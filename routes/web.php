@@ -17,6 +17,13 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+
 Route::get('/', function () {
-    return view('index');
+    return redirect()->route('index');
 });
+
+Route::get('/index', function () {
+    return view('index');
+})->name('index');
+
+Route::resource('servidores', ServidorPublicoController::class);
