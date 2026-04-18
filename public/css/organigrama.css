@@ -1,20 +1,28 @@
 body{
     background:#f4f7fb;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
 }
 
-/* 🔵 CAJAS PRINCIPALES (TU ESTILO BONITO) */
+/* 🔵 CAJAS PRINCIPALES */
 .box{
     background: linear-gradient(45deg,#1c3c6b,#0d6efd);
     color:white;
     padding:12px;
     border-radius:8px;
-    margin:10px;
+    margin:10px auto;
     cursor:pointer;
     font-weight:bold;
     box-shadow:0 4px 8px rgba(0,0,0,0.2);
     transition:0.3s;
     text-align:center;
+
+    width:100%;
+    min-height:80px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
     position:relative;
 }
 
@@ -31,38 +39,56 @@ body{
     margin:5px 0;
     font-size:13px;
     text-align:center;
+    width:100%;
 }
 
-/* 🔥 ESPACIADO */
+/* ❌ NO SOBRESCRIBIR .row COMPLETO
+   SOLO AJUSTES SEGUROS */
 .row{
-    margin-top:30px;
-    margin-bottom:30px;
+    margin-top:25px;
+    margin-bottom:25px;
+}
+
+/* 🔥 CENTRADO SOLO DE COLUMNAS */
+.col-md-2,
+.col-md-3,
+.col-md-4{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+/* 🔥 COLLAPSE */
+.collapse{
+    width:100%;
+}
+
+/* 🔵 LÍNEA DESDE GERENCIA (MEJOR CONTROLADA) */
+.container > .box{
     position:relative;
 }
 
-/* 🔥 LÍNEA DESDE GERENCIA */
 .container > .box::after{
     content:"";
     position:absolute;
     left:50%;
-    top:100%;
+    bottom:-25px;
     width:2px;
     height:25px;
     background:#0d6efd;
     transform:translateX(-50%);
 }
 
-/* 🔥 LÍNEA ENTRE NIVELES */
+/* 🔵 HR MEJORADO */
 hr{
     border:none;
     height:2px;
     background:#0d6efd;
     width:60%;
-    margin:25px auto;
+    margin:30px auto;
     position:relative;
 }
 
-/* 🔥 PUNTO CENTRAL */
 hr::after{
     content:"";
     width:10px;
@@ -74,15 +100,6 @@ hr::after{
     top:-4px;
     transform:translateX(-50%);
 }
-
-/* 🔥 LÍNEA HACIA ABAJO */
-.row::before{
-    content:"";
-    position:absolute;
-    top:-20px;
-    left:50%;
-    width:2px;
-    height:20px;
-    background:#0d6efd;
-    transform:translateX(-50%);
+.row{
+    justify-content: center !important;
 }
