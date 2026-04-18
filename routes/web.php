@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ServidorPublicoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
+});*/
+
+/*Route::get('/', function () {
+    return view('home');
+});*/
+
+Route::get('/', function () {
+    return redirect()->route('servidores.index');
 });
+
+Route::resource('servidores', ServidorPublicoController::class);
