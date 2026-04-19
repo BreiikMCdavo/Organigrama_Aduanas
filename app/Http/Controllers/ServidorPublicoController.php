@@ -10,6 +10,7 @@ class ServidorPublicoController extends Controller
     public function index()
     {
         $servidores = ServidorPublico::all();
+
         return view('servidores.index', compact('servidores'));
     }
 
@@ -21,14 +22,14 @@ class ServidorPublicoController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        
+
         if ($request->hasFile('fotografia')) {
             $path = $request->file('fotografia')->store('servidores', 'public');
             $data['fotografia'] = $path;
         }
-        
+
         ServidorPublico::create($data);
-        
+
         return redirect()->route('servidores.index')->with('success', 'Servidor registrado correctamente');
     }
 
@@ -48,14 +49,14 @@ class ServidorPublicoController extends Controller
     {
         $servidor = ServidorPublico::findOrFail($id);
         $data = $request->all();
-        
+
         if ($request->hasFile('fotografia')) {
             $path = $request->file('fotografia')->store('servidores', 'public');
             $data['fotografia'] = $path;
         }
-        
+
         $servidor->update($data);
-        
+
         return redirect()->route('servidores.index')->with('success', 'Actualizado correctamente');
     }
 
@@ -64,4 +65,5 @@ class ServidorPublicoController extends Controller
         ServidorPublico::destroy($id);
         return redirect()->route('servidores.index')->with('success', 'Eliminado correctamente');
     }
+
 }

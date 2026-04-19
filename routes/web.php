@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServidorPublicoController;
+use App\Http\Controllers\OrganigramaController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,5 +28,6 @@ Route::get('/', function () {
 Route::get('/index', function () {
     return view('index');
 })->name('index');
-
+Route::get('/organigrama/{area}', [OrganigramaController::class, 'show']);
 Route::resource('servidores', ServidorPublicoController::class);
+
