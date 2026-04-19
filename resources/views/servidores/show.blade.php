@@ -1,51 +1,109 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h2>Detalle del Servidor Público</h2>
-            <span class="badge {{ $servidor->tipo == 'item' ? 'bg-primary' : 'bg-success' }} fs-5">
-                {{ $servidor->tipo == 'item' ? 'ITEM' : 'CONSULTORÍA' }}
-            </span>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-4">
-                    @if($servidor->fotografia)
-                        <img src="{{ asset('storage/' . $servidor->fotografia) }}" class="img-fluid rounded">
-                    @endif
-                </div>
-                <div class="col-md-8">
-                    <h3>{{ $servidor->nombre }} {{ $servidor->apellido_paterno }} {{ $servidor->apellido_materno }}</h3>
-                    
-                    @if($servidor->tipo == 'item')
-                        <h4>Datos del Ítem</h4>
-                        <p><strong>Nº Ítem:</strong> {{ $servidor->numero_item }}</p>
-                        <p><strong>CITE Memorandum:</strong> {{ $servidor->cite_memorandum }}</p>
-                        <p><strong>Cargo:</strong> {{ $servidor->cargo }}</p>
-                        <p><strong>Designación:</strong> {{ $servidor->designacion }}</p>
-                        <p><strong>Fecha ingreso Aduana:</strong> {{ $servidor->fecha_ingreso_aduana }}</p>
-                        <p><strong>Fecha inicio cargo:</strong> {{ $servidor->fecha_inicio_cargo }}</p>
-                    @else
-                        <h4>Datos de Consultoría</h4>
-                        <p><strong>Contrato N°:</strong> {{ $servidor->contrato_numero }}</p>
-                        <p><strong>Cargo:</strong> {{ $servidor->cargo_consultoria }}</p>
-                        <p><strong>Fecha ingreso Aduana:</strong> {{ $servidor->fecha_ingreso_aduana }}</p>
-                        <p><strong>Fecha inicio contrato:</strong> {{ $servidor->fecha_inicio_contrato }}</p>
-                        <p><strong>Fecha fin contrato:</strong> {{ $servidor->fecha_fin_contrato }}</p>
-                    @endif
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/servidor_show.css') }}">
+@endpush
 
-                    <h4>Inamovilidad</h4>
-                    <p><strong>Asignación Familiar:</strong> {{ $servidor->asignacion_familiar_desc }} (Grado: {{ $servidor->asignacion_familiar_grado }})</p>
-                    <p><strong>Casos especiales:</strong> {{ $servidor->casos_especiales_desc }} (Grado: {{ $servidor->casos_especiales_grado }})</p>
-                    <p><strong>Discapacidad Ley N° 223:</strong> {{ $servidor->discapacidad_desc }} (Grado: {{ $servidor->discapacidad_grado }})</p>
+@section('content')
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div class="tarjeta-servidor">
+
+                {{-- Título unidad --}}
+                <div class="unidad-titulo">
+                    @if($servidor->tipo === 'item')
+                        UNIDAD ADMINISTRATIVA
+                    @else
+                        UNIDAD JURÍDICA
+                    @endif
                 </div>
+
+                {{-- Foto --}}
+                @if($servidor->fotografia)
+                    <img src="{{ asset('storage/' . $servidor->fotografia) }}" class="foto-circulo" alt="Foto">
+                @else
+                    <div class="foto-placeholder">👤</div>
+                @endif
+
+                {{-- Datos principales --}}
+                @if($servidor->tipo === 'item')
+                    <div class="dato-principal">
+                        <div class="label">N° Ítem: <span class="valor">{{ $servidor->numero_item ?? '—' }}</span></div>
+                    </div>
+                    <div class="dato-principal">
+                        <div class="label">Cargo: <span class="valor">{{ $servidor->designacion ?? '—' }}</span></div>
+                    </div>
+                    <div class="dato-principal">
+                        <div class="cargo-desc">✔ {{ $servidor->cargo ?? '' }}</div>
+                    </div>
+                @else
+                    <div class="dato-principal">
+                        <div class="label">Contrato: <span class="valor">{{ $servidor->contrato_numero ?? '—' }}</span></div>
+                    </div>
+                    <div class="dato-principal">
+                        <div class="label">Cargo: <span class="valor">{{ $servidor->designacion ?? '—' }}</span></div>
+                    </div>
+                    <div class="dato-principal">
+                        <div class="cargo-desc">{{ $servidor->cargo_consultoria ?? '' }}</div>
+                    </div>
+                @endif
+
+                <hr class="divider">
+
+                {{-- Nombre --}}
+                <div class="nombre-completo">
+                    Nombre: {{ $servidor->nombre }} {{ $servidor->apellido_paterno }} {{ $servidor->apellido_materno }}
+                </div>
+
+                {{-- Fechas --}}
+                <div class="fechas-row">
+                    <span>Ingreso a la Aduana: {{ $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('d/m/Y') : '—' }}</span>
+                    @if($servidor->tipo === 'item')
+                        <span>Fecha Inic. cargo: {{ $servidor->fecha_inicio_cargo ? \Carbon\Carbon::parse($servidor->fecha_inicio_cargo)->format('d/m/Y') : '—' }}</span>
+                    @else
+                        <span>Fecha del contrato: {{ $servidor->fecha_inicio_contrato ? \Carbon\Carbon::parse($servidor->fecha_inicio_contrato)->format('d/m/Y') : '—' }}</span>
+                    @endif
+                </div>
+
+                {{-- Inamovilidad --}}
+                <div class="inamovilidad-titulo">Inamovilidad:</div>
+
+                @if($servidor->asignacion_familiar_desc)
+                <div class="inamovilidad-item">
+                    <span class="check-icon">☑</span>
+                    <span>Asignación Familiar: {{ $servidor->asignacion_familiar_desc }} &nbsp; Grado: <strong>{{ $servidor->asignacion_familiar_grado }}</strong></span>
+                </div>
+                @endif
+
+                @if($servidor->casos_especiales_desc)
+                <div class="inamovilidad-item">
+                    <span class="check-icon">☑</span>
+                    <span>Casos especiales: {{ $servidor->casos_especiales_desc }} &nbsp; Grado: <strong>{{ $servidor->casos_especiales_grado }}</strong></span>
+                </div>
+                @endif
+
+                @if($servidor->discapacidad_desc)
+                <div class="inamovilidad-item">
+                    <span class="check-icon">☑</span>
+                    <span>Discapacidad Ley N° 223: {{ $servidor->discapacidad_desc }} &nbsp; Grado: <strong>{{ $servidor->discapacidad_grado }}</strong></span>
+                </div>
+                @endif
+
+                {{-- Botón volver --}}
+                <a href="{{ route('servidores.index') }}" class="btn-volver">Volver al Organigrama</a>
+
             </div>
-        </div>
-        <div class="card-footer">
-            <a href="{{ route('servidores.index') }}" class="btn btn-secondary">Volver</a>
-            <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-warning">Editar</a>
+
+            {{-- Acciones debajo de la tarjeta --}}
+            <div class="d-flex gap-2 mt-3 justify-content-center">
+                <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                <form action="{{ route('servidores.destroy', $servidor->id) }}" method="POST" onsubmit="return confirm('¿Eliminar este servidor?')">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -1,392 +1,289 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Servidor Público</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid #e0e0e0;
-            background: #f8f9fa;
-        }
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: bold;
-            color: #666;
-            transition: all 0.3s;
-            border: none;
-            background: none;
-            font-size: 16px;
-        }
-        .tab.active {
-            color: #007bff;
-            border-bottom: 3px solid #007bff;
-            background: white;
-        }
-        .tab-content {
-            display: none;
-            padding: 30px;
-            animation: fadeIn 0.5s;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-        .row > div {
-            flex: 1;
-        }
-        h3 {
-            color: #007bff;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-        }
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #0056b3;
-        }
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-        .image-preview {
-            margin-top: 10px;
-            max-width: 200px;
-        }
-        .image-preview img {
-            width: 100%;
-            border-radius: 5px;
-        }
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin-top: 5px;
-        }
-        .radio-group label {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: normal;
-        }
-        .radio-group input {
-            width: auto;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('item')">ITEM</button>
-            <button class="tab" onclick="showTab('consultoria')">CONSULTORÍA</button>
+@extends('layouts.app')
+
+@section('content')
+<div class="container py-4">
+
+    {{-- Encabezado de secciones --}}
+    <div class="row text-center mb-4">
+        <div class="col-4 border-end">
+            <h6 class="text-muted fw-bold">AGREGAR SERVIDORES PÚBLICOS</h6>
         </div>
-
-        <form action="{{ url('/servidores') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="tipo" id="tipo" value="item">
-
-            <!-- FORMULARIO ITEM -->
-            <div id="tab-item" class="tab-content active">
-                <h3>Datos del Ítem</h3>
-                
-                <div class="row">
-                    <div class="form-group">
-                        <label>Nº Ítem:</label>
-                        <input type="text" name="numero_item">
-                    </div>
-                    <div class="form-group">
-                        <label>Memorandum:</label>
-                        <input type="text" name="cite_memorandum">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>Cargo:</label>
-                        <input type="text" name="cargo" placeholder="Ej: Analista de Sistemas">
-                    </div>
-                    <div class="form-group">
-                        <label>Designación:</label>
-                        <select name="designacion">
-                            <option value="">Seleccionar...</option>
-                            <option value="Interinato">Interinato</option>
-                            <option value="Comisión">Comisión</option>
-                            <option value="Propiedad">Propiedad</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>Nombres:</label>
-                        <input type="text" name="nombre" placeholder="Nombres completos">
-                    </div>
-                    <div class="form-group">
-                        <label>Apellido Paterno:</label>
-                        <input type="text" name="apellido_paterno">
-                    </div>
-                    <div class="form-group">
-                        <label>Apellido Materno:</label>
-                        <input type="text" name="apellido_materno">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>Fecha de ingreso a la Aduana:</label>
-                        <input type="date" name="fecha_ingreso_aduana">
-                    </div>
-                    <div class="form-group">
-                        <label>Fecha de inicio cargo:</label>
-                        <input type="date" name="fecha_inicio_cargo">
-                    </div>
-                </div>
-
-                <h3>Inamovilidad</h3>
-                
-                <div class="form-group">
-                    <label>1. Asignación Familiar:</label>
-                    <textarea name="asignacion_familiar_desc" rows="2" placeholder="Ingresar descripción..."></textarea>
-                    <div style="margin-top: 10px;">
-                        <label>Grado:</label>
-                        <select name="asignacion_familiar_grado">
-                            <option value="">Seleccionar</option>
-                            <option value="G">G</option>
-                            <option value="MG">MG</option>
-                            <option value="M">M</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>2. Casos especiales:</label>
-                    <textarea name="casos_especiales_desc" rows="2" placeholder="Ingresar descripción..."></textarea>
-                    <div style="margin-top: 10px;">
-                        <label>Grado:</label>
-                        <select name="casos_especiales_grado">
-                            <option value="">Seleccionar</option>
-                            <option value="G">G</option>
-                            <option value="MG">MG</option>
-                            <option value="M">M</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>3. Discapacidad Ley N° 223:</label>
-                    <textarea name="discapacidad_desc" rows="2" placeholder="Ingresar descripción..."></textarea>
-                    <div style="margin-top: 10px;">
-                        <label>Grado:</label>
-                        <select name="discapacidad_grado">
-                            <option value="">Seleccionar</option>
-                            <option value="G">G</option>
-                            <option value="MG">MG</option>
-                            <option value="M">M</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FORMULARIO CONSULTORÍA -->
-            <div id="tab-consultoria" class="tab-content">
-                <h3>Datos de Consultoría</h3>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>Contrato N°:</label>
-                        <input type="text" name="contrato_numero" placeholder="Ej: CON-2024-095">
-                    </div>
-                    <div class="form-group">
-                        <label>Cargo:</label>
-                        <input type="text" name="cargo_consultoria" placeholder="Ej: Consultor Jurídico">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>Nombres:</label>
-                        <input type="text" name="nombre" placeholder="Nombres completos">
-                    </div>
-                    <div class="form-group">
-                        <label>Apellido Paterno:</label>
-                        <input type="text" name="apellido_paterno">
-                    </div>
-                    <div class="form-group">
-                        <label>Apellido Materno:</label>
-                        <input type="text" name="apellido_materno">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>Fecha de ingreso a la Aduana:</label>
-                        <input type="date" name="fecha_ingreso_aduana">
-                    </div>
-                    <div class="form-group">
-                        <label>Fecha de inicio contrato:</label>
-                        <input type="date" name="fecha_inicio_contrato">
-                    </div>
-                    <div class="form-group">
-                        <label>Fecha de fin contrato:</label>
-                        <input type="date" name="fecha_fin_contrato">
-                    </div>
-                </div>
-
-                <h3>Inamovilidad</h3>
-
-                <div class="form-group">
-                    <label>1. Asignación Familiar:</label>
-                    <textarea name="asignacion_familiar_desc" rows="2" placeholder="Ingresar descripción..."></textarea>
-                    <div style="margin-top: 10px;">
-                        <label>Grado:</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="asignacion_familiar_grado" value="G"> G</label>
-                            <label><input type="radio" name="asignacion_familiar_grado" value="MG"> MG</label>
-                            <label><input type="radio" name="asignacion_familiar_grado" value="M"> M</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>2. Casos especiales:</label>
-                    <textarea name="casos_especiales_desc" rows="2" placeholder="Ingresar descripción..."></textarea>
-                    <div style="margin-top: 10px;">
-                        <label>Grado:</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="casos_especiales_grado" value="G"> G</label>
-                            <label><input type="radio" name="casos_especiales_grado" value="MG"> MG</label>
-                            <label><input type="radio" name="casos_especiales_grado" value="M"> M</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>3. Discapacidad Ley N° 223:</label>
-                    <textarea name="discapacidad_desc" rows="2" placeholder="Ingresar descripción..."></textarea>
-                    <div style="margin-top: 10px;">
-                        <label>Grado:</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="discapacidad_grado" value="G"> G</label>
-                            <label><input type="radio" name="discapacidad_grado" value="MG"> MG</label>
-                            <label><input type="radio" name="discapacidad_grado" value="M"> M</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Fotografía (común para ambos) -->
-            <div style="padding: 0 30px 30px 30px;">
-                <div class="form-group">
-                    <label>📷 Fotografía:</label>
-                    <input type="file" name="fotografia" accept="image/*" onchange="previewImage(event)">
-                    <div class="image-preview" id="imagePreview"></div>
-                </div>
-
-                <div class="btn-group">
-                    <button type="submit" class="btn btn-primary">💾 Guardar</button>
-                    <a href="{{ url('/servidores') }}">
-                        <button type="button" class="btn btn-secondary">❌ Cancelar</button>
-                    </a>
-                </div>
-            </div>
-        </form>
+        <div class="col-4 border-end">
+            <h6 class="text-muted fw-bold">REGISTRO</h6>
+        </div>
+        <div class="col-4">
+            <h6 class="text-muted fw-bold">VISTA USUARIO FINAL</h6>
+        </div>
     </div>
 
-    <script>
-        function showTab(tab) {
-            // Ocultar todos los contenidos
-            document.getElementById('tab-item').classList.remove('active');
-            document.getElementById('tab-consultoria').classList.remove('active');
-            
-            // Desactivar todos los tabs
-            document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
-            
-            // Mostrar el tab seleccionado
-            if (tab === 'item') {
-                document.getElementById('tab-item').classList.add('active');
-                document.querySelector('.tab:first-child').classList.add('active');
-                document.getElementById('tipo').value = 'item';
-            } else {
-                document.getElementById('tab-consultoria').classList.add('active');
-                document.querySelector('.tab:last-child').classList.add('active');
-                document.getElementById('tipo').value = 'consultoria';
-            }
-        }
-        
-        function previewImage(event) {
-            const preview = document.getElementById('imagePreview');
-            preview.innerHTML = '';
-            
-            if (event.target.files && event.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    preview.appendChild(img);
-                };
-                reader.readAsDataURL(event.target.files[0]);
-            }
-        }
-    </script>
-</body>
-</html>
+    <div class="row align-items-start justify-content-center">
+
+        {{-- Columna izquierda: selector --}}
+        <div class="col-md-2 d-flex align-items-start pt-3">
+            <div class="w-100">
+                <select id="selectorTipo" class="form-select shadow-sm" onchange="mostrarFormulario(this.value)">
+                    <option value="">Selecciona una opción</option>
+                    <option value="item">Ítem</option>
+                    <option value="consultoria">Consultoría</option>
+                </select>
+            </div>
+        </div>
+
+        {{-- Columna central: formularios --}}
+        <div class="col-md-6">
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            {{-- FORMULARIO ITEM --}}
+            <div id="form-item" style="display:none;">
+                <form action="{{ route('servidores.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="tipo" value="item">
+
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-3">Datos del Ítem</h6>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">N° Ítem</label>
+                                    <input type="text" name="numero_item" class="form-control form-control-sm" value="{{ old('numero_item') }}">
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label small mb-1">CITE Memorandum</label>
+                                    <input type="text" name="cite_memorandum" class="form-control form-control-sm" value="{{ old('cite_memorandum') }}">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label small mb-1">Cargo</label>
+                                    <select name="designacion" class="form-select form-select-sm">
+                                        <option value="">Designación</option>
+                                        <option value="Designación" {{ old('designacion')=='Designación'?'selected':'' }}>Designación</option>
+                                        <option value="Interinato" {{ old('designacion')=='Interinato'?'selected':'' }}>Interinato</option>
+                                        <option value="Comisión" {{ old('designacion')=='Comisión'?'selected':'' }}>Comisión</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-4">
+                                    <input type="text" name="nombre" class="form-control form-control-sm" placeholder="Nombres" value="{{ old('nombre') }}">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" name="apellido_paterno" class="form-control form-control-sm" placeholder="Apellido Paterno" value="{{ old('apellido_paterno') }}">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" name="apellido_materno" class="form-control form-control-sm" placeholder="Apellido Materno" value="{{ old('apellido_materno') }}">
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <input type="text" name="cargo" class="form-control form-control-sm" placeholder="Ingresar nombre del cargo..." value="{{ old('cargo') }}">
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Fecha de ingreso a la Aduana</label>
+                                    <input type="date" name="fecha_ingreso_aduana" class="form-control form-control-sm" value="{{ old('fecha_ingreso_aduana') }}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Fecha de inicio cargo</label>
+                                    <input type="date" name="fecha_inicio_cargo" class="form-control form-control-sm" value="{{ old('fecha_inicio_cargo') }}">
+                                </div>
+                            </div>
+
+                            <p class="fw-bold small mb-2">Inamovilidad:</p>
+
+                            @foreach([
+                                ['label'=>'1. Asignación Familiar:', 'desc'=>'asignacion_familiar_desc', 'grado'=>'asignacion_familiar_grado'],
+                                ['label'=>'2. Casos especiales:', 'desc'=>'casos_especiales_desc', 'grado'=>'casos_especiales_grado'],
+                                ['label'=>'3. Discapacidad Ley N° 223:', 'desc'=>'discapacidad_desc', 'grado'=>'discapacidad_grado'],
+                            ] as $campo)
+                            <div class="row g-2 align-items-center mb-2">
+                                <div class="col-1 text-center">
+                                    <input type="checkbox" class="form-check-input" name="{{ $campo['desc'] }}_check">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small mb-0">{{ $campo['label'] }}</label>
+                                    <input type="text" name="{{ $campo['desc'] }}" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
+                                </div>
+                                <div class="col-2">
+                                    <label class="form-label small mb-0">Grado:</label>
+                                </div>
+                                <div class="col-3">
+                                    <select name="{{ $campo['grado'] }}" class="form-select form-select-sm">
+                                        <option value="G" {{ old($campo['grado'])=='G'?'selected':'' }}>G</option>
+                                        <option value="MG" {{ old($campo['grado'])=='MG'?'selected':'' }}>MG</option>
+                                        <option value="M" {{ old($campo['grado'])=='M'?'selected':'' }}>M</option>
+                                        <option value="L" {{ old($campo['grado'])=='L'?'selected':'' }}>L</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @endforeach
+
+                            <div class="mt-3">
+                                <label class="form-label small mb-1">📷 Fotografía</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="btn btn-sm btn-outline-secondary mb-0">
+                                        Subir Imagen <input type="file" name="fotografia" accept="image/*" class="d-none" onchange="previewImg(event,'preview-item')">
+                                    </label>
+                                    <img id="preview-item" src="" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;display:none;">
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-3">
+                                <button type="submit" class="btn btn-primary btn-sm px-4">Guardar</button>
+                                <a href="{{ route('servidores.index') }}" class="btn btn-secondary btn-sm px-4">Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {{-- FORMULARIO CONSULTORÍA --}}
+            <div id="form-consultoria" style="display:none;">
+                <form action="{{ route('servidores.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="tipo" value="consultoria">
+
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-3">Datos de Consultoría</h6>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-7">
+                                    <label class="form-label small mb-1">Contrato</label>
+                                    <input type="text" name="contrato_numero" class="form-control form-control-sm" value="{{ old('contrato_numero') }}">
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label small mb-1">Cargo</label>
+                                    <select name="designacion" class="form-select form-select-sm">
+                                        <option value="">Designación</option>
+                                        <option value="Designación" {{ old('designacion')=='Designación'?'selected':'' }}>Designación</option>
+                                        <option value="Interinato" {{ old('designacion')=='Interinato'?'selected':'' }}>Interinato</option>
+                                        <option value="Comisión" {{ old('designacion')=='Comisión'?'selected':'' }}>Comisión</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-4">
+                                    <input type="text" name="nombre" class="form-control form-control-sm" placeholder="Nombres" value="{{ old('nombre') }}">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" name="apellido_paterno" class="form-control form-control-sm" placeholder="Apellido Paterno" value="{{ old('apellido_paterno') }}">
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" name="apellido_materno" class="form-control form-control-sm" placeholder="Apellido Materno" value="{{ old('apellido_materno') }}">
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <input type="text" name="cargo_consultoria" class="form-control form-control-sm" placeholder="Ingresar descripción del cargo..." value="{{ old('cargo_consultoria') }}">
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Fecha de ingreso a la Aduana</label>
+                                    <input type="date" name="fecha_ingreso_aduana" class="form-control form-control-sm" value="{{ old('fecha_ingreso_aduana') }}">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Fecha de inicio contrato</label>
+                                    <input type="date" name="fecha_inicio_contrato" class="form-control form-control-sm" value="{{ old('fecha_inicio_contrato') }}">
+                                </div>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Fecha de fin contrato</label>
+                                    <input type="date" name="fecha_fin_contrato" class="form-control form-control-sm" value="{{ old('fecha_fin_contrato') }}">
+                                </div>
+                            </div>
+
+                            <p class="fw-bold small mb-2">Inamovilidad:</p>
+
+                            @foreach([
+                                ['label'=>'1. Asignación Familiar:', 'desc'=>'asignacion_familiar_desc', 'grado'=>'asignacion_familiar_grado'],
+                                ['label'=>'2. Casos especiales:', 'desc'=>'casos_especiales_desc', 'grado'=>'casos_especiales_grado'],
+                                ['label'=>'3. Discapacidad Ley N° 223:', 'desc'=>'discapacidad_desc', 'grado'=>'discapacidad_grado'],
+                            ] as $campo)
+                            <div class="row g-2 align-items-center mb-2">
+                                <div class="col-1 text-center">
+                                    <input type="checkbox" class="form-check-input" name="{{ $campo['desc'] }}_check">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small mb-0">{{ $campo['label'] }}</label>
+                                    <input type="text" name="{{ $campo['desc'] }}" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
+                                </div>
+                                <div class="col-2">
+                                    <label class="form-label small mb-0">Grado:</label>
+                                </div>
+                                <div class="col-3">
+                                    <select name="{{ $campo['grado'] }}" class="form-select form-select-sm">
+                                        <option value="G" {{ old($campo['grado'])=='G'?'selected':'' }}>G</option>
+                                        <option value="MG" {{ old($campo['grado'])=='MG'?'selected':'' }}>MG</option>
+                                        <option value="M" {{ old($campo['grado'])=='M'?'selected':'' }}>M</option>
+                                        <option value="L" {{ old($campo['grado'])=='L'?'selected':'' }}>L</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @endforeach
+
+                            <div class="mt-3">
+                                <label class="form-label small mb-1">📷 Fotografía</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="btn btn-sm btn-outline-secondary mb-0">
+                                        Subir Imagen <input type="file" name="fotografia" accept="image/*" class="d-none" onchange="previewImg(event,'preview-cons')">
+                                    </label>
+                                    <img id="preview-cons" src="" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;display:none;">
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-3">
+                                <button type="submit" class="btn btn-primary btn-sm px-4">Guardar</button>
+                                <a href="{{ route('servidores.index') }}" class="btn btn-secondary btn-sm px-4">Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>{{-- fin col central --}}
+
+    </div>{{-- fin row --}}
+</div>
+
+<script>
+function mostrarFormulario(valor) {
+    document.getElementById('form-item').style.display = 'none';
+    document.getElementById('form-consultoria').style.display = 'none';
+    if (valor === 'item') document.getElementById('form-item').style.display = 'block';
+    if (valor === 'consultoria') document.getElementById('form-consultoria').style.display = 'block';
+}
+
+function previewImg(event, previewId) {
+    const img = document.getElementById(previewId);
+    const file = event.target.files[0];
+    if (file) {
+        img.src = URL.createObjectURL(file);
+        img.style.display = 'inline-block';
+    }
+}
+
+// Si hay errores de validación, mostrar el formulario correcto
+@if(old('tipo') === 'item')
+    mostrarFormulario('item');
+    document.getElementById('selectorTipo').value = 'item';
+@elseif(old('tipo') === 'consultoria')
+    mostrarFormulario('consultoria');
+    document.getElementById('selectorTipo').value = 'consultoria';
+@endif
+</script>
+@endsection

@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\ServidorPublico;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServidorPublicoController extends Controller
 {
     public function index()
     {
-        $servidores = ServidorPublico::all();
-
+        $servidores = ServidorPublico::orderBy('created_at', 'desc')->get();
         return view('servidores.index', compact('servidores'));
     }
 
@@ -21,16 +21,37 @@ class ServidorPublicoController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
+        $rules = [
+            'tipo'             => 'required|in:item,consultoria',
+            'nombre'           => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:100',
+            'apellido_materno' => 'nullable|string|max:100',
+            'fotografia'       => 'nullable|image|max:2048',
+        ];
+
+        if ($request->tipo === 'item') {
+            $rules['numero_item']       = 'required|string|max:50';
+            $rules['fecha_ingreso_aduana'] = 'nullable|date';
+            $rules['fecha_inicio_cargo']   = 'nullable|date';
+        } else {
+            $rules['contrato_numero']      = 'required|string|max:100';
+            $rules['fecha_ingreso_aduana'] = 'nullable|date';
+            $rules['fecha_inicio_contrato'] = 'nullable|date';
+            $rules['fecha_fin_contrato']    = 'nullable|date';
+        }
+
+        $validated = $request->validate($rules);
+
+        $data = $request->except('fotografia');
 
         if ($request->hasFile('fotografia')) {
-            $path = $request->file('fotografia')->store('servidores', 'public');
-            $data['fotografia'] = $path;
+            $data['fotografia'] = $request->file('fotografia')->store('servidores', 'public');
         }
 
         ServidorPublico::create($data);
 
-        return redirect()->route('servidores.index')->with('success', 'Servidor registrado correctamente');
+        return redirect()->route('servidores.index')
+                         ->with('success', 'Servidor público registrado correctamente.');
     }
 
     public function show($id)
@@ -48,22 +69,54 @@ class ServidorPublicoController extends Controller
     public function update(Request $request, $id)
     {
         $servidor = ServidorPublico::findOrFail($id);
-        $data = $request->all();
+
+        $rules = [
+            'nombre'           => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:100',
+            'apellido_materno' => 'nullable|string|max:100',
+            'fotografia'       => 'nullable|image|max:2048',
+        ];
+
+        if ($servidor->tipo === 'item') {
+            $rules['numero_item']          = 'required|string|max:50';
+            $rules['fecha_ingreso_aduana'] = 'nullable|date';
+            $rules['fecha_inicio_cargo']   = 'nullable|date';
+        } else {
+            $rules['contrato_numero']       = 'required|string|max:100';
+            $rules['fecha_ingreso_aduana']  = 'nullable|date';
+            $rules['fecha_inicio_contrato'] = 'nullable|date';
+            $rules['fecha_fin_contrato']    = 'nullable|date';
+        }
+
+        $request->validate($rules);
+
+        $data = $request->except(['fotografia', '_token', '_method']);
 
         if ($request->hasFile('fotografia')) {
-            $path = $request->file('fotografia')->store('servidores', 'public');
-            $data['fotografia'] = $path;
+            // Eliminar foto anterior si existe
+            if ($servidor->fotografia) {
+                Storage::disk('public')->delete($servidor->fotografia);
+            }
+            $data['fotografia'] = $request->file('fotografia')->store('servidores', 'public');
         }
 
         $servidor->update($data);
 
-        return redirect()->route('servidores.index')->with('success', 'Actualizado correctamente');
+        return redirect()->route('servidores.show', $servidor->id)
+                         ->with('success', 'Servidor actualizado correctamente.');
     }
 
     public function destroy($id)
     {
-        ServidorPublico::destroy($id);
-        return redirect()->route('servidores.index')->with('success', 'Eliminado correctamente');
-    }
+        $servidor = ServidorPublico::findOrFail($id);
 
+        if ($servidor->fotografia) {
+            Storage::disk('public')->delete($servidor->fotografia);
+        }
+
+        $servidor->delete();
+
+        return redirect()->route('servidores.index')
+                         ->with('success', 'Servidor eliminado correctamente.');
+    }
 }

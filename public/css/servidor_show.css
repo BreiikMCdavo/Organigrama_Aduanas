@@ -1,0 +1,123 @@
+.tarjeta-servidor {
+    background: linear-gradient(135deg, #1a2a4a 0%, #0d1b35 60%, #1a3a5c 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 24px;
+    max-width: 380px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+}
+
+.tarjeta-servidor .unidad-titulo {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+.tarjeta-servidor .foto-circulo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4a90d9;
+    display: block;
+    margin: 0 auto 12px auto;
+}
+
+.tarjeta-servidor .foto-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #2a4a7a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px auto;
+    font-size: 2rem;
+    border: 3px solid #4a90d9;
+}
+
+.tarjeta-servidor .dato-principal {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.tarjeta-servidor .dato-principal .label {
+    font-size: 0.75rem;
+    color: #a0b8d8;
+}
+
+.tarjeta-servidor .dato-principal .valor {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.tarjeta-servidor .dato-principal .cargo-desc {
+    font-size: 0.82rem;
+    color: #c8daf0;
+}
+
+.tarjeta-servidor .divider {
+    border-color: #2a4a7a;
+    margin: 12px 0;
+}
+
+.tarjeta-servidor .nombre-completo {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.tarjeta-servidor .fechas-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #a0b8d8;
+    margin-bottom: 10px;
+}
+
+.tarjeta-servidor .inamovilidad-titulo {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #a0b8d8;
+    margin-bottom: 6px;
+}
+
+.tarjeta-servidor .inamovilidad-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.78rem;
+    margin-bottom: 4px;
+}
+
+.tarjeta-servidor .inamovilidad-item .check-icon {
+    color: #4fc3f7;
+    font-size: 0.85rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+.tarjeta-servidor .btn-volver {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    background: #1565c0;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.tarjeta-servidor .btn-volver:hover {
+    background: #0d47a1;
+    color: #fff;
+}
