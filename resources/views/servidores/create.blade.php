@@ -265,15 +265,15 @@
                 <div class="row">
                     <div class="form-group">
                         <label>Nombres:</label>
-                        <input type="text" name="nombre" placeholder="Nombres completos">
+                        <input type="text" name="consultoria_nombre" placeholder="Nombres completos">
                     </div>
                     <div class="form-group">
                         <label>Apellido Paterno:</label>
-                        <input type="text" name="apellido_paterno">
+                        <input type="text" name="consultoria_apellido_paterno">
                     </div>
                     <div class="form-group">
                         <label>Apellido Materno:</label>
-                        <input type="text" name="apellido_materno">
+                        <input type="text" name="consultoria_apellido_materno">
                     </div>
                 </div>
 

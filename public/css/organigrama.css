@@ -1,18 +1,19 @@
+/* ===== BASE ===== */
 body{
     background:#f4f7fb;
     font-family: Arial, sans-serif;
 }
 
-/* 🔵 CAJAS PRINCIPALES */
+/* ===== CAJAS ===== */
 .box{
     background: linear-gradient(45deg,#1c3c6b,#0d6efd);
     color:white;
     padding:12px;
-    border-radius:8px;
+    border-radius:10px;
     margin:10px auto;
     cursor:pointer;
     font-weight:bold;
-    box-shadow:0 4px 8px rgba(0,0,0,0.2);
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
     transition:0.3s;
     text-align:center;
 
@@ -30,7 +31,7 @@ body{
     transform:scale(1.05);
 }
 
-/* 🔵 SUB CAJAS */
+/* ===== SUB CAJAS ===== */
 .sub-box{
     background:#0d6efd;
     color:white;
@@ -42,14 +43,12 @@ body{
     width:100%;
 }
 
-/* ❌ NO SOBRESCRIBIR .row COMPLETO
-   SOLO AJUSTES SEGUROS */
+/* ===== GRID ===== */
 .row{
-    margin-top:25px;
-    margin-bottom:25px;
+    margin:25px 0;
+    justify-content:center !important;
 }
 
-/* 🔥 CENTRADO SOLO DE COLUMNAS */
 .col-md-2,
 .col-md-3,
 .col-md-4{
@@ -58,31 +57,125 @@ body{
     align-items:center;
 }
 
-/* 🔥 COLLAPSE */
+/* ===== COLLAPSE ===== */
 .collapse{
     width:100%;
 }
 
-/* 🔵 LÍNEA DESDE GERENCIA (MEJOR CONTROLADA) */
-.container > .box{
+/* ===== ORGANIGRAMA ===== */
+.organigrama{
     position:relative;
 }
 
-.container > .box::after{
+/* 🔗 GERENCIA → ZIGZAG */
+.organigrama > .box::after{
     content:"";
     position:absolute;
     left:50%;
-    bottom:-25px;
+    bottom:-40px;
     width:2px;
-    height:25px;
+    height:40px;
     background:#0d6efd;
     transform:translateX(-50%);
 }
 
-/* 🔵 HR MEJORADO */
+/* ===== ZIGZAG ===== */
+.zigzag-container{
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    width:100%;
+    max-width:500px;
+    margin:auto;
+    margin-top:20px;
+    margin-bottom:40px;
+}
+
+.zigzag-container::before{
+    content:"";
+    position:absolute;
+    top:-23px;     /* sube la línea */
+    bottom:-38px;  /* baja la línea */
+    left:50%;
+    width:2px;
+    background:#0d6efd;
+    transform:translateX(-50%);
+}
+
+
+/* cajas zigzag */
+.zigzag-container .box{
+    width:250px;
+    margin:12px 0;
+}
+
+/* izquierda */
+.zigzag-container .left{
+    align-self:flex-start;
+    margin-left:-60px;
+}
+
+/* derecha */
+.zigzag-container .right{
+    align-self:flex-end;
+    margin-right:-60px;
+}
+
+/* conectores */
+.zigzag-container .box::before{
+    content:"";
+    position:absolute;
+    top:50%;
+    width:50px;
+    height:2px;
+    background:#0d6efd;
+}
+
+.zigzag-container .left::before{
+    right:-50px;
+}
+
+.zigzag-container .right::before{
+    left:-50px;
+}
+
+/* ===== SEGUNDO Y TERCER NIVEL ===== */
+.nivel-hijos{
+    position:relative;
+}
+
+/* línea horizontal */
+.nivel-hijos::before{
+    content:"";
+    position:absolute;
+    top:-20px;
+    left:50%;
+    width:67%;
+    height:2px;
+    background:#0d6efd;
+    transform:translateX(-50%);
+}
+
+/* líneas verticales hacia cajas */
+.nivel-hijos .col-md-4{
+    position:relative;
+}
+
+.nivel-hijos .col-md-4::before{
+    content:"";
+    position:absolute;
+    top:-34px;      /* sube más arriba */
+    left:50%;
+    width:2.1px;
+    height:50px;    /* aumenta la longitud */
+    background:#0d6efd;
+    transform:translateX(-50%);
+}
+
+/* ===== HR ===== */
 hr{
     border:none;
-    height:2px;
+    
     background:#0d6efd;
     width:60%;
     margin:30px auto;
@@ -100,8 +193,3 @@ hr::after{
     top:-4px;
     transform:translateX(-50%);
 }
-.row{
-    justify-content: center !important;
-}
-
-
