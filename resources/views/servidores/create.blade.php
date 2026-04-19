@@ -3,34 +3,21 @@
 @section('content')
 <div class="container py-4">
 
-    {{-- Encabezado de secciones --}}
-    <div class="row text-center mb-4">
-        <div class="col-4 border-end">
-            <h6 class="text-muted fw-bold">AGREGAR SERVIDORES PÚBLICOS</h6>
-        </div>
-        <div class="col-4 border-end">
-            <h6 class="text-muted fw-bold">REGISTRO</h6>
-        </div>
-        <div class="col-4">
-            <h6 class="text-muted fw-bold">VISTA USUARIO FINAL</h6>
-        </div>
-    </div>
-
     <div class="row align-items-start justify-content-center">
 
         {{-- Columna izquierda: selector --}}
-        <div class="col-md-2 d-flex align-items-start pt-3">
-            <div class="w-100">
-                <select id="selectorTipo" class="form-select shadow-sm" onchange="mostrarFormulario(this.value)">
-                    <option value="">Selecciona una opción</option>
-                    <option value="item">Ítem</option>
-                    <option value="consultoria">Consultoría</option>
-                </select>
-            </div>
+        <div class="col-md-2 text-center">
+            <h6 class="text-muted fw-bold mb-3">AGREGAR SERVIDORES PÚBLICOS</h6>
+            <select id="selectorTipo" class="form-select shadow-sm" onchange="mostrarFormulario(this.value)">
+                <option value="">Selecciona una opción</option>
+                <option value="item">Ítem</option>
+                <option value="consultoria">Consultoría</option>
+            </select>
         </div>
 
         {{-- Columna central: formularios --}}
         <div class="col-md-6">
+            <h6 class="text-muted fw-bold mb-3 text-center">REGISTRO</h6>
 
             @if ($errors->any())
                 <div class="alert alert-danger">
