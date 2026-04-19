@@ -8,24 +8,31 @@ use Illuminate\Database\Eloquent\Model;
 class ServidorPublico extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'servidores_publicos';
-    
+
     protected $fillable = [
+        'persona_id',
         'tipo',
-        // Datos comunes
-        'nombre', 'apellido_paterno', 'apellido_materno',
-        'fotografia',
-        
-        // Datos para ITEM
-        'numero_item', 'cite_memorandum', 'cargo', 'designacion',
-        'fecha_ingreso_aduana', 'fecha_inicio_cargo',
-        'asignacion_familiar_grado', 'casos_especiales_grado', 
-        'discapacidad_grado', 'asignacion_familiar_desc', 
-        'casos_especiales_desc', 'discapacidad_desc',
-        
-        // Datos para CONSULTORIA
-        'contrato_numero', 'cargo_consultoria', 'fecha_inicio_contrato',
-        'fecha_fin_contrato',
+        'cargo',
+        'numero_item',
+        'fecha_ingreso'
     ];
+
+    // 🔥 RELACIÓN con persona
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class);
+    }
+
+    // 🔥 RELACIÓN con unidades (CORREGIDO)
+    public function unidades()
+    {
+        return $this->belongsToMany(
+            Unidad::class,
+            'servidor_unidad',
+            'servidor_id',
+            'unidad_id'
+        );
+    }
 }

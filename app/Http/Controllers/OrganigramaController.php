@@ -9,19 +9,19 @@ class OrganigramaController extends Controller
 {
     public function show($area)
     {
-        
-        // Decodificar por si viene con espacios o %
         $area = urldecode($area);
 
-        // 🔥 FILTRAR por área (AJUSTA ESTE CAMPO A TU BD REAL)
-        $servidores = ServidorPublico::where('area_administracion', $area)
+        $servidores = ServidorPublico::whereHas('unidades', function ($query) use ($area) {
+                $query->where('nombre', $area);
+            })
+            ->with('persona')
             ->get();
 
         return response()->json([
             "items" => $servidores->count(),
-            "acefalias" => 0, // si no tienes campo aún
+            "acefalias" => 0,
             "personal" => $servidores->map(function ($s) {
-                return $s->nombre . ' ' . $s->apellido_paterno;
+                return $s->persona->nombre . ' ' . $s->persona->apellido_paterno;
             })
         ]);
     }

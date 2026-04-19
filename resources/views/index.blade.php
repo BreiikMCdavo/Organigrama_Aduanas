@@ -7,6 +7,7 @@
     <!-- GERENCIA -->
     <div class="box mb-4" onclick="mostrarInfo('GERENCIA REGIONAL LA PAZ - GRLPZ')">
         GERENCIA REGIONAL LA PAZ - GRLPZ
+        
     </div>
 
     <!-- PRIMER NIVEL -->

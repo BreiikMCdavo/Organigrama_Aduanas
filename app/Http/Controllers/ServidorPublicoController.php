@@ -10,7 +10,6 @@ class ServidorPublicoController extends Controller
     public function index()
     {
         $servidores = ServidorPublico::all();
-
         return view('servidores.index', compact('servidores'));
     }
 
@@ -21,16 +20,22 @@ class ServidorPublicoController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
+        $data = $request->validate([
+            'persona_id' => 'required',
+            'tipo' => 'required',
+            'numero_item' => 'nullable',
+            'cargo' => 'nullable',
+            'fecha_ingreso_aduana' => 'nullable|date',
+        ]);
 
         if ($request->hasFile('fotografia')) {
-            $path = $request->file('fotografia')->store('servidores', 'public');
-            $data['fotografia'] = $path;
+            $data['fotografia'] = $request->file('fotografia')->store('servidores', 'public');
         }
 
         ServidorPublico::create($data);
 
-        return redirect()->route('servidores.index')->with('success', 'Servidor registrado correctamente');
+        return redirect()->route('servidores.index')
+            ->with('success', 'Servidor registrado correctamente');
     }
 
     public function show($id)
@@ -48,22 +53,30 @@ class ServidorPublicoController extends Controller
     public function update(Request $request, $id)
     {
         $servidor = ServidorPublico::findOrFail($id);
-        $data = $request->all();
+
+        $data = $request->validate([
+            'persona_id' => 'required',
+            'tipo' => 'required',
+            'numero_item' => 'nullable',
+            'cargo' => 'nullable',
+            'fecha_ingreso_aduana' => 'nullable|date',
+        ]);
 
         if ($request->hasFile('fotografia')) {
-            $path = $request->file('fotografia')->store('servidores', 'public');
-            $data['fotografia'] = $path;
+            $data['fotografia'] = $request->file('fotografia')->store('servidores', 'public');
         }
 
         $servidor->update($data);
 
-        return redirect()->route('servidores.index')->with('success', 'Actualizado correctamente');
+        return redirect()->route('servidores.index')
+            ->with('success', 'Actualizado correctamente');
     }
 
     public function destroy($id)
     {
         ServidorPublico::destroy($id);
-        return redirect()->route('servidores.index')->with('success', 'Eliminado correctamente');
-    }
 
+        return redirect()->route('servidores.index')
+            ->with('success', 'Eliminado correctamente');
+    }
 }
