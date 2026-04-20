@@ -15,7 +15,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ url('/servidores') }}">
+            <a class="navbar-brand" href="{{ Request::is('servidores') ? url('/') : url('/servidores') }}">
                 Sistema Aduana - Gerencia Regional La Paz
             </a>
         </div>
