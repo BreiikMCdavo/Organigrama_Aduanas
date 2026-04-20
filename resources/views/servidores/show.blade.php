@@ -13,11 +13,7 @@
 
                 {{-- Título unidad --}}
                 <div class="unidad-titulo">
-                    @if($servidor->tipo === 'item')
-                        UNIDAD ADMINISTRATIVA
-                    @else
-                        UNIDAD JURÍDICA
-                    @endif
+                    {{ $servidor->unidad ?? ($servidor->tipo === 'item' ? 'UNIDAD ADMINISTRATIVA' : 'UNIDAD JURÍDICA') }}
                 </div>
 
                 {{-- Foto --}}
@@ -92,16 +88,39 @@
                 @endif
 
                 {{-- Botón volver --}}
-                <a href="{{ route('servidores.index') }}" class="btn-volver">Volver al Organigrama</a>
+                <a href="{{ route('index') }}" class="btn-volver">Volver al Organigrama</a>
 
             </div>
 
             {{-- Acciones debajo de la tarjeta --}}
             <div class="d-flex gap-2 mt-3 justify-content-center">
                 <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                <form action="{{ route('servidores.destroy', $servidor->id) }}" method="POST" onsubmit="return confirm('¿Eliminar este servidor?')">
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar">
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Modal confirmación eliminar --}}
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">⚠️ Confirmar eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro que deseas eliminar a
+                <strong>{{ $servidor->nombre }} {{ $servidor->apellido_paterno }}</strong>?
+                <br><small class="text-muted">Esta acción no se puede deshacer.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <form action="{{ route('servidores.destroy', $servidor->id) }}" method="POST">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    <button type="submit" class="btn btn-danger btn-sm">Sí, eliminar</button>
                 </form>
             </div>
         </div>
