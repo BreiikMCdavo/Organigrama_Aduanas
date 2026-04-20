@@ -9,9 +9,12 @@ return new class extends Migration {
     {
         Schema::table('servidores_publicos', function (Blueprint $table) {
 
-            $table->index('unidad', 'idx_unidad');
-            $table->index('sub_unidad', 'idx_sub_unidad');
-            $table->index('numero_item', 'idx_numero_item');
+            $indexes = collect(DB::select("SHOW INDEX FROM servidores_publicos"))
+                ->pluck('Key_name')->toArray();
+
+            if (!in_array('idx_unidad', $indexes))     $table->index('unidad', 'idx_unidad');
+            if (!in_array('idx_sub_unidad', $indexes)) $table->index('sub_unidad', 'idx_sub_unidad');
+            if (!in_array('idx_numero_item', $indexes)) $table->index('numero_item', 'idx_numero_item');
 
         });
     }
