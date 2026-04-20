@@ -27,17 +27,6 @@ function mostrarInfo(area){
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
-                                    <h6>Consultorías</h6>
-                                    <span class="badge bg-success">
-                                        ${data.consultorias}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
                                     <h6>Acefalías</h6>
                                     <span class="badge bg-danger">
                                         ${data.acefalias}

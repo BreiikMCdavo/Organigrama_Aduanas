@@ -21,9 +21,6 @@ class OrganigramaController extends Controller
     // ITEMS (con nombre, no acefalía)
     $items = $personal->filter(fn($p) => $p->tipo === 'item' && !$p->acefalia)->count();
 
-    // CONSULTORIAS (con nombre, no acefalía)
-    $consultorias = $personal->filter(fn($p) => $p->tipo === 'consultoria' && !$p->acefalia)->count();
-
     // ACEFALIAS
     $acefalias = $personal->filter(fn($p) => (bool) $p->acefalia)->count();
 
@@ -37,10 +34,9 @@ class OrganigramaController extends Controller
         });
 
     return response()->json([
-        'items'        => $items,
-        'consultorias' => $consultorias,
-        'acefalias'    => $acefalias,
-        'cargos'       => $cargos
+        'items'     => $items,
+        'acefalias' => $acefalias,
+        'cargos'    => $cargos
     ]);
 }
 }
