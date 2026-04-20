@@ -41,16 +41,21 @@ return new class extends Migration {
             $table->string('casos_especiales_grado', 10)->nullable()->comment('Grado casos especiales');
             $table->text('discapacidad_desc')->nullable()->comment('Descripción discapacidad Ley 223');
             $table->string('discapacidad_grado', 10)->nullable()->comment('Grado discapacidad');
+
             /* NUEVOS CAMPOS */
             $table->string('unidad', 150)
                 ->nullable()
+                ->index()
                 ->comment('Unidad del servidor público');
 
             $table->string('sub_unidad', 150)
                 ->nullable()
+                ->index()
                 ->comment('Sub unidad del servidor público');
+                
             $table->timestamps();
         });
+
     }
 
     public function down(): void

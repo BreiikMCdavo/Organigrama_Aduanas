@@ -100,10 +100,26 @@
                                                 Aduana Aeropuerto El Alto
                                             </option>
 
-                                            <option value="Administración Aduana Zona Franca">
-                                                Administración Aduana Zona Franca
+                                            <option value="Administración Aduana Zona Franca Industrial Patacamaya">
+                                                Administración Aduana Zona Franca Industrial Patacamaya
                                             </option>
 
+                                            <option value="Administración Aduana Frontera Desaguadero">
+                                                Administración Aduana Frontera Desaguadero
+                                            </option>
+
+                                            <option value="Zona Franca Comercial / Frontera Cobija">
+                                                Zona Franca Comercial / Frontera Cobija
+                                            </option>
+
+                                            <option value="Agencia Aduana Exterior Matarani">
+                                                Agencia Aduana Exterior Matarani
+                                            </option>
+
+                                            <option value="Administración Aduana Frontera Charaña">
+                                                Administración Aduana Frontera Charaña
+                                            </option>
+                                            
                                         </select>
                                     </div>
 
@@ -413,12 +429,38 @@ function cargarSubUnidades() {
             "Administración"
         ],
 
-        "Administración Aduana Zona Franca": [
-            "Operaciones",
-            "Control",
-            "Administración"
-        ]
+ 
+        "Administración Aduana Zona Franca Industrial Patacamaya": [
+        "Operaciones",
+        "Control",
+        "Administración"
+    ],
 
+    "Administración Aduana Frontera Desaguadero": [
+        "Control Fronterizo",
+        "Despachos",
+        "Administración"
+    ],
+
+    "Zona Franca Comercial / Frontera Cobija": [
+        "CEBAF",
+        "Puente Nuevo",
+        "Puente Viejo",
+        "Puerto Acosta",
+        "Kasani"
+    ],
+
+    "Agencia Aduana Exterior Matarani": [
+        "Operaciones",
+        "Despachos",
+        "Administración"
+    ],
+
+    "Administración Aduana Frontera Charaña": [
+        "Control",
+        "Despachos",
+        "Administración"
+    ],
     };
 
     if (datos[unidad]) {

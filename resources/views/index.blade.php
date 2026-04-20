@@ -26,10 +26,13 @@
         <!-- <div class="row g-3 mb-3"> -->
         <div class="row nivel-hijos g-3 mb-3">
 
+            <!-- UNIDAD ADMINISTRATIVA -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#admin">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#admin"
+                    onclick="mostrarInfo('Unidad Administrativa')">
                     Unidad Administrativa
                 </button>
+
                 <div id="admin" class="collapse mt-2">
                     <div class="sub-box" onclick="mostrarInfo('Contabilidad')">Contabilidad</div>
                     <div class="sub-box" onclick="mostrarInfo('Activos Fijos')">Activos Fijos</div>
@@ -39,25 +42,40 @@
                 </div>
             </div>
 
+            <!-- UNIDAD FISCALIZACIÓN -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#fiscal">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#fiscal"
+                    onclick="mostrarInfo('Unidad Fiscalización')">
                     Unidad Fiscalización
                 </button>
+
                 <div id="fiscal" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Fiscalizaciones posteriores')">Fiscalizaciones posteriores
+                    <div class="sub-box" onclick="mostrarInfo('Fiscalizaciones posteriores')">
+                        Fiscalizaciones posteriores
                     </div>
-                    <div class="sub-box" onclick="mostrarInfo('Controles diferidos')">Controles diferidos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Controles diferidos')">
+                        Controles diferidos
+                    </div>
                 </div>
             </div>
 
+            <!-- UNIDAD JURÍDICA -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#juridica">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#juridica"
+                    onclick="mostrarInfo('Unidad Jurídica')">
                     Unidad Jurídica
                 </button>
+
                 <div id="juridica" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Cobranza coactiva')">Cobranza coactiva</div>
-                    <div class="sub-box" onclick="mostrarInfo('Técnica jurídica')">Técnica jurídica</div>
-                    <div class="sub-box" onclick="mostrarInfo('Procesos administrativos')">Procesos administrativos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Cobranza coactiva')">
+                        Cobranza coactiva
+                    </div>
+                    <div class="sub-box" onclick="mostrarInfo('Técnica jurídica')">
+                        Técnica jurídica
+                    </div>
+                    <div class="sub-box" onclick="mostrarInfo('Procesos administrativos')">
+                        Procesos administrativos
+                    </div>
                 </div>
             </div>
 
@@ -73,9 +91,11 @@
 
             <!-- INTERIOR LA PAZ -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#interior">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#interior"
+                    onclick="mostrarInfo('Administración Aduana Interior La Paz')">
                     Administración Aduana Interior La Paz
                 </button>
+
                 <div id="interior" class="collapse mt-2">
                     <div class="sub-box" onclick="mostrarInfo('SPCC (Comisos)')">SPCC (Comisos)</div>
                     <div class="sub-box" onclick="mostrarInfo('Disposición de mercancías')">Disposición de mercancías</div>
@@ -86,97 +106,112 @@
 
             <!-- GUAYARAMERIN -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#guayaramerin">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#guayaramerin"
+                    onclick="mostrarInfo('Aduana Frontera Guayaramerín')">
                     Aduana Frontera Guayaramerín
                 </button>
+
                 <div id="guayaramerin" class="collapse mt-2">
-                    <div class="sub-box">Control Operativo</div>
-                    <div class="sub-box">Despachos</div>
-                    <div class="sub-box">Administración</div>
+                    <div class="sub-box" onclick="mostrarInfo('Control Operativo')">Control Operativo</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos')">Despachos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Administración')">Administración</div>
                 </div>
             </div>
 
             <!-- AEROPUERTO -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#aeropuerto">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#aeropuerto"
+                    onclick="mostrarInfo('Aduana Aeropuerto El Alto')">
                     Aduana Aeropuerto El Alto
                 </button>
+
                 <div id="aeropuerto" class="collapse mt-2">
-                    <div class="sub-box">Carga Aérea</div>
-                    <div class="sub-box">Equipajes</div>
-                    <div class="sub-box">Administración</div>
+                    <div class="sub-box" onclick="mostrarInfo('Carga Aérea')">Carga Aérea</div>
+                    <div class="sub-box" onclick="mostrarInfo('Equipajes')">Equipajes</div>
+                    <div class="sub-box" onclick="mostrarInfo('Administración')">Administración</div>
                 </div>
             </div>
 
             <!-- PATACAMAYA -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#patacamaya">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#patacamaya"
+                    onclick="mostrarInfo('Administración Aduana Zona Franca Industrial Patacamaya')">
                     Administración Aduana Zona Franca Industrial Patacamaya
                 </button>
+
                 <div id="patacamaya" class="collapse mt-2">
-                    <div class="sub-box">Operaciones</div>
-                    <div class="sub-box">Control</div>
-                    <div class="sub-box">Administración</div>
+                    <div class="sub-box" onclick="mostrarInfo('Operaciones')">Operaciones</div>
+                    <div class="sub-box" onclick="mostrarInfo('Control')">Control</div>
+                    <div class="sub-box" onclick="mostrarInfo('Administración')">Administración</div>
                 </div>
             </div>
 
             <!-- DESAGUADERO -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#desaguadero">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#desaguadero"
+                    onclick="mostrarInfo('Administración Aduana Frontera Desaguadero')">
                     Administración Aduana Frontera Desaguadero
                 </button>
+
                 <div id="desaguadero" class="collapse mt-2">
-                    <div class="sub-box">Control Fronterizo</div>
-                    <div class="sub-box">Despachos</div>
-                    <div class="sub-box">Administración</div>
+                    <div class="sub-box" onclick="mostrarInfo('Control Fronterizo')">Control Fronterizo</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos')">Despachos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Administración')">Administración</div>
                 </div>
             </div>
 
             <!-- COBIJA -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#cobija">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#cobija"
+                    onclick="mostrarInfo('Zona Franca Comercial / Frontera Cobija')">
                     Zona Franca Comercial / Frontera Cobija
                 </button>
+                
                 <div id="cobija" class="collapse mt-2">
-                    <div class="sub-box">Comercial</div>
-                    <div class="sub-box">Control</div>
-                    <div class="sub-box">Administración</div>
+                    <div class="sub-box" onclick="mostrarInfo('CEBAF')">CEBAF</div>
+                    <div class="sub-box" onclick="mostrarInfo('Puente Nuevo')">Puente Nuevo</div>
+                    <div class="sub-box" onclick="mostrarInfo('Puente Viejo')">Puente Viejo</div>
+                    <div class="sub-box" onclick="mostrarInfo('Puerto Acosta')">Puerto Acosta</div>
+                    <div class="sub-box" onclick="mostrarInfo('Kasani')">Kasani</div>
                 </div>
             </div>
 
             <!-- MATARANI -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#matarani">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#matarani"
+                    onclick="mostrarInfo('Agencia Aduana Exterior Matarani')">
                     Agencia Aduana Exterior Matarani
                 </button>
+
                 <div id="matarani" class="collapse mt-2">
-                    <div class="sub-box">Operaciones</div>
-                    <div class="sub-box">Despachos</div>
-                    <div class="sub-box">Administración</div>
+                    <div class="sub-box" onclick="mostrarInfo('Operaciones')">Operaciones</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos')">Despachos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Administración')">Administración</div>
                 </div>
             </div>
 
             <!-- CHARANA -->
             <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#charana">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#charana"
+                    onclick="mostrarInfo('Administración Aduana Frontera Charaña')">
                     Administración Aduana Frontera Charaña
                 </button>
+
                 <div id="charana" class="collapse mt-2">
-                    <div class="sub-box">Control</div>
-                    <div class="sub-box">Despachos</div>
-                    <div class="sub-box">Administración</div>
+                    <div class="sub-box" onclick="mostrarInfo('Control')">Control</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos')">Despachos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Administración')">Administración</div>
                 </div>
             </div>
 
         </div>
-    </div>
 
 @endsection
 
-@section('js')
-    <script>
-        const servidores = @json($servidores ?? []);
-    </script>
+    @section('js')
+        <script>
+            const servidores = @json($servidores ?? []);
+        </script>
 
-    <script src="{{ asset('js/organigrama.js') }}"></script>
-@endsection
+        <script src="{{ asset('js/organigrama.js') }}"></script>
+    @endsection

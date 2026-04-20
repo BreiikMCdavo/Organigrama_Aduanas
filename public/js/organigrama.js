@@ -58,6 +58,7 @@ function mostrarInfo(area){
                 document.getElementById('modalInfo')
             ).show();
         });
+        
 }
 function verPersonal(area){
 

@@ -16,28 +16,26 @@ class ServidorPublicoController extends Controller
 
             if ($area === 'GERENCIA REGIONAL LA PAZ - GRLPZ') {
 
-                // Mostrar todos
-                $servidores = ServidorPublico::orderBy('created_at', 'desc')->get();
+                $servidores = ServidorPublico::orderBy('created_at', 'desc')
+                    ->paginate(25);
 
             } else {
 
-                // Filtrar por unidad o sub_unidad
                 $servidores = ServidorPublico::where('unidad', $area)
                     ->orWhere('sub_unidad', $area)
                     ->orderBy('created_at', 'desc')
-                    ->get();
+                    ->paginate(25);
             }
 
         } else {
 
-            // Mostrar todos
-            $servidores = ServidorPublico::orderBy('created_at', 'desc')->get();
+            $servidores = ServidorPublico::orderBy('created_at', 'desc')
+                ->paginate(25);
 
         }
 
         return view('servidores.index', compact('servidores'));
     }
-
     public function create()
     {
         return view('servidores.create');
