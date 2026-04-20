@@ -13,11 +13,49 @@
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{{ Request::is('servidores') ? url('/') : url('/servidores') }}">
-                Sistema Aduana - Gerencia Regional La Paz
-            </a>
+    <nav class="navbar navbar-dark" style="background: linear-gradient(90deg, #0a1628 0%, #1a3a6b 100%);">
+        <div class="container-fluid px-4" style="min-height:64px;">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <!-- LOGO -->
+                <a href="{{ url('/index') }}"
+                    style="background:#fff; border-radius:8px; padding:6px 12px; display:flex; align-items:center;">
+
+                    <img src="{{ asset('img/logo_aduana.png') }}" alt="Aduana Nacional"
+                        style="height:46px;width:auto;object-fit:contain;">
+
+                </a>
+
+                <!-- TEXTO SISTEMA -->
+                <a class="navbar-brand d-flex flex-column lh-sm text-decoration-none"
+                    href="{{ Request::is('servidores*') ? url('/') : url('/servidores') }}">
+
+                    <span style="font-size:0.7rem;letter-spacing:2px;color:#a0b8d8;text-transform:uppercase;">
+                        Sistema de Gestión
+                    </span>
+
+                    <span style="font-size:1rem;font-weight:700;color:#fff;">
+                        Gerencia Regional La Paz
+                    </span>
+
+                </a>
+
+            </div>
+
+            <!-- BOTONES DERECHA -->
+            <div class="d-flex gap-2">
+                <a href="{{ route('servidores.index') }}" class="btn btn-sm"
+                    style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);">
+                    Servidores
+                </a>
+
+                <a href="{{ route('servidores.create') }}" class="btn btn-sm"
+                    style="background:#1565c0;color:#fff;border:none;">
+                    + Agregar
+                </a>
+            </div>
+
         </div>
     </nav>
 
