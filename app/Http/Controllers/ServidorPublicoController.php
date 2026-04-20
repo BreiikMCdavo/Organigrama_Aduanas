@@ -8,9 +8,33 @@ use Illuminate\Support\Facades\Storage;
 
 class ServidorPublicoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $servidores = ServidorPublico::orderBy('created_at', 'desc')->get();
+        $area = $request->area;
+
+        if ($area) {
+
+            if ($area === 'GERENCIA REGIONAL LA PAZ - GRLPZ') {
+
+                // Mostrar todos
+                $servidores = ServidorPublico::orderBy('created_at', 'desc')->get();
+
+            } else {
+
+                // Filtrar por unidad o sub_unidad
+                $servidores = ServidorPublico::where('unidad', $area)
+                    ->orWhere('sub_unidad', $area)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+
+        } else {
+
+            // Mostrar todos
+            $servidores = ServidorPublico::orderBy('created_at', 'desc')->get();
+
+        }
+
         return view('servidores.index', compact('servidores'));
     }
 
@@ -22,22 +46,22 @@ class ServidorPublicoController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'tipo'             => 'required|in:item,consultoria',
-            'nombre'           => 'required|string|max:100',
+            'tipo' => 'required|in:item,consultoria',
+            'nombre' => 'required|string|max:100',
             'apellido_paterno' => 'required|string|max:100',
             'apellido_materno' => 'nullable|string|max:100',
-            'fotografia'       => 'nullable|image|max:2048',
+            'fotografia' => 'nullable|image|max:2048',
         ];
 
         if ($request->tipo === 'item') {
-            $rules['numero_item']       = 'required|string|max:50';
+            $rules['numero_item'] = 'required|string|max:50';
             $rules['fecha_ingreso_aduana'] = 'nullable|date';
-            $rules['fecha_inicio_cargo']   = 'nullable|date';
+            $rules['fecha_inicio_cargo'] = 'nullable|date';
         } else {
-            $rules['contrato_numero']      = 'required|string|max:100';
+            $rules['contrato_numero'] = 'required|string|max:100';
             $rules['fecha_ingreso_aduana'] = 'nullable|date';
             $rules['fecha_inicio_contrato'] = 'nullable|date';
-            $rules['fecha_fin_contrato']    = 'nullable|date';
+            $rules['fecha_fin_contrato'] = 'nullable|date';
         }
 
         $validated = $request->validate($rules);
@@ -51,7 +75,7 @@ class ServidorPublicoController extends Controller
         ServidorPublico::create($data);
 
         return redirect()->route('servidores.index')
-                         ->with('success', 'Servidor público registrado correctamente.');
+            ->with('success', 'Servidor público registrado correctamente.');
     }
 
     public function show($id)
@@ -71,21 +95,21 @@ class ServidorPublicoController extends Controller
         $servidor = ServidorPublico::findOrFail($id);
 
         $rules = [
-            'nombre'           => 'required|string|max:100',
+            'nombre' => 'required|string|max:100',
             'apellido_paterno' => 'required|string|max:100',
             'apellido_materno' => 'nullable|string|max:100',
-            'fotografia'       => 'nullable|image|max:2048',
+            'fotografia' => 'nullable|image|max:2048',
         ];
 
         if ($servidor->tipo === 'item') {
-            $rules['numero_item']          = 'required|string|max:50';
+            $rules['numero_item'] = 'required|string|max:50';
             $rules['fecha_ingreso_aduana'] = 'nullable|date';
-            $rules['fecha_inicio_cargo']   = 'nullable|date';
+            $rules['fecha_inicio_cargo'] = 'nullable|date';
         } else {
-            $rules['contrato_numero']       = 'required|string|max:100';
-            $rules['fecha_ingreso_aduana']  = 'nullable|date';
+            $rules['contrato_numero'] = 'required|string|max:100';
+            $rules['fecha_ingreso_aduana'] = 'nullable|date';
             $rules['fecha_inicio_contrato'] = 'nullable|date';
-            $rules['fecha_fin_contrato']    = 'nullable|date';
+            $rules['fecha_fin_contrato'] = 'nullable|date';
         }
 
         $request->validate($rules);
@@ -103,7 +127,7 @@ class ServidorPublicoController extends Controller
         $servidor->update($data);
 
         return redirect()->route('servidores.show', $servidor->id)
-                         ->with('success', 'Servidor actualizado correctamente.');
+            ->with('success', 'Servidor actualizado correctamente.');
     }
 
     public function destroy($id)
@@ -117,6 +141,6 @@ class ServidorPublicoController extends Controller
         $servidor->delete();
 
         return redirect()->route('servidores.index')
-                         ->with('success', 'Servidor eliminado correctamente.');
+            ->with('success', 'Servidor eliminado correctamente.');
     }
 }

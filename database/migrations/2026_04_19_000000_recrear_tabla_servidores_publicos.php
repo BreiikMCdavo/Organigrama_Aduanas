@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         // Eliminar la tabla vieja con todas sus columnas desordenadas
@@ -42,7 +41,14 @@ return new class extends Migration
             $table->string('casos_especiales_grado', 10)->nullable()->comment('Grado casos especiales');
             $table->text('discapacidad_desc')->nullable()->comment('Descripción discapacidad Ley 223');
             $table->string('discapacidad_grado', 10)->nullable()->comment('Grado discapacidad');
+            /* NUEVOS CAMPOS */
+            $table->string('unidad', 150)
+                ->nullable()
+                ->comment('Unidad del servidor público');
 
+            $table->string('sub_unidad', 150)
+                ->nullable()
+                ->comment('Sub unidad del servidor público');
             $table->timestamps();
         });
     }

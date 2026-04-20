@@ -20,6 +20,9 @@ class ServidorPublico extends Model
         'fotografia',
         'fecha_ingreso_aduana',
         'designacion',
+        /* NUEVOS CAMPOS */
+        'unidad',
+        'sub_unidad',
         // Datos ÍTEM
         'numero_item',
         'cite_memorandum',
@@ -40,9 +43,9 @@ class ServidorPublico extends Model
     ];
 
     protected $casts = [
-        'fecha_ingreso_aduana'  => 'date',
-        'fecha_inicio_cargo'    => 'date',
+        'fecha_ingreso_aduana' => 'date',
+        'fecha_inicio_cargo' => 'date',
         'fecha_inicio_contrato' => 'date',
-        'fecha_fin_contrato'    => 'date',
+        'fecha_fin_contrato' => 'date',
     ];
 }
