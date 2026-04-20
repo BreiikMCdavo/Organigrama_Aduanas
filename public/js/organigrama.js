@@ -16,9 +16,20 @@ function mostrarInfo(area){
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
-                                    <h6>Total Items</h6>
-                                    <span class="badge bg-success">
+                                    <h6>Total Ítems</h6>
+                                    <span class="badge bg-primary">
                                         ${data.items}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Consultorías</h6>
+                                    <span class="badge bg-success">
+                                        ${data.consultorias}
                                     </span>
                                 </div>
                             </div>

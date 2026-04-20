@@ -33,7 +33,14 @@
                         <div class="fw-bold">{{ $servidor->nombre }} {{ $servidor->apellido_paterno }}
                             {{ $servidor->apellido_materno }}</div>
                         <div class="text-muted small">
-                            @if($servidor->tipo === 'item')
+                            @if($servidor->acefalia)
+                                <span class="badge bg-danger me-1">ACEFALÍA</span>
+                                @if($servidor->tipo === 'item')
+                                    N° {{ $servidor->numero_item }} &bull; {{ $servidor->cargo }}
+                                @else
+                                    Contrato: {{ $servidor->contrato_numero }} &bull; {{ $servidor->cargo_consultoria }}
+                                @endif
+                            @elseif($servidor->tipo === 'item')
                                 <span class="badge bg-primary me-1">ÍTEM</span>
                                 N° {{ $servidor->numero_item }} &bull; {{ $servidor->cargo }} &bull; {{ $servidor->designacion }}
                             @else

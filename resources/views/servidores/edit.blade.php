@@ -63,6 +63,34 @@
                                 <input type="text" name="cargo" class="form-control form-control-sm" placeholder="Nombre del cargo..." value="{{ old('cargo', $servidor->cargo) }}">
                             </div>
 
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Unidad</label>
+                                    <select name="unidad" id="unidad" class="form-select form-select-sm" onchange="cargarSubUnidades()">
+                                        <option value="">Seleccionar Unidad</option>
+                                        @foreach([
+                                            'GERENCIA REGIONAL LA PAZ - GRLPZ',
+                                            'Unidad Administrativa','Unidad Fiscalización','Unidad Jurídica',
+                                            'Administración Aduana Interior La Paz','Aduana Frontera Guayaramerín',
+                                            'Aduana Aeropuerto El Alto','Administración Aduana Zona Franca',
+                                            'Administración Aduana Zona Franca Industrial Patacamaya',
+                                            'Administración Aduana Frontera Desaguadero',
+                                            'Zona Franca Comercial / Frontera Cobija',
+                                            'Agencia Aduana Exterior Matarani',
+                                            'Administración Aduana Frontera Charaña',
+                                        ] as $u)
+                                            <option value="{{ $u }}" {{ old('unidad', $servidor->unidad)==$u?'selected':'' }}>{{ $u }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Sub-Unidad</label>
+                                    <select name="sub_unidad" id="sub_unidad" class="form-select form-select-sm">
+                                        <option value="">Seleccionar Sub-Unidad</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="row g-2 mb-3">
                                 <div class="col-6">
                                     <label class="form-label small mb-1">Fecha de ingreso a la Aduana</label>
@@ -107,6 +135,34 @@
 
                             <div class="mb-2">
                                 <input type="text" name="cargo_consultoria" class="form-control form-control-sm" placeholder="Descripción del cargo..." value="{{ old('cargo_consultoria', $servidor->cargo_consultoria) }}">
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Unidad</label>
+                                    <select name="unidad" id="unidad_cons" class="form-select form-select-sm" onchange="cargarSubUnidadesCons()">
+                                        <option value="">Seleccionar Unidad</option>
+                                        @foreach([
+                                            'GERENCIA REGIONAL LA PAZ - GRLPZ',
+                                            'Unidad Administrativa','Unidad Fiscalización','Unidad Jurídica',
+                                            'Administración Aduana Interior La Paz','Aduana Frontera Guayaramerín',
+                                            'Aduana Aeropuerto El Alto','Administración Aduana Zona Franca',
+                                            'Administración Aduana Zona Franca Industrial Patacamaya',
+                                            'Administración Aduana Frontera Desaguadero',
+                                            'Zona Franca Comercial / Frontera Cobija',
+                                            'Agencia Aduana Exterior Matarani',
+                                            'Administración Aduana Frontera Charaña',
+                                        ] as $u)
+                                            <option value="{{ $u }}" {{ old('unidad', $servidor->unidad)==$u?'selected':'' }}>{{ $u }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Sub-Unidad</label>
+                                    <select name="sub_unidad" id="sub_unidad_cons" class="form-select form-select-sm">
+                                        <option value="">Seleccionar Sub-Unidad</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="row g-2 mb-3">
@@ -194,5 +250,65 @@ function previewEdit(event) {
         img.style.display = 'inline-block';
     }
 }
+
+const subUnidadesData = {
+    "GERENCIA REGIONAL LA PAZ - GRLPZ": ["ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
+    "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales"],
+    "Unidad Fiscalización": ["Fiscalizaciones posteriores","Controles diferidos"],
+    "Unidad Jurídica": ["Cobranza coactiva","Técnica jurídica","Procesos administrativos"],
+    "Administración Aduana Interior La Paz": ["SPCC (Comisos)","Disposición de mercancías","Despachos","Gestión"],
+    "Aduana Frontera Guayaramerín": ["Operaciones","Control","Administración"],
+    "Aduana Aeropuerto El Alto": ["Carga Aérea","Equipajes","Administración"],
+    "Administración Aduana Zona Franca": ["Operaciones","Control","Administración"],
+    "Administración Aduana Zona Franca Industrial Patacamaya": ["Operaciones","Control","Administración"],
+    "Administración Aduana Frontera Desaguadero": ["Control Fronterizo","Despachos","Administración"],
+    "Zona Franca Comercial / Frontera Cobija": ["CEBAF","Puente Nuevo","Puente Viejo","Puerto Acosta","Kasani"],
+    "Agencia Aduana Exterior Matarani": ["Operaciones","Despachos","Administración"],
+    "Administración Aduana Frontera Charaña": ["Control","Despachos","Administración"],
+};
+
+function llenarSubUnidades(unidad, selectEl, valorActual) {
+    selectEl.innerHTML = '<option value="">Seleccionar Sub-Unidad</option>';
+    if (subUnidadesData[unidad]) {
+        subUnidadesData[unidad].forEach(function(sub) {
+            const opt = document.createElement('option');
+            opt.value = sub;
+            opt.text = sub;
+            if (sub === valorActual) opt.selected = true;
+            selectEl.appendChild(opt);
+        });
+    }
+}
+
+function cargarSubUnidades() {
+    llenarSubUnidades(
+        document.getElementById('unidad').value,
+        document.getElementById('sub_unidad'),
+        ''
+    );
+}
+
+function cargarSubUnidadesCons() {
+    llenarSubUnidades(
+        document.getElementById('unidad_cons').value,
+        document.getElementById('sub_unidad_cons'),
+        ''
+    );
+}
+
+// Al cargar la página, pre-poblar sub-unidades con el valor actual
+document.addEventListener('DOMContentLoaded', function () {
+    const subActual = "{{ old('sub_unidad', $servidor->sub_unidad) }}";
+
+    @if($servidor->tipo === 'item')
+        const unidadEl = document.getElementById('unidad');
+        const subEl    = document.getElementById('sub_unidad');
+        if (unidadEl && unidadEl.value) llenarSubUnidades(unidadEl.value, subEl, subActual);
+    @else
+        const unidadEl = document.getElementById('unidad_cons');
+        const subEl    = document.getElementById('sub_unidad_cons');
+        if (unidadEl && unidadEl.value) llenarSubUnidades(unidadEl.value, subEl, subActual);
+    @endif
+});
 </script>
 @endsection

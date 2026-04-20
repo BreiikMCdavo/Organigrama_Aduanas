@@ -45,6 +45,8 @@ class ServidorPublicoController extends Controller
     {
         $rules = [
             'tipo'             => 'required|in:item,consultoria',
+            'unidad'           => 'required|string|max:150',
+            'sub_unidad'       => 'required|string|max:150',
             'nombre'           => 'nullable|regex:/^[\pL\s]+$/u|max:100',
             'apellido_paterno' => 'nullable|regex:/^[\pL\s]+$/u|max:100',
             'apellido_materno' => 'nullable|regex:/^[\pL\s]+$/u|max:100',
@@ -52,38 +54,39 @@ class ServidorPublicoController extends Controller
         ];
 
         if ($request->tipo === 'item') {
-            $rules['numero_item']        = 'required|digits_between:1,10';
-            $rules['cargo']              = 'required|string|max:150';
+            $rules['numero_item']          = 'required|digits_between:1,10';
+            $rules['cargo']                = 'required|string|max:150';
             $rules['fecha_ingreso_aduana'] = 'nullable|date';
             $rules['fecha_inicio_cargo']   = 'nullable|date';
         } else {
-            $rules['nombre']           = 'required|regex:/^[\pL\s]+$/u|max:100';
-            $rules['apellido_paterno'] = 'required|regex:/^[\pL\s]+$/u|max:100';
-            $rules['contrato_numero']  = 'required|string|max:100';
+            $rules['contrato_numero']       = 'required|string|max:100';
+            $rules['cargo_consultoria']     = 'required|string|max:150';
+            $rules['nombre']                = 'nullable|regex:/^[\pL\s]+$/u|max:100';
+            $rules['apellido_paterno']      = 'nullable|regex:/^[\pL\s]+$/u|max:100';
             $rules['fecha_ingreso_aduana']  = 'nullable|date';
             $rules['fecha_inicio_contrato'] = 'nullable|date';
             $rules['fecha_fin_contrato']    = 'nullable|date';
         }
 
         $request->validate($rules, [
-            'numero_item.required'       => 'El N° de Ítem es obligatorio.',
-            'numero_item.digits_between' => 'El N° de Ítem debe contener solo números.',
-            'cargo.required'             => 'El cargo es obligatorio.',
-            'nombre.regex'               => 'El nombre solo debe contener letras.',
-            'apellido_paterno.regex'     => 'El apellido paterno solo debe contener letras.',
-            'apellido_materno.regex'     => 'El apellido materno solo debe contener letras.',
-            'nombre.required'            => 'El nombre es obligatorio.',
-            'apellido_paterno.required'  => 'El apellido paterno es obligatorio.',
-            'contrato_numero.required'   => 'El número de contrato es obligatorio.',
+            'unidad.required'              => 'La unidad es obligatoria.',
+            'sub_unidad.required'          => 'La sub-unidad es obligatoria.',
+            'numero_item.required'         => 'El N° de Ítem es obligatorio.',
+            'numero_item.digits_between'   => 'El N° de Ítem debe contener solo números.',
+            'cargo.required'               => 'El cargo es obligatorio.',
+            'contrato_numero.required'     => 'El número de contrato es obligatorio.',
+            'cargo_consultoria.required'   => 'El cargo de consultoría es obligatorio.',
+            'nombre.regex'                 => 'El nombre solo debe contener letras.',
+            'apellido_paterno.regex'       => 'El apellido paterno solo debe contener letras.',
+            'apellido_materno.regex'       => 'El apellido materno solo debe contener letras.',
+            'nombre.required'              => 'El nombre es obligatorio.',
+            'apellido_paterno.required'    => 'El apellido paterno es obligatorio.',
         ]);
 
         $data = $request->except('fotografia');
 
-        // Detectar acefalía: ítem sin datos personales
-        if ($request->tipo === 'item') {
-            $tieneNombre = !empty(trim($request->nombre ?? ''));
-            $data['acefalia'] = !$tieneNombre;
-        }
+        // Detectar acefalía: sin nombre = acefalía
+        $data['acefalia'] = empty(trim($request->nombre ?? ''));
 
         if ($request->hasFile('fotografia')) {
             $data['fotografia'] = $request->file('fotografia')->store('servidores', 'public');
@@ -112,6 +115,8 @@ class ServidorPublicoController extends Controller
         $servidor = ServidorPublico::findOrFail($id);
 
         $rules = [
+            'unidad'           => 'required|string|max:150',
+            'sub_unidad'       => 'required|string|max:150',
             'nombre'           => 'nullable|regex:/^[\pL\s]+$/u|max:100',
             'apellido_paterno' => 'nullable|regex:/^[\pL\s]+$/u|max:100',
             'apellido_materno' => 'nullable|regex:/^[\pL\s]+$/u|max:100',
@@ -124,33 +129,34 @@ class ServidorPublicoController extends Controller
             $rules['fecha_ingreso_aduana'] = 'nullable|date';
             $rules['fecha_inicio_cargo']   = 'nullable|date';
         } else {
-            $rules['nombre']           = 'required|regex:/^[\pL\s]+$/u|max:100';
-            $rules['apellido_paterno'] = 'required|regex:/^[\pL\s]+$/u|max:100';
             $rules['contrato_numero']       = 'required|string|max:100';
+            $rules['cargo_consultoria']     = 'required|string|max:150';
+            $rules['nombre']                = 'nullable|regex:/^[\pL\s]+$/u|max:100';
+            $rules['apellido_paterno']      = 'nullable|regex:/^[\pL\s]+$/u|max:100';
             $rules['fecha_ingreso_aduana']  = 'nullable|date';
             $rules['fecha_inicio_contrato'] = 'nullable|date';
             $rules['fecha_fin_contrato']    = 'nullable|date';
         }
 
         $request->validate($rules, [
-            'numero_item.required'       => 'El N° de Ítem es obligatorio.',
-            'numero_item.digits_between' => 'El N° de Ítem debe contener solo números.',
-            'cargo.required'             => 'El cargo es obligatorio.',
-            'nombre.regex'               => 'El nombre solo debe contener letras.',
-            'apellido_paterno.regex'     => 'El apellido paterno solo debe contener letras.',
-            'apellido_materno.regex'     => 'El apellido materno solo debe contener letras.',
-            'nombre.required'            => 'El nombre es obligatorio.',
-            'apellido_paterno.required'  => 'El apellido paterno es obligatorio.',
-            'contrato_numero.required'   => 'El número de contrato es obligatorio.',
+            'unidad.required'              => 'La unidad es obligatoria.',
+            'sub_unidad.required'          => 'La sub-unidad es obligatoria.',
+            'numero_item.required'         => 'El N° de Ítem es obligatorio.',
+            'numero_item.digits_between'   => 'El N° de Ítem debe contener solo números.',
+            'cargo.required'               => 'El cargo es obligatorio.',
+            'contrato_numero.required'     => 'El número de contrato es obligatorio.',
+            'cargo_consultoria.required'   => 'El cargo de consultoría es obligatorio.',
+            'nombre.regex'                 => 'El nombre solo debe contener letras.',
+            'apellido_paterno.regex'       => 'El apellido paterno solo debe contener letras.',
+            'apellido_materno.regex'       => 'El apellido materno solo debe contener letras.',
+            'nombre.required'              => 'El nombre es obligatorio.',
+            'apellido_paterno.required'    => 'El apellido paterno es obligatorio.',
         ]);
 
         $data = $request->except(['fotografia', '_token', '_method']);
 
         // Recalcular acefalía al editar
-        if ($servidor->tipo === 'item') {
-            $tieneNombre = !empty(trim($request->nombre ?? ''));
-            $data['acefalia'] = !$tieneNombre;
-        }
+        $data['acefalia'] = empty(trim($request->nombre ?? ''));
 
         if ($request->hasFile('fotografia')) {
             // Eliminar foto anterior si existe
