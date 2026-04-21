@@ -12,6 +12,7 @@
         <!-- PRIMER NIVEL -->
         <div class="zigzag-container mb-4">
 
+            <div class="box right" onclick="mostrarInfo('GERENTE')">GERENTE</div>
             <div class="box left" onclick="mostrarInfo('ASESORÍA')">ASESORÍA</div>
             <div class="box right" onclick="mostrarInfo('SECRETARIA')">SECRETARIA</div>
             <div class="box left" onclick="mostrarInfo('SISTEMAS')">SISTEMAS</div>

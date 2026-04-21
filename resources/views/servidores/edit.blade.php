@@ -252,7 +252,7 @@ function previewEdit(event) {
 }
 
 const subUnidadesData = {
-    "GERENCIA REGIONAL LA PAZ - GRLPZ": ["ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
+    "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
     "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales"],
     "Unidad Fiscalización": ["Fiscalizaciones posteriores","Controles diferidos"],
     "Unidad Jurídica": ["Cobranza coactiva","Técnica jurídica","Procesos administrativos"],
