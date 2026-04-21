@@ -325,7 +325,7 @@ function previewImg(event, previewId) {
 function llenarSubUnidades(unidad, selectEl) {
     selectEl.innerHTML = '<option value="">Seleccionar Sub-Unidad</option>';
     const datos = {
-        "GERENCIA REGIONAL LA PAZ - GRLPZ": ["ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
+        "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
         "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales","Responsable Administrativo Financiero","Auxiliar Unidad Administrativa"],
         "Unidad Fiscalización": ["Fiscalizaciones posteriores / Controles diferidos","Jefes Unidad Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización"],
         "Unidad Jurídica": ["Cobranza coactiva","Técnica jurídica","Procesos administrativos","Servicios Generales","Responsable Administrativo Jurídica","Auxiliar Unidad Jurídica"],
