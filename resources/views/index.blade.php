@@ -32,6 +32,7 @@
                     onclick="mostrarInfo('Unidad Administrativa')">
                     Unidad Administrativa
                 </button>
+                
 
                 <div id="admin" class="collapse mt-2">
                     <div class="sub-box" onclick="mostrarInfo('Responsable Administrativo Financiero')">Responsable Administrativo Financiero</div>
@@ -45,8 +46,13 @@
             </div>
 
             <!-- UNIDAD FISCALIZACIÓN -->
-            <div class="col-md-4">
-                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#fiscal">Unidad Fiscalización</button>
+             <div class="col-md-4">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#fiscal"
+                    onclick="mostrarInfo('Unidad Fiscalización')">
+                    Unidad Fiscalización
+                </button>
+            <!-- <div class="col-md-4">
+                <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#fiscal">Unidad Fiscalización</button> -->
 
                 <div id="fiscal" class="collapse mt-2">
                     <div class="sub-box" onclick="mostrarInfo('Jefes Unidad Fiscalización')">Jefes Unidad Fiscalización</div>
