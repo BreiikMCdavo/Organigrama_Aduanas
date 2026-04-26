@@ -111,6 +111,11 @@ class ServidorPublicoController extends Controller
 
         $data = $request->except(['fotografia', 'accion_duplicado', 'cargo_a_reemplazar', 'designacion_tipos']);
 
+        // Convertir checkboxes booleanos (HTML envía "on", BD necesita 0/1)
+        $data['asignacion_familiar_check'] = $request->boolean('asignacion_familiar_check');
+        $data['casos_especiales_check']    = $request->boolean('casos_especiales_check');
+        $data['discapacidad_check']        = $request->boolean('discapacidad_check');
+
         // Guardar designación como texto separado por comas
         $data['designacion'] = $request->designacion_tipos
             ? implode(', ', $request->designacion_tipos)
@@ -233,6 +238,11 @@ class ServidorPublicoController extends Controller
         ]);
 
         $data = $request->except(['fotografia', '_token', '_method', 'designacion_tipos']);
+
+        // Convertir checkboxes booleanos
+        $data['asignacion_familiar_check'] = $request->boolean('asignacion_familiar_check');
+        $data['casos_especiales_check']    = $request->boolean('casos_especiales_check');
+        $data['discapacidad_check']        = $request->boolean('discapacidad_check');
 
         // Guardar designación como texto separado por comas
         $data['designacion'] = $request->designacion_tipos

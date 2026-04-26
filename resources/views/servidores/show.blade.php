@@ -26,10 +26,14 @@
                 {{-- Datos principales --}}
                 @if($servidor->tipo === 'item')
                     <div class="dato-principal">
-                        <div class="label">
-                            N° Ítem: <span class="valor">{{ $servidor->numero_item ?? '—' }}</span>
-                            &nbsp;&nbsp; Cód. Funcionario: <span class="valor">{{ $servidor->cod_funcionario ?? '' }}</span>
-                            &nbsp;&nbsp; Escala Salarial: <span class="valor">{{ $servidor->escala_salarial ?? '' }}</span>
+                        <div class="valor" style="font-size:1rem;">N° Ítem: {{ $servidor->numero_item ?? '—' }}</div>
+                        <div style="font-size:0.78rem; color:#a0b8d8; margin-top:2px;">
+                            @if($servidor->cod_funcionario)
+                                Cód. Funcionario: <span style="color:#fff;">{{ $servidor->cod_funcionario }}</span>
+                            @endif
+                            @if($servidor->escala_salarial)
+                                &nbsp; Escala Salarial: <span style="color:#fff;">{{ $servidor->escala_salarial }} Bs.</span>
+                            @endif
                         </div>
                     </div>
                     <div class="dato-principal">
@@ -80,38 +84,32 @@
                 <div class="inamovilidad-titulo">Inamovilidad:</div>
 
                 @if($servidor->asignacion_familiar_desc)
-                <div class="inamovilidad-item">
-                    <span class="check-icon">☑</span>
-                    <span>Asignación Familiar: {{ $servidor->asignacion_familiar_desc }} &nbsp; Grado: <strong>{{ $servidor->asignacion_familiar_grado }}</strong></span>
+                <div class="inamovilidad-item" style="justify-content:space-between;">
+                    <span><span class="check-icon">☑</span> Asignación Familiar: {{ $servidor->asignacion_familiar_desc }}</span>
+                    <span style="color:#4fc3f7; white-space:nowrap;">Grado: <strong>{{ $servidor->asignacion_familiar_grado }}</strong></span>
                 </div>
                 @endif
 
                 @if($servidor->casos_especiales_desc)
-                <div class="inamovilidad-item">
-                    <span class="check-icon">☑</span>
-                    <span>Casos especiales: {{ $servidor->casos_especiales_desc }} &nbsp; Grado: <strong>{{ $servidor->casos_especiales_grado }}</strong></span>
+                <div class="inamovilidad-item" style="justify-content:space-between;">
+                    <span><span class="check-icon">☑</span> Casos especiales: {{ $servidor->casos_especiales_desc }}</span>
+                    <span style="color:#4fc3f7; white-space:nowrap;">Grado: <strong>{{ $servidor->casos_especiales_grado }}</strong></span>
                 </div>
                 @endif
 
                 @if($servidor->discapacidad_desc)
-                <div class="inamovilidad-item">
-                    <span class="check-icon">☑</span>
+                <div class="inamovilidad-item" style="justify-content:space-between; align-items:flex-start;">
                     <span>
-                        Discapacidad Ley N° 223: {{ $servidor->discapacidad_desc }} &nbsp; Grado: <strong>{{ $servidor->discapacidad_grado }}</strong>
+                        <span class="check-icon">☑</span> Discapacidad Ley N° 223: {{ $servidor->discapacidad_desc }}
                         @if($servidor->discapacidad_tipo || $servidor->discapacidad_carnet || $servidor->discapacidad_vence)
                         <div class="mt-1 ms-2 d-flex flex-column" style="font-size:0.8rem;color:#c8daf0;">
-                            @if($servidor->discapacidad_tipo)
-                                <span>Tipo: {{ $servidor->discapacidad_tipo }}</span>
-                            @endif
-                            @if($servidor->discapacidad_carnet)
-                                <span>Carnet: {{ $servidor->discapacidad_carnet }}</span>
-                            @endif
-                            @if($servidor->discapacidad_vence)
-                                <span>Vence: {{ \Carbon\Carbon::parse($servidor->discapacidad_vence)->format('d/m/Y') }}</span>
-                            @endif
+                            @if($servidor->discapacidad_tipo)<span>Tipo: {{ $servidor->discapacidad_tipo }}</span>@endif
+                            @if($servidor->discapacidad_carnet)<span>Carnet: {{ $servidor->discapacidad_carnet }}</span>@endif
+                            @if($servidor->discapacidad_vence)<span>Vence: {{ \Carbon\Carbon::parse($servidor->discapacidad_vence)->format('d/m/Y') }}</span>@endif
                         </div>
                         @endif
                     </span>
+                    <span style="color:#4fc3f7; white-space:nowrap;">Grado: <strong>{{ $servidor->discapacidad_grado }}</strong></span>
                 </div>
                 @endif
 

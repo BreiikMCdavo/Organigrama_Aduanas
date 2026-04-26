@@ -28,6 +28,8 @@ class ServidorPublico extends Model
         'acefalia',
         // Datos ÍTEM
         'numero_item',
+        'cod_funcionario',
+        'escala_salarial',
         'cite_memorandum',
         'cargo',
         'fecha_inicio_cargo',
@@ -39,10 +41,13 @@ class ServidorPublico extends Model
         // Inamovilidad
         'asignacion_familiar_desc',
         'asignacion_familiar_grado',
+        'asignacion_familiar_check',
         'casos_especiales_desc',
         'casos_especiales_grado',
+        'casos_especiales_check',
         'discapacidad_desc',
         'discapacidad_grado',
+        'discapacidad_check',
         'discapacidad_tipo',
         'discapacidad_carnet',
         'discapacidad_vence',
@@ -57,6 +62,9 @@ class ServidorPublico extends Model
         'designacion_fin'       => 'date',
         'discapacidad_vence'    => 'date',
         'acefalia'              => 'boolean',
+        'asignacion_familiar_check' => 'boolean',
+        'casos_especiales_check'    => 'boolean',
+        'discapacidad_check'        => 'boolean',
     ];
 
     /**
@@ -64,16 +72,11 @@ class ServidorPublico extends Model
      */
     public static function buscarPorNombreCompleto($nombre, $apellidoPaterno, $apellidoMaterno)
     {
-        $nombreCompleto = trim(($nombre ?? '') . ' ' . ($apellidoPaterno ?? '') . ' ' . ($apellidoMaterno ?? ''));
-        
-        return self::where(function($query) use ($nombre, $apellidoPaterno, $apellidoMaterno) {
-                $query->where('nombre', 'LIKE', '%' . trim($nombre) . '%')
-                      ->where('apellido_paterno', 'LIKE', '%' . trim($apellidoPaterno) . '%')
-                      ->where('apellido_materno', 'LIKE', '%' . trim($apellidoMaterno) . '%');
-            })
+        return self::where('nombre', trim($nombre))
+            ->where('apellido_paterno', trim($apellidoPaterno))
+            ->where('apellido_materno', trim($apellidoMaterno ?? ''))
             ->where(function($query) {
-                $query->whereNull('acefalia')
-                      ->orWhere('acefalia', false);
+                $query->whereNull('acefalia')->orWhere('acefalia', false);
             })
             ->get();
     }
