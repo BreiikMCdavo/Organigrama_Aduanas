@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container py-4">
+<div class="container py-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="fw-bold mb-0">Servidores Públicos Registrados</h5>
@@ -13,13 +13,11 @@
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+    @endif
 
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+    @forelse($servidores as $servidor)
+    <div class="card mb-3 shadow-sm border-0">
+        <div class="card-body d-flex align-items-center gap-3">
 
             {{-- Foto --}}
             @if($servidor->fotografia)
@@ -39,8 +37,8 @@
                         <span class="badge bg-primary me-1">ÍTEM</span>
                         N° {{ $servidor->numero_item }} &bull; {{ $servidor->cargo }} &bull; {{ $servidor->designacion }}
                     @else
-                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
-                            style="width:60px;height:60px;font-size:1.5rem;flex-shrink:0;">👤</div>
+                        <span class="badge bg-success me-1">CONSULTORÍA</span>
+                        Contrato: {{ $servidor->contrato_numero }} &bull; {{ $servidor->cargo_consultoria }} &bull; {{ $servidor->designacion }}
                     @endif
                 </div>
                 <div class="text-muted mt-1" style="font-size:0.875rem;">
@@ -50,9 +48,6 @@
                     @endif
                 </div>
             </div>
-        @empty
-            <div class="alert alert-info">No hay servidores registrados aún.</div>
-        @endforelse
 
             {{-- Acciones --}}
             <div class="d-flex gap-2 flex-shrink-0">
@@ -65,10 +60,14 @@
             </div>
 
         </div>
+    </div>
+    @empty
+        <div class="alert alert-info">No hay servidores registrados aún.</div>
+    @endforelse
 
 </div>
 
-{{-- UN SOLO modal compartido --}}
+{{-- Modal eliminar compartido --}}
 <div class="modal fade" id="modalEliminar" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
