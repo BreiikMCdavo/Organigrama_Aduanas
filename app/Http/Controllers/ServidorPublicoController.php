@@ -87,29 +87,8 @@ class ServidorPublicoController extends Controller
 
         $data = $request->except('fotografia', 'accion_duplicado', 'cargo_a_reemplazar');
 
-        // Guardar designación como texto separado por comas
-        $data['designacion'] = $request->designacion_tipos
-            ? implode(', ', $request->designacion_tipos)
-            : null;
-
-        // Acefalía: si NO tiene todos los 5 mínimos, O si tiene los 5 pero sin datos extra
-        $tieneNombre       = !empty($request->nombre);
-        $tieneApellido     = !empty($request->apellido_paterno);
-        $tieneFechas       = !empty($request->fecha_ingreso_aduana) || !empty($request->fecha_inicio_cargo) || !empty($request->fecha_inicio_contrato);
-        $tieneInamovilidad = !empty($request->asignacion_familiar_desc) || !empty($request->casos_especiales_desc) || !empty($request->discapacidad_desc);
-        $tieneFoto         = $request->hasFile('fotografia');
-        $tieneCite         = !empty($request->cite_memorandum);
-
-        $tieneDatosExtra = $tieneNombre || $tieneApellido || $tieneFechas || $tieneInamovilidad || $tieneFoto || $tieneCite;
-
-        if ($request->tipo === 'item') {
-            $tieneMinimos = !empty($request->numero_item) && !empty($request->cargo) && !empty($request->unidad) && !empty($request->sub_unidad) && !empty($data['designacion']);
-        } else {
-            $tieneMinimos = !empty($request->contrato_numero) && !empty($request->cargo_consultoria) && !empty($request->unidad) && !empty($request->sub_unidad) && !empty($data['designacion']);
-        }
-
-        // Es ÍTEM/CONSULTORÍA solo si tiene los 5 mínimos Y además datos extra
-        $data['acefalia'] = !($tieneMinimos && $tieneDatosExtra);
+        // Detectar acefalía: sin nombre = acefalía
+        $data['acefalia'] = empty(trim($request->nombre ?? ''));
 
         // Buscar duplicados solo si hay nombre completo
         if (!empty(trim($request->nombre ?? '')) && !empty(trim($request->apellido_paterno ?? ''))) {
@@ -224,31 +203,10 @@ class ServidorPublicoController extends Controller
             'apellido_paterno.required'    => 'El apellido paterno es obligatorio.',
         ]);
 
-        $data = $request->except(['fotografia', '_token', '_method', 'designacion_tipos']);
+        $data = $request->except(['fotografia', '_token', '_method']);
 
-        // Guardar designación como texto separado por comas
-        $data['designacion'] = $request->designacion_tipos
-            ? implode(', ', $request->designacion_tipos)
-            : null;
-
-        // Acefalía: si NO tiene todos los 5 mínimos, O si tiene los 5 pero sin datos extra
-        $tieneNombre       = !empty($request->nombre);
-        $tieneApellido     = !empty($request->apellido_paterno);
-        $tieneFechas       = !empty($request->fecha_ingreso_aduana) || !empty($request->fecha_inicio_cargo) || !empty($request->fecha_inicio_contrato);
-        $tieneInamovilidad = !empty($request->asignacion_familiar_desc) || !empty($request->casos_especiales_desc) || !empty($request->discapacidad_desc);
-        $tieneFoto         = $request->hasFile('fotografia');
-        $tieneCite         = !empty($request->cite_memorandum);
-
-        $tieneDatosExtra = $tieneNombre || $tieneApellido || $tieneFechas || $tieneInamovilidad || $tieneFoto || $tieneCite;
-
-        if ($servidor->tipo === 'item') {
-            $tieneMinimos = !empty($request->numero_item) && !empty($request->cargo) && !empty($request->unidad) && !empty($request->sub_unidad) && !empty($data['designacion']);
-        } else {
-            $tieneMinimos = !empty($request->contrato_numero) && !empty($request->cargo_consultoria) && !empty($request->unidad) && !empty($request->sub_unidad) && !empty($data['designacion']);
-        }
-
-        // Es ÍTEM/CONSULTORÍA solo si tiene los 5 mínimos Y además datos extra
-        $data['acefalia'] = !($tieneMinimos && $tieneDatosExtra);
+        // Recalcular acefalía al editar
+        $data['acefalia'] = empty(trim($request->nombre ?? ''));
 
         if ($request->hasFile('fotografia')) {
             // Eliminar foto anterior si existe
