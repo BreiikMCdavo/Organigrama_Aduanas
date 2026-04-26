@@ -20,6 +20,8 @@ class ServidorPublico extends Model
         'fotografia',
         'fecha_ingreso_aduana',
         'designacion',
+        'designacion_inicio',
+        'designacion_fin',
         /* NUEVOS CAMPOS */
         'unidad',
         'sub_unidad',
@@ -41,14 +43,20 @@ class ServidorPublico extends Model
         'casos_especiales_grado',
         'discapacidad_desc',
         'discapacidad_grado',
+        'discapacidad_tipo',
+        'discapacidad_carnet',
+        'discapacidad_vence',
     ];
 
     protected $casts = [
-        'fecha_ingreso_aduana' => 'date',
-        'fecha_inicio_cargo' => 'date',
+        'fecha_ingreso_aduana'  => 'date',
+        'fecha_inicio_cargo'    => 'date',
         'fecha_inicio_contrato' => 'date',
-        'fecha_fin_contrato' => 'date',
-        'acefalia' => 'boolean',
+        'fecha_fin_contrato'    => 'date',
+        'designacion_inicio'    => 'date',
+        'designacion_fin'       => 'date',
+        'discapacidad_vence'    => 'date',
+        'acefalia'              => 'boolean',
     ];
 
     /**

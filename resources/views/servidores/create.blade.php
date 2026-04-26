@@ -126,15 +126,6 @@
                                     <label class="form-label small mb-1">CITE Memorandum</label>
                                     <input type="text" name="cite_memorandum" class="form-control form-control-sm" value="{{ old('cite_memorandum') }}">
                                 </div>
-                                <div class="col-4">
-                                    <label class="form-label small mb-1">Cargo</label>
-                                    <select name="designacion" class="form-select form-select-sm">
-                                        <option value="">Designación</option>
-                                        <option value="Designación" {{ old('designacion')=='Designación'?'selected':'' }}>Designación</option>
-                                        <option value="Interinato" {{ old('designacion')=='Interinato'?'selected':'' }}>Interinato</option>
-                                        <option value="Comisión" {{ old('designacion')=='Comisión'?'selected':'' }}>Comisión</option>
-                                    </select>
-                                </div>
                             </div>
 
                             <div class="row g-2 mb-2">
@@ -153,6 +144,36 @@
                                 <input type="text" name="cargo" class="form-control form-control-sm" placeholder="Ingresar nombre del cargo..." value="{{ old('cargo') }}">
                             </div>
 
+                            {{-- Designación --}}
+                            <div class="border rounded p-2 mb-2 bg-light">
+                                <label class="form-label small fw-bold mb-1">Designación:</label>
+                                <div class="row g-2 align-items-start">
+                                    <div class="col-5 d-flex flex-column gap-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Designación" id="chk_des_item"
+                                                {{ is_array(old('designacion_tipos')) && in_array('Designación', old('designacion_tipos')) ? 'checked' : '' }}>
+                                            <label class="form-check-label small" for="chk_des_item">Designación</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Interinato" id="chk_int_item"
+                                                {{ is_array(old('designacion_tipos')) && in_array('Interinato', old('designacion_tipos')) ? 'checked' : '' }}>
+                                            <label class="form-check-label small" for="chk_int_item">Interinato</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Comisión" id="chk_com_item"
+                                                {{ is_array(old('designacion_tipos')) && in_array('Comisión', old('designacion_tipos')) ? 'checked' : '' }}>
+                                            <label class="form-check-label small" for="chk_com_item">Comisión</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="date" name="designacion_inicio" class="form-control form-control-sm" title="Fecha inicio" value="{{ old('designacion_inicio') }}">
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="date" name="designacion_fin" class="form-control form-control-sm" title="Fecha fin" value="{{ old('designacion_fin') }}">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row g-2 mb-2">
                                 <div class="col-6">
                                     <label class="form-label small mb-1">Unidad</label>
@@ -165,13 +186,11 @@
                                         <option value="Administración Aduana Interior La Paz">Administración Aduana Interior La Paz</option>
                                         <option value="Aduana Frontera Guayaramerín">Aduana Frontera Guayaramerín</option>
                                         <option value="Aduana Aeropuerto El Alto">Aduana Aeropuerto El Alto</option>
-                                        <option value="Administración Aduana Zona Franca">Administración Aduana Zona Franca</option>
                                         <option value="Administración Aduana Zona Franca Industrial Patacamaya">Administración Aduana Zona Franca Industrial Patacamaya</option>
                                         <option value="Administración Aduana Frontera Desaguadero">Administración Aduana Frontera Desaguadero</option>
                                         <option value="Zona Franca Comercial / Frontera Cobija">Zona Franca Comercial / Frontera Cobija</option>
                                         <option value="Agencia Aduana Exterior Matarani">Agencia Aduana Exterior Matarani</option>
                                         <option value="Administración Aduana Frontera Charaña">Administración Aduana Frontera Charaña</option>
-                                        
                                     </select>
                                 </div>
                                 <div class="col-6">
@@ -197,29 +216,60 @@
                             @foreach([
                                 ['label'=>'1. Asignación Familiar:','desc'=>'asignacion_familiar_desc','grado'=>'asignacion_familiar_grado'],
                                 ['label'=>'2. Casos especiales:','desc'=>'casos_especiales_desc','grado'=>'casos_especiales_grado'],
-                                ['label'=>'3. Discapacidad Ley N° 223:','desc'=>'discapacidad_desc','grado'=>'discapacidad_grado'],
                             ] as $campo)
                             <div class="row g-2 align-items-center mb-2">
-                                <div class="col-1 text-center">
-                                    <input type="checkbox" class="form-check-input">
-                                </div>
+                                <div class="col-1 text-center"><input type="checkbox" class="form-check-input"></div>
                                 <div class="col-6">
                                     <label class="form-label small mb-0">{{ $campo['label'] }}</label>
                                     <input type="text" name="{{ $campo['desc'] }}" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
                                 </div>
-                                <div class="col-2">
-                                    <label class="form-label small mb-0">Grado:</label>
-                                </div>
+                                <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
                                 <div class="col-3">
                                     <select name="{{ $campo['grado'] }}" class="form-select form-select-sm">
-                                        <option value="G" {{ old($campo['grado'])=='G'?'selected':'' }}>G</option>
-                                        <option value="MG" {{ old($campo['grado'])=='MG'?'selected':'' }}>MG</option>
-                                        <option value="M" {{ old($campo['grado'])=='M'?'selected':'' }}>M</option>
-                                        <option value="L" {{ old($campo['grado'])=='L'?'selected':'' }}>L</option>
+                                        @foreach(['G','MG','M','L'] as $g)
+                                            <option value="{{ $g }}" {{ old($campo['grado'])==$g?'selected':'' }}>{{ $g }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             @endforeach
+
+                            {{-- 3. Discapacidad con detalle --}}
+                            <div class="mb-2">
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-1 text-center">
+                                        <input type="checkbox" class="form-check-input" id="chk_disc_item" onchange="document.getElementById('disc_detalle_item').style.display=this.checked?'block':'none'">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small mb-0">3. Discapacidad Ley N° 223:</label>
+                                        <input type="text" name="discapacidad_desc" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old('discapacidad_desc') }}">
+                                    </div>
+                                    <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
+                                    <div class="col-3">
+                                        <select name="discapacidad_grado" class="form-select form-select-sm">
+                                            @foreach(['G','MG','M','L'] as $g)
+                                                <option value="{{ $g }}" {{ old('discapacidad_grado')==$g?'selected':'' }}>{{ $g }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="disc_detalle_item" class="mt-2 ms-4 ps-2 border-start border-2 border-primary" style="display:{{ old('discapacidad_tipo') || old('discapacidad_carnet') ? 'block' : 'none' }};">
+                                    <div class="row g-2">
+                                        <div class="col-4">
+                                            <label class="form-label small mb-1">Tipo de discapacidad</label>
+                                            <input type="text" name="discapacidad_tipo" class="form-control form-control-sm" placeholder="Ej: Visual, Motriz..." value="{{ old('discapacidad_tipo') }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label small mb-1">Carnet de discapacidad</label>
+                                            <input type="text" name="discapacidad_carnet" class="form-control form-control-sm" placeholder="N° carnet" value="{{ old('discapacidad_carnet') }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label small mb-1">Vence</label>
+                                            <input type="date" name="discapacidad_vence" class="form-control form-control-sm" value="{{ old('discapacidad_vence') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="mt-3">
                                 <label class="form-label small mb-1">📷 Fotografía</label>
@@ -249,85 +299,13 @@
                         <div class="card-body p-4">
                             <h6 class="fw-bold mb-3">Datos de Consultoría</h6>
 
-                            {{-- SECCIÓN DE DUPLICADOS - VERSIÓN SIMPLE --}}
-                            @if(session('duplicados') && session('duplicados')->count() > 0)
-                                <div class="alert alert-warning mb-3">
-                                    <h6 class="alert-heading">
-                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                        ¡Esta persona ya tiene un cargo registrado!
-                                    </h6>
-                                    
-                                    <div class="mb-3">
-                                        <strong>Cargo actual:</strong> 
-                                        {{ session('duplicados')->first()->cargo_descripcion }}
-                                        <br>
-                                        <small class="text-muted">
-                                            {{ session('duplicados')->first()->sub_unidad ?? session('duplicados')->first()->unidad }}
-                                        </small>
-                                    </div>
-
-                                    <div class="alert alert-light">
-                                        <h6 class="mb-2">¿Qué quieres hacer?</h6>
-                                        
-                                        <div class="mb-2">
-                                            <label class="form-check">
-                                                <input class="form-check-input" type="radio" 
-                                                       name="accion_duplicado" 
-                                                       value="reemplazar" 
-                                                       required>
-                                                <span class="form-check-label">
-                                                    <strong>🔄 Cambiar de cargo</strong>
-                                                    <br>
-                                                    <small>Dejar el cargo actual vacante y asignar el nuevo</small>
-                                                </span>
-                                            </label>
-                                        </div>
-
-                                        <div class="mb-2">
-                                            <label class="form-check">
-                                                <input class="form-check-input" type="radio" 
-                                                       name="accion_duplicado" 
-                                                       value="adicionar">
-                                                <span class="form-check-label">
-                                                    <strong>➕ Agregar segundo cargo</strong>
-                                                    <br>
-                                                    <small class="text-warning">La persona tendrá dos cargos (se contará como vacante)</small>
-                                                </span>
-                                            </label>
-                                        </div>
-
-                                        <div class="mb-2">
-                                            <label class="form-check">
-                                                <input class="form-check-input" type="radio" 
-                                                       name="accion_duplicado" 
-                                                       value="nuevo">
-                                                <span class="form-check-label">
-                                                    <strong>👤 Es otra persona</strong>
-                                                    <br>
-                                                    <small>Son nombres iguales pero personas diferentes</small>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <div class="row g-2 mb-2">
-                                <div class="col-7">
-                                    <label class="form-label small mb-1">Contrato</label>
-                                    <input type="text" name="contrato_numero" class="form-control form-control-sm" value="{{ old('contrato_numero') }}">
-                                </div>
-                                <div class="col-5">
-                                    <label class="form-label small mb-1">Cargo</label>
-                                    <select name="designacion" class="form-select form-select-sm">
-                                        <option value="">Designación</option>
-                                        <option value="Designación" {{ old('designacion')=='Designación'?'selected':'' }}>Designación</option>
-                                        <option value="Interinato" {{ old('designacion')=='Interinato'?'selected':'' }}>Interinato</option>
-                                        <option value="Comisión" {{ old('designacion')=='Comisión'?'selected':'' }}>Comisión</option>
-                                    </select>
-                                </div>
+                            {{-- 1. Contrato --}}
+                            <div class="mb-2">
+                                <label class="form-label small mb-1">Contrato</label>
+                                <input type="text" name="contrato_numero" class="form-control form-control-sm" value="{{ old('contrato_numero') }}">
                             </div>
 
+                            {{-- 2. Nombres --}}
                             <div class="row g-2 mb-2">
                                 <div class="col-4">
                                     <input type="text" name="nombre" class="form-control form-control-sm" placeholder="Nombres" value="{{ old('nombre') }}">
@@ -340,10 +318,42 @@
                                 </div>
                             </div>
 
+                            {{-- 3. Cargo --}}
                             <div class="mb-2">
                                 <input type="text" name="cargo_consultoria" class="form-control form-control-sm" placeholder="Ingresar descripción del cargo..." value="{{ old('cargo_consultoria') }}">
                             </div>
 
+                            {{-- 4. Designación --}}
+                            <div class="border rounded p-2 mb-2 bg-light">
+                                <label class="form-label small fw-bold mb-1">Designación:</label>
+                                <div class="row g-2 align-items-start">
+                                    <div class="col-5 d-flex flex-column gap-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Designación" id="chk_des_cons"
+                                                {{ is_array(old('designacion_tipos')) && in_array('Designación', old('designacion_tipos')) ? 'checked' : '' }}>
+                                            <label class="form-check-label small" for="chk_des_cons">Designación</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Interinato" id="chk_int_cons"
+                                                {{ is_array(old('designacion_tipos')) && in_array('Interinato', old('designacion_tipos')) ? 'checked' : '' }}>
+                                            <label class="form-check-label small" for="chk_int_cons">Interinato</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Comisión" id="chk_com_cons"
+                                                {{ is_array(old('designacion_tipos')) && in_array('Comisión', old('designacion_tipos')) ? 'checked' : '' }}>
+                                            <label class="form-check-label small" for="chk_com_cons">Comisión</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="date" name="designacion_inicio" class="form-control form-control-sm" title="Fecha inicio" value="{{ old('designacion_inicio') }}">
+                                    </div>
+                                    <div class="col-3">
+                                        <input type="date" name="designacion_fin" class="form-control form-control-sm" title="Fecha fin" value="{{ old('designacion_fin') }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 5. Unidad / Sub-Unidad --}}
                             <div class="row g-2 mb-2">
                                 <div class="col-6">
                                     <label class="form-label small mb-1">Unidad</label>
@@ -356,13 +366,11 @@
                                         <option value="Administración Aduana Interior La Paz">Administración Aduana Interior La Paz</option>
                                         <option value="Aduana Frontera Guayaramerín">Aduana Frontera Guayaramerín</option>
                                         <option value="Aduana Aeropuerto El Alto">Aduana Aeropuerto El Alto</option>
-                                        <option value="Administración Aduana Zona Franca">Administración Aduana Zona Franca</option>
                                         <option value="Administración Aduana Zona Franca Industrial Patacamaya">Administración Aduana Zona Franca Industrial Patacamaya</option>
                                         <option value="Administración Aduana Frontera Desaguadero">Administración Aduana Frontera Desaguadero</option>
                                         <option value="Zona Franca Comercial / Frontera Cobija">Zona Franca Comercial / Frontera Cobija</option>
                                         <option value="Agencia Aduana Exterior Matarani">Agencia Aduana Exterior Matarani</option>
                                         <option value="Administración Aduana Frontera Charaña">Administración Aduana Frontera Charaña</option>
-
                                     </select>
                                 </div>
                                 <div class="col-6">
@@ -395,29 +403,60 @@
                             @foreach([
                                 ['label'=>'1. Asignación Familiar:','desc'=>'asignacion_familiar_desc','grado'=>'asignacion_familiar_grado'],
                                 ['label'=>'2. Casos especiales:','desc'=>'casos_especiales_desc','grado'=>'casos_especiales_grado'],
-                                ['label'=>'3. Discapacidad Ley N° 223:','desc'=>'discapacidad_desc','grado'=>'discapacidad_grado'],
                             ] as $campo)
                             <div class="row g-2 align-items-center mb-2">
-                                <div class="col-1 text-center">
-                                    <input type="checkbox" class="form-check-input">
-                                </div>
+                                <div class="col-1 text-center"><input type="checkbox" class="form-check-input"></div>
                                 <div class="col-6">
                                     <label class="form-label small mb-0">{{ $campo['label'] }}</label>
                                     <input type="text" name="{{ $campo['desc'] }}" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
                                 </div>
-                                <div class="col-2">
-                                    <label class="form-label small mb-0">Grado:</label>
-                                </div>
+                                <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
                                 <div class="col-3">
                                     <select name="{{ $campo['grado'] }}" class="form-select form-select-sm">
-                                        <option value="G" {{ old($campo['grado'])=='G'?'selected':'' }}>G</option>
-                                        <option value="MG" {{ old($campo['grado'])=='MG'?'selected':'' }}>MG</option>
-                                        <option value="M" {{ old($campo['grado'])=='M'?'selected':'' }}>M</option>
-                                        <option value="L" {{ old($campo['grado'])=='L'?'selected':'' }}>L</option>
+                                        @foreach(['G','MG','M','L'] as $g)
+                                            <option value="{{ $g }}" {{ old($campo['grado'])==$g?'selected':'' }}>{{ $g }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             @endforeach
+
+                            {{-- 3. Discapacidad con detalle --}}
+                            <div class="mb-2">
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-1 text-center">
+                                        <input type="checkbox" class="form-check-input" id="chk_disc_cons" onchange="document.getElementById('disc_detalle_cons').style.display=this.checked?'block':'none'">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small mb-0">3. Discapacidad Ley N° 223:</label>
+                                        <input type="text" name="discapacidad_desc" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old('discapacidad_desc') }}">
+                                    </div>
+                                    <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
+                                    <div class="col-3">
+                                        <select name="discapacidad_grado" class="form-select form-select-sm">
+                                            @foreach(['G','MG','M','L'] as $g)
+                                                <option value="{{ $g }}" {{ old('discapacidad_grado')==$g?'selected':'' }}>{{ $g }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="disc_detalle_cons" class="mt-2 ms-4 ps-2 border-start border-2 border-primary" style="display:{{ old('discapacidad_tipo') || old('discapacidad_carnet') ? 'block' : 'none' }};">
+                                    <div class="row g-2">
+                                        <div class="col-4">
+                                            <label class="form-label small mb-1">Tipo de discapacidad</label>
+                                            <input type="text" name="discapacidad_tipo" class="form-control form-control-sm" placeholder="Ej: Visual, Motriz..." value="{{ old('discapacidad_tipo') }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label small mb-1">Carnet de discapacidad</label>
+                                            <input type="text" name="discapacidad_carnet" class="form-control form-control-sm" placeholder="N° carnet" value="{{ old('discapacidad_carnet') }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label small mb-1">Vence</label>
+                                            <input type="date" name="discapacidad_vence" class="form-control form-control-sm" value="{{ old('discapacidad_vence') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="mt-3">
                                 <label class="form-label small mb-1">📷 Fotografía</label>

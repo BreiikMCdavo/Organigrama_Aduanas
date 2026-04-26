@@ -58,37 +58,23 @@
                 </div>
 
                 {{-- Fechas --}}
-                <div class="fechas-row">
-                    <span>Ingreso a la Aduana: {{ $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('d/m/Y') : '—' }}</span>
+                <div class="fechas-row" style="display:flex; justify-content:space-between;">
+                    <div>
+                        <div>Ingreso a la Aduana:</div>
+                        <div><strong>{{ $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('d/m/Y') : '—' }}</strong></div>
+                    </div>
                     @if($servidor->tipo === 'item')
-                        <span>Fecha Inic. cargo: {{ $servidor->fecha_inicio_cargo ? \Carbon\Carbon::parse($servidor->fecha_inicio_cargo)->format('d/m/Y') : '—' }}</span>
+                    <div>
+                        <div>Fecha Inic. cargo:</div>
+                        <div><strong>{{ $servidor->fecha_inicio_cargo ? \Carbon\Carbon::parse($servidor->fecha_inicio_cargo)->format('d/m/Y') : '—' }}</strong></div>
+                    </div>
                     @else
-                        <span>Fecha del contrato: {{ $servidor->fecha_inicio_contrato ? \Carbon\Carbon::parse($servidor->fecha_inicio_contrato)->format('d/m/Y') : '—' }}</span>
+                    <div>
+                        <div>Fecha del contrato:</div>
+                        <div><strong>{{ $servidor->fecha_inicio_contrato ? \Carbon\Carbon::parse($servidor->fecha_inicio_contrato)->format('d/m/Y') : '—' }}</strong></div>
+                    </div>
                     @endif
                 </div>
-
-                {{-- Designación con fechas --}}
-                @if($servidor->designacion)
-                <div class="inamovilidad-titulo mt-2">Designación:</div>
-                @foreach(explode(', ', $servidor->designacion) as $tipo)
-                <div class="inamovilidad-item">
-                    <span class="check-icon">☑</span>
-                    <span>
-                        {{ $tipo }}
-                        @if($tipo === 'Designación' && $servidor->designacion_inicio)
-                            — {{ \Carbon\Carbon::parse($servidor->designacion_inicio)->format('d/m/Y') }}
-                            @if($servidor->designacion_fin) al {{ \Carbon\Carbon::parse($servidor->designacion_fin)->format('d/m/Y') }} @endif
-                        @elseif($tipo === 'Interinato' && $servidor->interinato_inicio)
-                            — {{ \Carbon\Carbon::parse($servidor->interinato_inicio)->format('d/m/Y') }}
-                            @if($servidor->interinato_fin) al {{ \Carbon\Carbon::parse($servidor->interinato_fin)->format('d/m/Y') }} @endif
-                        @elseif($tipo === 'Comisión' && $servidor->comision_inicio)
-                            — {{ \Carbon\Carbon::parse($servidor->comision_inicio)->format('d/m/Y') }}
-                            @if($servidor->comision_fin) al {{ \Carbon\Carbon::parse($servidor->comision_fin)->format('d/m/Y') }} @endif
-                        @endif
-                    </span>
-                </div>
-                @endforeach
-                @endif
 
                 {{-- Inamovilidad --}}
                 <div class="inamovilidad-titulo">Inamovilidad:</div>
@@ -110,7 +96,22 @@
                 @if($servidor->discapacidad_desc)
                 <div class="inamovilidad-item">
                     <span class="check-icon">☑</span>
-                    <span>Discapacidad Ley N° 223: {{ $servidor->discapacidad_desc }} &nbsp; Grado: <strong>{{ $servidor->discapacidad_grado }}</strong></span>
+                    <span>
+                        Discapacidad Ley N° 223: {{ $servidor->discapacidad_desc }} &nbsp; Grado: <strong>{{ $servidor->discapacidad_grado }}</strong>
+                        @if($servidor->discapacidad_tipo || $servidor->discapacidad_carnet || $servidor->discapacidad_vence)
+                        <div class="mt-1 ms-2 d-flex flex-column" style="font-size:0.8rem;color:#c8daf0;">
+                            @if($servidor->discapacidad_tipo)
+                                <span>Tipo: {{ $servidor->discapacidad_tipo }}</span>
+                            @endif
+                            @if($servidor->discapacidad_carnet)
+                                <span>Carnet: {{ $servidor->discapacidad_carnet }}</span>
+                            @endif
+                            @if($servidor->discapacidad_vence)
+                                <span>Vence: {{ \Carbon\Carbon::parse($servidor->discapacidad_vence)->format('d/m/Y') }}</span>
+                            @endif
+                        </div>
+                        @endif
+                    </span>
                 </div>
                 @endif
 

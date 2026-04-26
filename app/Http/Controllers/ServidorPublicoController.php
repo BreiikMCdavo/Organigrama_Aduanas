@@ -109,7 +109,12 @@ class ServidorPublicoController extends Controller
             'apellido_paterno.required'    => 'El apellido paterno es obligatorio.',
         ]);
 
-        $data = $request->except('fotografia', 'accion_duplicado', 'cargo_a_reemplazar');
+        $data = $request->except(['fotografia', 'accion_duplicado', 'cargo_a_reemplazar', 'designacion_tipos']);
+
+        // Guardar designación como texto separado por comas
+        $data['designacion'] = $request->designacion_tipos
+            ? implode(', ', $request->designacion_tipos)
+            : null;
 
         // Detectar acefalía: sin nombre = acefalía
         $data['acefalia'] = empty(trim($request->nombre ?? ''));
@@ -227,7 +232,12 @@ class ServidorPublicoController extends Controller
             'apellido_paterno.required'    => 'El apellido paterno es obligatorio.',
         ]);
 
-        $data = $request->except(['fotografia', '_token', '_method']);
+        $data = $request->except(['fotografia', '_token', '_method', 'designacion_tipos']);
+
+        // Guardar designación como texto separado por comas
+        $data['designacion'] = $request->designacion_tipos
+            ? implode(', ', $request->designacion_tipos)
+            : null;
 
         // Recalcular acefalía al editar
         $data['acefalia'] = empty(trim($request->nombre ?? ''));
