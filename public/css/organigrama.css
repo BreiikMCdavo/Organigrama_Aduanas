@@ -13,6 +13,7 @@ body {
     margin: 10px auto;
     cursor: pointer;
     font-weight: bold;
+    font-size: 20px !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     text-align: center;
@@ -33,20 +34,172 @@ body {
 
 /* ===== SUB CAJAS ===== */
 .sub-box {
-    background: #0d6efd;
+    background: linear-gradient(45deg, #0d6efd, #1e88e5);
     color: white;
-    padding: 8px;
-    border-radius: 5px;
-    margin: 5px 0;
-    font-size: 13px;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 8px 0;
+    font-size: 14px !important;
+    font-weight: 600;
     text-align: center;
     width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
+}
+
+.sub-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    background: linear-gradient(45deg, #1e88e5, #1565c0);
 }
 
 /* ===== GRID ===== */
 .row {
     margin: 25px 0;
-    justify-content: center !important;
+}
+
+/* ===== MODAL ESTILOS PERSONALIZADOS ===== */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px 15px 0 0;
+    border: none;
+    padding: 1.5rem;
+}
+
+.modal-title {
+    color: white;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.modal-body {
+    padding: 2rem;
+    background: #f8f9fa;
+}
+
+/* ===== TARJETAS DE DATOS ===== */
+.card-datos {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.card-datos:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-datos .card-body {
+    padding: 1.25rem;
+}
+
+/* ===== BADGES PERSONALIZADOS ===== */
+.badge-items {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.badge-acefalias {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.badge-total {
+    background: linear-gradient(135deg, #007bff, #6f42c1);
+    color: white;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+/* ===== PROGRESS BARS PERSONALIZADOS ===== */
+.progress {
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+/* ===== ICONOS ===== */
+.icon-datos {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+.icon-success {
+    color: #28a745;
+}
+
+.icon-danger {
+    color: #dc3545;
+}
+
+.icon-primary {
+    color: #007bff;
+}
+
+.icon-info {
+    color: #17a2b8;
+}
+
+/* ===== TÍTULOS Y TEXTOS ===== */
+.titulo-unidad {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.numero-dato {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.texto-dato {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== BOTONES ===== */
+.btn-ver-personal {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-ver-personal:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 .col-md-2,
@@ -55,6 +208,149 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* ===== MODAL PROFESIONAL Y CHEVERE ===== */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 95vh;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(13, 110, 253, 0.15), 0 8px 25px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.98));
+    overflow: hidden;
+}
+
+.modal-body {
+    overflow-y: auto;
+    padding: 2rem;
+    padding-bottom: 3rem;
+    max-height: calc(95vh - 150px);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.95));
+}
+
+/* Scrollbar personalizado */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: rgba(13, 110, 253, 0.05);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0b5ed7, #0a58ca);
+}
+
+/* ===== GRID DE UNIDADES - 2 COLUMNAS RESPONSIVE ===== */
+.unidades-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .unidades-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 2rem 2rem;
+    }
+}
+
+/* ===== BOTÓN FIJO EN MODAL ===== */
+.modal-footer-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 12px;
+    border-top: 1px solid #ddd;
+    z-index: 9999;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.modal-footer-fixed .btn {
+    min-width: 300px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    transition: all 0.3s ease;
+}
+
+.modal-footer-fixed .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+}
+
+.modal-body {
+    padding-bottom: 0;
+}
+
+/* ===== BOTÓN GENERATE REPORT ===== */
+.btn-generate-report {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #6c757d, #495057);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-generate-report:hover {
+    background: linear-gradient(135deg, #5a6268, #343a40);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* ===== SERVIDORES CARD ESTILOS ===== */
+.servidor-card {
+    transition: all 0.3s ease;
+    border-left: 4px solid #1565c0;
+}
+
+.servidor-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-left-color: #0d47a1;
+}
+
+.servidor-nombre {
+    color: #1565c0;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.servidor-badge {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+}
+
+.servidor-info {
+    border-left: 3px solid #e9ecef;
+    padding-left: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.servidor-info i {
+    color: #1565c0;
+    width: 16px;
+    text-align: center;
 }
 
 /* ===== COLLAPSE ===== */

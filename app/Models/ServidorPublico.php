@@ -62,4 +62,39 @@ class ServidorPublico extends Model
         'comision_fin'          => 'date',
         'acefalia'              => 'boolean',
     ];
+
+    /**
+     * Buscar duplicados por nombre completo
+     */
+    public static function buscarPorNombreCompleto($nombre, $apellidoPaterno, $apellidoMaterno)
+    {
+        $nombreCompleto = trim(($nombre ?? '') . ' ' . ($apellidoPaterno ?? '') . ' ' . ($apellidoMaterno ?? ''));
+        
+        return self::where(function($query) use ($nombre, $apellidoPaterno, $apellidoMaterno) {
+                $query->where('nombre', 'LIKE', '%' . trim($nombre) . '%')
+                      ->where('apellido_paterno', 'LIKE', '%' . trim($apellidoPaterno) . '%')
+                      ->where('apellido_materno', 'LIKE', '%' . trim($apellidoMaterno) . '%');
+            })
+            ->where(function($query) {
+                $query->whereNull('acefalia')
+                      ->orWhere('acefalia', false);
+            })
+            ->get();
+    }
+
+    /**
+     * Obtener nombre completo formateado
+     */
+    public function getNombreCompletoAttribute()
+    {
+        return trim(($this->nombre ?? '') . ' ' . ($this->apellido_paterno ?? '') . ' ' . ($this->apellido_materno ?? ''));
+    }
+
+    /**
+     * Obtener descripción del cargo según tipo
+     */
+    public function getCargoDescripcionAttribute()
+    {
+        return $this->tipo === 'item' ? ($this->cargo ?? 'Sin cargo') : ($this->cargo_consultoria ?? 'Sin cargo');
+    }
 }

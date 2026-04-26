@@ -28,6 +28,7 @@ Route::get('/', function () {
 Route::get('/index', function () {
     return view('index');
 })->name('index');
+
 Route::get('/organigrama/{area}', [OrganigramaController::class, 'info'])
     ->where('area', '.*');
 Route::resource('servidores', ServidorPublicoController::class);
