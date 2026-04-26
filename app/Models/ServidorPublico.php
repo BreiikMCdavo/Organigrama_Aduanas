@@ -23,6 +23,7 @@ class ServidorPublico extends Model
         /* NUEVOS CAMPOS */
         'unidad',
         'sub_unidad',
+        'acefalia',
         // Datos ÍTEM
         'numero_item',
         'cite_memorandum',
@@ -47,5 +48,6 @@ class ServidorPublico extends Model
         'fecha_inicio_cargo' => 'date',
         'fecha_inicio_contrato' => 'date',
         'fecha_fin_contrato' => 'date',
+        'acefalia' => 'boolean',
     ];
 }

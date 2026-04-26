@@ -10,15 +10,19 @@ return new class extends Migration
     {
         Schema::table('servidores_publicos', function (Blueprint $table) {
 
-            $table->string('unidad', 150)
-                ->nullable()
-                ->after('designacion')
-                ->comment('Unidad del servidor público');
+            if (!Schema::hasColumn('servidores_publicos', 'unidad')) {
+                $table->string('unidad', 150)
+                    ->nullable()
+                    ->after('designacion')
+                    ->comment('Unidad del servidor público');
+            }
 
-            $table->string('sub_unidad', 150)
-                ->nullable()
-                ->after('unidad')
-                ->comment('Sub unidad del servidor público');
+            if (!Schema::hasColumn('servidores_publicos', 'sub_unidad')) {
+                $table->string('sub_unidad', 150)
+                    ->nullable()
+                    ->after('unidad')
+                    ->comment('Sub unidad del servidor público');
+            }
 
         });
     }

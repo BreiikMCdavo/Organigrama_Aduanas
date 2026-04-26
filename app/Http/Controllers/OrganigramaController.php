@@ -18,11 +18,11 @@ class OrganigramaController extends Controller
             ->get();
     }
 
-    // ITEMS
-    $items = $personal->filter(fn($p) => !empty($p->numero_item))->count();
+    // ITEMS (con nombre, no acefalía)
+    $items = $personal->filter(fn($p) => $p->tipo === 'item' && !$p->acefalia)->count();
 
     // ACEFALIAS
-    $acefalias = $personal->filter(fn($p) => empty($p->numero_item))->count();
+    $acefalias = $personal->filter(fn($p) => (bool) $p->acefalia)->count();
 
     // AGRUPAR POR CARGO
     $cargos = $personal
@@ -34,9 +34,9 @@ class OrganigramaController extends Controller
         });
 
     return response()->json([
-        'items' => $items,
+        'items'     => $items,
         'acefalias' => $acefalias,
-        'cargos' => $cargos
+        'cargos'    => $cargos
     ]);
 }
 }
