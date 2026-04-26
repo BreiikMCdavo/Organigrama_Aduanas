@@ -60,7 +60,6 @@
 
     <!-- SCRIPTS -->
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('js/unidades.js') }}"></script>
     <script src="{{ asset('js/organigrama.js') }}"></script>
 
 </body>

@@ -13,6 +13,10 @@
                 </div>
             @endif
 
+            @php
+                $designacionActual = old('designacion_tipos', $servidor->designacion ? explode(', ', $servidor->designacion) : []);
+            @endphp
+
             <form action="{{ route('servidores.update', $servidor->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -25,22 +29,13 @@
                             <h5 class="fw-bold mb-3">Editar Datos del Ítem</h5>
 
                             <div class="row g-3 mb-3">
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="form-label">N° Ítem</label>
                                     <input type="text" name="numero_item" class="form-control" value="{{ old('numero_item', $servidor->numero_item) }}">
                                 </div>
-                                <div class="col-5">
+                                <div class="col-8">
                                     <label class="form-label">CITE Memorandum</label>
                                     <input type="text" name="cite_memorandum" class="form-control" value="{{ old('cite_memorandum', $servidor->cite_memorandum) }}">
-                                </div>
-                                <div class="col-4">
-                                    <label class="form-label">Designación</label>
-                                    <select name="designacion" class="form-select">
-                                        <option value="">Seleccionar</option>
-                                        @foreach(['Designación','Interinato','Comisión'] as $op)
-                                            <option value="{{ $op }}" {{ old('designacion', $servidor->designacion)==$op?'selected':'' }}>{{ $op }}</option>
-                                        @endforeach
-                                    </select>
                                 </div>
                             </div>
 
@@ -60,53 +55,13 @@
                                 <input type="text" name="cargo" class="form-control" placeholder="Nombre del cargo..." value="{{ old('cargo', $servidor->cargo) }}">
                             </div>
 
-                            <div class="row g-3 mb-3">
-                                <div class="col-6">
-                                    <label class="form-label">Unidad</label>
-                                    <select name="unidad" id="unidad_edit" class="form-select" onchange="cargarSubsEdit()">
-                                        <option value="">Seleccionar Unidad</option>
-                                        @foreach(['GERENCIA REGIONAL LA PAZ - GRLPZ','Unidad Administrativa','Unidad Fiscalización','Unidad Jurídica','Administración Aduana Interior La Paz','Aduana Frontera Guayaramerín','Aduana Aeropuerto El Alto','Administración Aduana Zona Franca Industrial Patacamaya','Administración Aduana Frontera Desaguadero','Zona Franca Comercial / Frontera Cobija','Agencia Aduana Exterior Matarani','Administración Aduana Frontera Charaña'] as $u)
-                                            <option value="{{ $u }}" {{ old('unidad', $servidor->unidad)==$u?'selected':'' }}>{{ $u }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">Sub-Unidad</label>
-                                    <select name="sub_unidad" id="sub_unidad_edit" class="form-select">
-                                        <option value="">Seleccionar Sub-Unidad</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row g-3 mb-3">
-                                <div class="col-6">
-                                    <label class="form-label">Fecha de ingreso a la Aduana</label>
-                                    <input type="date" name="fecha_ingreso_aduana" class="form-control"
-                                        value="{{ old('fecha_ingreso_aduana', $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('Y-m-d') : '') }}">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">Fecha de inicio cargo</label>
-                                    <input type="date" name="fecha_inicio_cargo" class="form-control"
-                                        value="{{ old('fecha_inicio_cargo', $servidor->fecha_inicio_cargo ? \Carbon\Carbon::parse($servidor->fecha_inicio_cargo)->format('Y-m-d') : '') }}">
-                                </div>
-                            </div>
-
                         @else
                             <h5 class="fw-bold mb-3">Editar Datos de Consultoría</h5>
 
                             <div class="row g-3 mb-3">
-                                <div class="col-7">
+                                <div class="col-12">
                                     <label class="form-label">Contrato</label>
                                     <input type="text" name="contrato_numero" class="form-control" value="{{ old('contrato_numero', $servidor->contrato_numero) }}">
-                                </div>
-                                <div class="col-5">
-                                    <label class="form-label">Designación</label>
-                                    <select name="designacion" class="form-select">
-                                        <option value="">Seleccionar</option>
-                                        @foreach(['Designación','Interinato','Comisión'] as $op)
-                                            <option value="{{ $op }}" {{ old('designacion', $servidor->designacion)==$op?'selected':'' }}>{{ $op }}</option>
-                                        @endforeach
-                                    </select>
                                 </div>
                             </div>
 
@@ -125,42 +80,119 @@
                             <div class="mb-3">
                                 <input type="text" name="cargo_consultoria" class="form-control" placeholder="Descripción del cargo..." value="{{ old('cargo_consultoria', $servidor->cargo_consultoria) }}">
                             </div>
+                        @endif
 
-                            <div class="row g-3 mb-3">
-                                <div class="col-6">
-                                    <label class="form-label">Unidad</label>
-                                    <select name="unidad" id="unidad_edit" class="form-select" onchange="cargarSubsEdit()">
-                                        <option value="">Seleccionar Unidad</option>
-                                        @foreach(['GERENCIA REGIONAL LA PAZ - GRLPZ','Unidad Administrativa','Unidad Fiscalización','Unidad Jurídica','Administración Aduana Interior La Paz','Aduana Frontera Guayaramerín','Aduana Aeropuerto El Alto','Administración Aduana Zona Franca Industrial Patacamaya','Administración Aduana Frontera Desaguadero','Zona Franca Comercial / Frontera Cobija','Agencia Aduana Exterior Matarani','Administración Aduana Frontera Charaña'] as $u)
-                                            <option value="{{ $u }}" {{ old('unidad', $servidor->unidad)==$u?'selected':'' }}>{{ $u }}</option>
-                                        @endforeach
-                                    </select>
+                        {{-- Designación (común para ambos tipos) --}}
+                        <p class="fw-bold mb-2 mt-1">Designación:</p>
+                        <div class="border rounded p-3 mb-3 bg-light">
+
+                            <div class="row g-2 align-items-center mb-2">
+                                <div class="col-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Designación" id="chk_des_edit"
+                                            {{ in_array('Designación', $designacionActual) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="chk_des_edit">Designación</label>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <label class="form-label">Sub-Unidad</label>
-                                    <select name="sub_unidad" id="sub_unidad_edit" class="form-select">
-                                        <option value="">Seleccionar Sub-Unidad</option>
-                                    </select>
+                                <div class="col-4">
+                                    <input type="date" name="designacion_inicio" class="form-control form-control-sm"
+                                        value="{{ old('designacion_inicio', $servidor->designacion_inicio ? \Carbon\Carbon::parse($servidor->designacion_inicio)->format('Y-m-d') : '') }}">
+                                </div>
+                                <div class="col-4">
+                                    <input type="date" name="designacion_fin" class="form-control form-control-sm"
+                                        value="{{ old('designacion_fin', $servidor->designacion_fin ? \Carbon\Carbon::parse($servidor->designacion_fin)->format('Y-m-d') : '') }}">
                                 </div>
                             </div>
 
-                            <div class="row g-3 mb-3">
-                                <div class="col-4">
-                                    <label class="form-label">Fecha ingreso Aduana</label>
-                                    <input type="date" name="fecha_ingreso_aduana" class="form-control"
-                                        value="{{ old('fecha_ingreso_aduana', $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('Y-m-d') : '') }}">
+                            <div class="row g-2 align-items-center mb-2">
+                                <div class="col-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Interinato" id="chk_int_edit"
+                                            {{ in_array('Interinato', $designacionActual) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="chk_int_edit">Interinato</label>
+                                    </div>
                                 </div>
                                 <div class="col-4">
-                                    <label class="form-label">Fecha inicio contrato</label>
-                                    <input type="date" name="fecha_inicio_contrato" class="form-control"
-                                        value="{{ old('fecha_inicio_contrato', $servidor->fecha_inicio_contrato ? \Carbon\Carbon::parse($servidor->fecha_inicio_contrato)->format('Y-m-d') : '') }}">
+                                    <input type="date" name="interinato_inicio" class="form-control form-control-sm"
+                                        value="{{ old('interinato_inicio', $servidor->interinato_inicio ? \Carbon\Carbon::parse($servidor->interinato_inicio)->format('Y-m-d') : '') }}">
                                 </div>
                                 <div class="col-4">
-                                    <label class="form-label">Fecha fin contrato</label>
-                                    <input type="date" name="fecha_fin_contrato" class="form-control"
-                                        value="{{ old('fecha_fin_contrato', $servidor->fecha_fin_contrato ? \Carbon\Carbon::parse($servidor->fecha_fin_contrato)->format('Y-m-d') : '') }}">
+                                    <input type="date" name="interinato_fin" class="form-control form-control-sm"
+                                        value="{{ old('interinato_fin', $servidor->interinato_fin ? \Carbon\Carbon::parse($servidor->interinato_fin)->format('Y-m-d') : '') }}">
                                 </div>
                             </div>
+
+                            <div class="row g-2 align-items-center">
+                                <div class="col-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Comisión" id="chk_com_edit"
+                                            {{ in_array('Comisión', $designacionActual) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="chk_com_edit">Comisión</label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <input type="date" name="comision_inicio" class="form-control form-control-sm"
+                                        value="{{ old('comision_inicio', $servidor->comision_inicio ? \Carbon\Carbon::parse($servidor->comision_inicio)->format('Y-m-d') : '') }}">
+                                </div>
+                                <div class="col-4">
+                                    <input type="date" name="comision_fin" class="form-control form-control-sm"
+                                        value="{{ old('comision_fin', $servidor->comision_fin ? \Carbon\Carbon::parse($servidor->comision_fin)->format('Y-m-d') : '') }}">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {{-- Unidad y Sub-Unidad (común) --}}
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label">Unidad</label>
+                                <select name="unidad" id="unidad_edit" class="form-select" onchange="cargarSubsEdit()">
+                                    <option value="">Seleccionar Unidad</option>
+                                    @foreach(['GERENCIA REGIONAL LA PAZ - GRLPZ','Unidad Administrativa','Unidad Fiscalización','Unidad Jurídica','Administración Aduana Interior La Paz','Aduana Frontera Guayaramerín','Aduana Aeropuerto El Alto','Administración Aduana Zona Franca Industrial Patacamaya','Administración Aduana Frontera Desaguadero','Zona Franca Comercial / Frontera Cobija','Agencia Aduana Exterior Matarani','Administración Aduana Frontera Charaña'] as $u)
+                                        <option value="{{ $u }}" {{ old('unidad', $servidor->unidad)==$u?'selected':'' }}>{{ $u }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Sub-Unidad</label>
+                                <select name="sub_unidad" id="sub_unidad_edit" class="form-select">
+                                    <option value="">Seleccionar Sub-Unidad</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- Fechas según tipo --}}
+                        @if($servidor->tipo === 'item')
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label">Fecha de ingreso a la Aduana</label>
+                                <input type="date" name="fecha_ingreso_aduana" class="form-control"
+                                    value="{{ old('fecha_ingreso_aduana', $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('Y-m-d') : '') }}">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Fecha de inicio cargo</label>
+                                <input type="date" name="fecha_inicio_cargo" class="form-control"
+                                    value="{{ old('fecha_inicio_cargo', $servidor->fecha_inicio_cargo ? \Carbon\Carbon::parse($servidor->fecha_inicio_cargo)->format('Y-m-d') : '') }}">
+                            </div>
+                        </div>
+                        @else
+                        <div class="row g-3 mb-3">
+                            <div class="col-4">
+                                <label class="form-label">Fecha ingreso Aduana</label>
+                                <input type="date" name="fecha_ingreso_aduana" class="form-control"
+                                    value="{{ old('fecha_ingreso_aduana', $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('Y-m-d') : '') }}">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Fecha inicio contrato</label>
+                                <input type="date" name="fecha_inicio_contrato" class="form-control"
+                                    value="{{ old('fecha_inicio_contrato', $servidor->fecha_inicio_contrato ? \Carbon\Carbon::parse($servidor->fecha_inicio_contrato)->format('Y-m-d') : '') }}">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Fecha fin contrato</label>
+                                <input type="date" name="fecha_fin_contrato" class="form-control"
+                                    value="{{ old('fecha_fin_contrato', $servidor->fecha_fin_contrato ? \Carbon\Carbon::parse($servidor->fecha_fin_contrato)->format('Y-m-d') : '') }}">
+                            </div>
+                        </div>
                         @endif
 
                         {{-- Inamovilidad --}}
@@ -225,50 +257,35 @@
 function previewEdit(event) {
     const img = document.getElementById('preview-edit');
     const file = event.target.files[0];
-    if (file) {
-        img.src = URL.createObjectURL(file);
-        img.style.display = 'inline-block';
-    }
+    if (file) { img.src = URL.createObjectURL(file); img.style.display = 'inline-block'; }
 }
 
-const datosUnidades = {
-    "GERENCIA REGIONAL LA PAZ - GRLPZ": ["ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
-    "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales"],
-    "Unidad Fiscalización": ["Fiscalizaciones posteriores","Controles diferidos"],
-    "Unidad Jurídica": ["Cobranza coactiva","Técnica jurídica","Procesos administrativos"],
-    "Administración Aduana Interior La Paz": ["SPCC (Comisos)","Disposición de mercancías","Despachos","Gestión"],
-    "Aduana Frontera Guayaramerín": ["Operaciones","Control","Administración"],
-    "Aduana Aeropuerto El Alto": ["Carga Aérea","Equipajes","Administración"],
-    "Administración Aduana Zona Franca Industrial Patacamaya": ["Operaciones","Control","Administración"],
-    "Administración Aduana Frontera Desaguadero": ["Control Fronterizo","Despachos","Administración"],
-    "Zona Franca Comercial / Frontera Cobija": ["Comercial","Control","Administración"],
-    "Agencia Aduana Exterior Matarani": ["Operaciones","Despachos","Administración"],
-    "Administración Aduana Frontera Charaña": ["Control","Despachos","Administración"]
+const subs = {
+    "GERENCIA REGIONAL LA PAZ - GRLPZ":["GERENTE","ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
+    "Unidad Administrativa":["Responsable Administrativo Financiero","Auxiliar Unidad Administrativa","Activos Fijos","Contabilidad","Talento Humano","Contrataciones","Servicios Generales"],
+    "Unidad Fiscalización":["Jefes Unidad Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización","Fiscalizaciones posteriores / Controles diferidos"],
+    "Unidad Jurídica":["Responsable Administrativo Jurídica","Auxiliar Unidad Jurídica","Cobranza coactiva","Técnica jurídica","Procesos administrativos"],
+    "Administración Aduana Interior La Paz":["Secretaria Aduana Interior La Paz","Administrador Aduana Interior La Paz","SPCC (Comisos)","Disposición de mercancías","Despachos","Gestión"],
+    "Aduana Frontera Guayaramerín":["Secretaria Guayaramerin","Administrador Guayamerin","Gestion Aduanera / Operativa Guayamerin"],
+    "Aduana Aeropuerto El Alto":["Secretaria Aeropuerto El Alto","Administrador Aeropuerto El Alto","Supervisor Aeropuerto El Alto","Despachos Aeropuerto El Alto","Tecnico gestion Aeropuerto El Alto","SPCC Aeropuerto El Alto"],
+    "Administración Aduana Zona Franca Industrial Patacamaya":["Secretaria Patacamaya","Administrador Patacamaya","Gestion Aduanera / Operativa Patacamaya"],
+    "Administración Aduana Frontera Desaguadero":["Secretaria Frontera Desaguadero","Administrador Frontera Desaguadero","Gestion Aduanera / Operativa Desaguadero"],
+    "Zona Franca Comercial / Frontera Cobija":["Secretaria Frontera Cobija","Administrador Frontera Cobija","Gestion Aduanera / Operativa Cobija","Zofra Cobija","Aeropuerto Cobija"],
+    "Agencia Aduana Exterior Matarani":["Secretaria Exterior Matarani","Administrador Exterior Matarani","Gestion Aduanera / Operativa Matarani"],
+    "Administración Aduana Frontera Charaña":["Secretaria Frontera Charaña","Administrador Frontera Charaña","Despachos / Minimas cuantrillas"]
 };
-
 function cargarSubsEdit() {
-    const unidad = document.getElementById('unidad_edit').value;
     const sel = document.getElementById('sub_unidad_edit');
     sel.innerHTML = '<option value="">Seleccionar Sub-Unidad</option>';
-    (datosUnidades[unidad] || []).forEach(function(sub) {
-        const opt = document.createElement('option');
-        opt.value = sub; opt.text = sub;
-        sel.appendChild(opt);
-    });
+    (subs[document.getElementById('unidad_edit').value]||[]).forEach(s => { let o=document.createElement('option'); o.value=s; o.text=s; sel.appendChild(o); });
 }
-
 document.addEventListener('DOMContentLoaded', function() {
-    const unidadActual = '{{ old('unidad', $servidor->unidad) }}';
-    const subActual = '{{ old('sub_unidad', $servidor->sub_unidad) }}';
-    if (unidadActual) {
+    const u = @json(old('unidad', $servidor->unidad));
+    const s = @json(old('sub_unidad', $servidor->sub_unidad));
+    if (u) {
         const sel = document.getElementById('sub_unidad_edit');
         sel.innerHTML = '<option value="">Seleccionar Sub-Unidad</option>';
-        (datosUnidades[unidadActual] || []).forEach(function(sub) {
-            const opt = document.createElement('option');
-            opt.value = sub; opt.text = sub;
-            if (sub === subActual) opt.selected = true;
-            sel.appendChild(opt);
-        });
+        (subs[u]||[]).forEach(sub => { let o=document.createElement('option'); o.value=sub; o.text=sub; if(sub===s) o.selected=true; sel.appendChild(o); });
     }
 });
 </script>

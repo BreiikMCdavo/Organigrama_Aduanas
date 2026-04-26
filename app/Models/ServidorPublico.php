@@ -20,6 +20,12 @@ class ServidorPublico extends Model
         'fotografia',
         'fecha_ingreso_aduana',
         'designacion',
+        'designacion_inicio',
+        'designacion_fin',
+        'interinato_inicio',
+        'interinato_fin',
+        'comision_inicio',
+        'comision_fin',
         /* NUEVOS CAMPOS */
         'unidad',
         'sub_unidad',
@@ -44,10 +50,16 @@ class ServidorPublico extends Model
     ];
 
     protected $casts = [
-        'fecha_ingreso_aduana' => 'date',
-        'fecha_inicio_cargo' => 'date',
+        'fecha_ingreso_aduana'  => 'date',
+        'fecha_inicio_cargo'    => 'date',
         'fecha_inicio_contrato' => 'date',
-        'fecha_fin_contrato' => 'date',
-        'acefalia' => 'boolean',
+        'fecha_fin_contrato'    => 'date',
+        'designacion_inicio'    => 'date',
+        'designacion_fin'       => 'date',
+        'interinato_inicio'     => 'date',
+        'interinato_fin'        => 'date',
+        'comision_inicio'       => 'date',
+        'comision_fin'          => 'date',
+        'acefalia'              => 'boolean',
     ];
 }

@@ -67,6 +67,29 @@
                     @endif
                 </div>
 
+                {{-- Designación con fechas --}}
+                @if($servidor->designacion)
+                <div class="inamovilidad-titulo mt-2">Designación:</div>
+                @foreach(explode(', ', $servidor->designacion) as $tipo)
+                <div class="inamovilidad-item">
+                    <span class="check-icon">☑</span>
+                    <span>
+                        {{ $tipo }}
+                        @if($tipo === 'Designación' && $servidor->designacion_inicio)
+                            — {{ \Carbon\Carbon::parse($servidor->designacion_inicio)->format('d/m/Y') }}
+                            @if($servidor->designacion_fin) al {{ \Carbon\Carbon::parse($servidor->designacion_fin)->format('d/m/Y') }} @endif
+                        @elseif($tipo === 'Interinato' && $servidor->interinato_inicio)
+                            — {{ \Carbon\Carbon::parse($servidor->interinato_inicio)->format('d/m/Y') }}
+                            @if($servidor->interinato_fin) al {{ \Carbon\Carbon::parse($servidor->interinato_fin)->format('d/m/Y') }} @endif
+                        @elseif($tipo === 'Comisión' && $servidor->comision_inicio)
+                            — {{ \Carbon\Carbon::parse($servidor->comision_inicio)->format('d/m/Y') }}
+                            @if($servidor->comision_fin) al {{ \Carbon\Carbon::parse($servidor->comision_fin)->format('d/m/Y') }} @endif
+                        @endif
+                    </span>
+                </div>
+                @endforeach
+                @endif
+
                 {{-- Inamovilidad --}}
                 <div class="inamovilidad-titulo">Inamovilidad:</div>
 
