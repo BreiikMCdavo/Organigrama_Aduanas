@@ -260,22 +260,7 @@ function previewEdit(event) {
     if (file) { img.src = URL.createObjectURL(file); img.style.display = 'inline-block'; }
 }
 
-<<<<<<< HEAD
 const subs = {
-    "GERENCIA REGIONAL LA PAZ - GRLPZ":["GERENTE","ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
-    "Unidad Administrativa":["Responsable Administrativo Financiero","Auxiliar Unidad Administrativa","Activos Fijos","Contabilidad","Talento Humano","Contrataciones","Servicios Generales"],
-    "Unidad Fiscalización":["Jefes Unidad Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización","Fiscalizaciones posteriores / Controles diferidos"],
-    "Unidad Jurídica":["Responsable Administrativo Jurídica","Auxiliar Unidad Jurídica","Cobranza coactiva","Técnica jurídica","Procesos administrativos"],
-    "Administración Aduana Interior La Paz":["Secretaria Aduana Interior La Paz","Administrador Aduana Interior La Paz","SPCC (Comisos)","Disposición de mercancías","Despachos","Gestión"],
-    "Aduana Frontera Guayaramerín":["Secretaria Guayaramerin","Administrador Guayamerin","Gestion Aduanera / Operativa Guayamerin"],
-    "Aduana Aeropuerto El Alto":["Secretaria Aeropuerto El Alto","Administrador Aeropuerto El Alto","Supervisor Aeropuerto El Alto","Despachos Aeropuerto El Alto","Tecnico gestion Aeropuerto El Alto","SPCC Aeropuerto El Alto"],
-    "Administración Aduana Zona Franca Industrial Patacamaya":["Secretaria Patacamaya","Administrador Patacamaya","Gestion Aduanera / Operativa Patacamaya"],
-    "Administración Aduana Frontera Desaguadero":["Secretaria Frontera Desaguadero","Administrador Frontera Desaguadero","Gestion Aduanera / Operativa Desaguadero"],
-    "Zona Franca Comercial / Frontera Cobija":["Secretaria Frontera Cobija","Administrador Frontera Cobija","Gestion Aduanera / Operativa Cobija","Zofra Cobija","Aeropuerto Cobija"],
-    "Agencia Aduana Exterior Matarani":["Secretaria Exterior Matarani","Administrador Exterior Matarani","Gestion Aduanera / Operativa Matarani"],
-    "Administración Aduana Frontera Charaña":["Secretaria Frontera Charaña","Administrador Frontera Charaña","Despachos / Minimas cuantrillas"]
-=======
-const subUnidadesData = {
     "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
     "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales","Responsable Administrativo Financiero","Auxiliar Unidad Administrativa"],
     "Unidad Fiscalización": ["Fiscalizaciones posteriores / Controles diferidos","Jefes Unidad Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización"],
@@ -288,7 +273,6 @@ const subUnidadesData = {
     "Zona Franca Comercial / Frontera Cobija": ["Secretaria Frontera Cobija","Administrador Frontera Cobija","Gestion Aduanera / Operativa Cobija","Zofra Cobija","Aeropuerto Cobija"],
     "Agencia Aduana Exterior Matarani": ["Secretaria Exterior Matarani","Administrador Exterior Matarani","Gestion Aduanera / Operativa Matarani"],
     "Administración Aduana Frontera Charaña": ["Secretaria Frontera Charaña","Administrador Frontera Charaña","Despachos / Minimas cuantrillas"],
->>>>>>> 4c7633c02e93131b1314530ba6cd535b1b0112a4
 };
 function cargarSubsEdit() {
     const sel = document.getElementById('sub_unidad_edit');
