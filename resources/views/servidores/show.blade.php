@@ -26,10 +26,14 @@
                 {{-- Datos principales --}}
                 @if($servidor->tipo === 'item')
                     <div class="dato-principal">
-                        <div class="label">N° Ítem: <span class="valor">{{ $servidor->numero_item ?? '—' }}</span></div>
+                        <div class="label">
+                            N° Ítem: <span class="valor">{{ $servidor->numero_item ?? '—' }}</span>
+                            &nbsp;&nbsp; Cód. Funcionario: <span class="valor">{{ $servidor->cod_funcionario ?? '' }}</span>
+                            &nbsp;&nbsp; Escala Salarial: <span class="valor">{{ $servidor->escala_salarial ?? '' }}</span>
+                        </div>
                     </div>
                     <div class="dato-principal">
-                        <div class="label">Cargo: <span class="valor">{{ $servidor->designacion ?? '—' }}</span></div>
+                        <div class="label">Cargo: <span class="valor">{{ $servidor->designacion ?? '' }}</span></div>
                     </div>
                     <div class="dato-principal">
                         <div class="cargo-desc">✔ {{ $servidor->cargo ?? '' }}</div>
@@ -39,7 +43,7 @@
                         <div class="label">Contrato: <span class="valor">{{ $servidor->contrato_numero ?? '—' }}</span></div>
                     </div>
                     <div class="dato-principal">
-                        <div class="label">Cargo: <span class="valor">{{ $servidor->designacion ?? '—' }}</span></div>
+                        <div class="label">Cargo: <span class="valor">{{ $servidor->designacion ?? '' }}</span></div>
                     </div>
                     <div class="dato-principal">
                         <div class="cargo-desc">{{ $servidor->cargo_consultoria ?? '' }}</div>
