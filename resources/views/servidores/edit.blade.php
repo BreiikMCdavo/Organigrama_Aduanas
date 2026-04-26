@@ -252,35 +252,18 @@ function previewEdit(event) {
 }
 
 const subUnidadesData = {
-<<<<<<< HEAD
-        "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
-        "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales","Responsable Administrativo Financiero","Auxiliar Unidad Administrativa"],
-        "Unidad Fiscalización": ["Fiscalizaciones posteriores / Controles diferidos","Jefes Unidad Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización"],
-        "Unidad Jurídica": ["Cobranza coactiva","Técnica jurídica","Procesos administrativos","Servicios Generales","Responsable Administrativo Jurídica","Auxiliar Unidad Jurídica"],
-        "Administración Aduana Interior La Paz": ["SPCC (Comisos)","Disposición de mercancías","Despachos","Gestión","Secretaria Aduana Interior La Paz","Administrador Aduana Interior La Paz"],
-        "Aduana Frontera Guayaramerín": ["Secretaria Guayaramerin","Administrador Guayamerin","Gestion Aduanera / Operativa Guayamerin"],
-        "Aduana Aeropuerto El Alto": ["Secretaria Aeropuerto El Alto","Administrador Aeropuerto El Alto","Supervisor Aeropuerto El Alto","Despachos Aeropuerto El Alto","Tecnico gestion Aeropuerto El Alto","SPCC Aeropuerto El Alto"],
-        // "Administración Aduana Zona Franca": ["Operaciones","Control","Administración"],
-        "Administración Aduana Zona Franca Industrial Patacamaya": ["Secretaria Patacamaya","Administrador Patacamaya","Gestion Aduanera / Operativa Patacamaya"],
-        "Administración Aduana Frontera Desaguadero": ["Secretaria Frontera Desaguadero","Administrador Frontera Desaguadero","Gestion Aduanera / Operativa Desaguadero"],
-        "Zona Franca Comercial / Frontera Cobija": ["Secretaria Frontera Cobija","Administrador Frontera Cobija","Gestion Aduanera / Operativa Cobija","Zofra Cobija","Aeropuerto Cobija"],
-        "Agencia Aduana Exterior Matarani": ["Secretaria Exterior Matarani","Administrador Exterior Matarani","Gestion Aduanera / Operativa Matarani"],
-        "Administración Aduana Frontera Charaña": ["Secretaria Frontera Charaña","Administrador Frontera Charaña","Despachos / Minimas cuantrillas"],
-=======
     "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
-    "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales"],
-    "Unidad Fiscalización": ["Fiscalizaciones posteriores","Controles diferidos"],
-    "Unidad Jurídica": ["Cobranza coactiva","Técnica jurídica","Procesos administrativos"],
-    "Administración Aduana Interior La Paz": ["SPCC (Comisos)","Disposición de mercancías","Despachos","Gestión"],
-    "Aduana Frontera Guayaramerín": ["Operaciones","Control","Administración"],
-    "Aduana Aeropuerto El Alto": ["Carga Aérea","Equipajes","Administración"],
-    "Administración Aduana Zona Franca": ["Operaciones","Control","Administración"],
-    "Administración Aduana Zona Franca Industrial Patacamaya": ["Operaciones","Control","Administración"],
-    "Administración Aduana Frontera Desaguadero": ["Control Fronterizo","Despachos","Administración"],
-    "Zona Franca Comercial / Frontera Cobija": ["CEBAF","Puente Nuevo","Puente Viejo","Puerto Acosta","Kasani"],
-    "Agencia Aduana Exterior Matarani": ["Operaciones","Despachos","Administración"],
-    "Administración Aduana Frontera Charaña": ["Control","Despachos","Administración"],
->>>>>>> cd59bac1aaf4fe3d7707675141df3209e157bcb6
+    "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales","Responsable Administrativo Financiero","Auxiliar Unidad Administrativa"],
+    "Unidad Fiscalización": ["Fiscalizaciones posteriores / Controles diferidos","Jefes Unidad Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización"],
+    "Unidad Jurídica": ["Cobranza coactiva","Técnica jurídica","Procesos administrativos","Servicios Generales","Responsable Administrativo Jurídica","Auxiliar Unidad Jurídica"],
+    "Administración Aduana Interior La Paz": ["SPCC (Comisos)","Disposición de mercancías","Despachos","Gestión","Secretaria Aduana Interior La Paz","Administrador Aduana Interior La Paz"],
+    "Aduana Frontera Guayaramerín": ["Secretaria Guayaramerin","Administrador Guayamerin","Gestion Aduanera / Operativa Guayamerin"],
+    "Aduana Aeropuerto El Alto": ["Secretaria Aeropuerto El Alto","Administrador Aeropuerto El Alto","Supervisor Aeropuerto El Alto","Despachos Aeropuerto El Alto","Tecnico gestion Aeropuerto El Alto","SPCC Aeropuerto El Alto"],
+    "Administración Aduana Zona Franca Industrial Patacamaya": ["Secretaria Patacamaya","Administrador Patacamaya","Gestion Aduanera / Operativa Patacamaya"],
+    "Administración Aduana Frontera Desaguadero": ["Secretaria Frontera Desaguadero","Administrador Frontera Desaguadero","Gestion Aduanera / Operativa Desaguadero"],
+    "Zona Franca Comercial / Frontera Cobija": ["Secretaria Frontera Cobija","Administrador Frontera Cobija","Gestion Aduanera / Operativa Cobija","Zofra Cobija","Aeropuerto Cobija"],
+    "Agencia Aduana Exterior Matarani": ["Secretaria Exterior Matarani","Administrador Exterior Matarani","Gestion Aduanera / Operativa Matarani"],
+    "Administración Aduana Frontera Charaña": ["Secretaria Frontera Charaña","Administrador Frontera Charaña","Despachos / Minimas cuantrillas"],
 };
 
 function llenarSubUnidades(unidad, selectEl, valorActual) {

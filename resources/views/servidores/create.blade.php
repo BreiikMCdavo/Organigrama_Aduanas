@@ -26,6 +26,25 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    <strong>❌ Error:</strong> {{ session('error') }}
+                </div>
+            @endif
+
+            @if(session('warning'))
+                <div class="alert alert-warning">
+                    <strong>⚠️ Atención:</strong> {{ session('warning') }}
+                </div>
+            @endif
+
+            @if(session('info'))
+                <div class="alert alert-info">
+                    <strong>ℹ️ Información:</strong> {{ session('info') }}
+                </div>
+            @endif
+
+            {{-- SECCIÓN DE DUPLICADOS - VERSIÓN SIMPLE --}}
             {{-- ===== ÍTEM ===== --}}
             <div id="form-item" style="display:none;">
                 <form action="{{ route('servidores.store') }}" method="POST" enctype="multipart/form-data">
@@ -34,6 +53,69 @@
                     <div class="card shadow-sm border-0 rounded-3">
                         <div class="card-body p-4">
                             <h6 class="fw-bold mb-3">Datos del Ítem</h6>
+
+                            {{-- SECCIÓN DE DUPLICADOS - VERSIÓN SIMPLE --}}
+                            @if(session('duplicados') && session('duplicados')->count() > 0)
+                                <div class="alert alert-warning mb-3">
+                                    <h6 class="alert-heading">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                        ¡Esta persona ya tiene un cargo registrado!
+                                    </h6>
+                                    
+                                    <div class="mb-3">
+                                        <strong>Cargo actual:</strong> 
+                                        {{ session('duplicados')->first()->cargo_descripcion }}
+                                        <br>
+                                        <small class="text-muted">
+                                            {{ session('duplicados')->first()->sub_unidad ?? session('duplicados')->first()->unidad }}
+                                        </small>
+                                    </div>
+
+                                    <div class="alert alert-light">
+                                        <h6 class="mb-2">¿Qué quieres hacer?</h6>
+                                        
+                                        <div class="mb-2">
+                                            <label class="form-check">
+                                                <input class="form-check-input" type="radio" 
+                                                       name="accion_duplicado" 
+                                                       value="reemplazar" 
+                                                       required>
+                                                <span class="form-check-label">
+                                                    <strong>🔄 Cambiar de cargo</strong>
+                                                    <br>
+                                                    <small>Dejar el cargo actual vacante y asignar el nuevo</small>
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="form-check">
+                                                <input class="form-check-input" type="radio" 
+                                                       name="accion_duplicado" 
+                                                       value="adicionar">
+                                                <span class="form-check-label">
+                                                    <strong>➕ Agregar segundo cargo</strong>
+                                                    <br>
+                                                    <small class="text-warning">La persona tendrá dos cargos (se contará como vacante)</small>
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="form-check">
+                                                <input class="form-check-input" type="radio" 
+                                                       name="accion_duplicado" 
+                                                       value="nuevo">
+                                                <span class="form-check-label">
+                                                    <strong>👤 Es otra persona</strong>
+                                                    <br>
+                                                    <small>Son nombres iguales pero personas diferentes</small>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
 
                             <div class="row g-2 mb-2">
                                 <div class="col-3">
@@ -166,6 +248,69 @@
                     <div class="card shadow-sm border-0 rounded-3">
                         <div class="card-body p-4">
                             <h6 class="fw-bold mb-3">Datos de Consultoría</h6>
+
+                            {{-- SECCIÓN DE DUPLICADOS - VERSIÓN SIMPLE --}}
+                            @if(session('duplicados') && session('duplicados')->count() > 0)
+                                <div class="alert alert-warning mb-3">
+                                    <h6 class="alert-heading">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                        ¡Esta persona ya tiene un cargo registrado!
+                                    </h6>
+                                    
+                                    <div class="mb-3">
+                                        <strong>Cargo actual:</strong> 
+                                        {{ session('duplicados')->first()->cargo_descripcion }}
+                                        <br>
+                                        <small class="text-muted">
+                                            {{ session('duplicados')->first()->sub_unidad ?? session('duplicados')->first()->unidad }}
+                                        </small>
+                                    </div>
+
+                                    <div class="alert alert-light">
+                                        <h6 class="mb-2">¿Qué quieres hacer?</h6>
+                                        
+                                        <div class="mb-2">
+                                            <label class="form-check">
+                                                <input class="form-check-input" type="radio" 
+                                                       name="accion_duplicado" 
+                                                       value="reemplazar" 
+                                                       required>
+                                                <span class="form-check-label">
+                                                    <strong>🔄 Cambiar de cargo</strong>
+                                                    <br>
+                                                    <small>Dejar el cargo actual vacante y asignar el nuevo</small>
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="form-check">
+                                                <input class="form-check-input" type="radio" 
+                                                       name="accion_duplicado" 
+                                                       value="adicionar">
+                                                <span class="form-check-label">
+                                                    <strong>➕ Agregar segundo cargo</strong>
+                                                    <br>
+                                                    <small class="text-warning">La persona tendrá dos cargos (se contará como vacante)</small>
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="form-check">
+                                                <input class="form-check-input" type="radio" 
+                                                       name="accion_duplicado" 
+                                                       value="nuevo">
+                                                <span class="form-check-label">
+                                                    <strong>👤 Es otra persona</strong>
+                                                    <br>
+                                                    <small>Son nombres iguales pero personas diferentes</small>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
 
                             <div class="row g-2 mb-2">
                                 <div class="col-7">

@@ -51,6 +51,8 @@ class ServidorPublicoController extends Controller
             'apellido_paterno' => 'nullable|regex:/^[\pL\s]+$/u|max:100',
             'apellido_materno' => 'nullable|regex:/^[\pL\s]+$/u|max:100',
             'fotografia'       => 'nullable|image|max:2048',
+            'accion_duplicado' => 'nullable|in:nuevo,reemplazar,adicionar',
+            'cargo_a_reemplazar' => 'nullable|integer',
         ];
 
         if ($request->tipo === 'item') {
@@ -83,10 +85,58 @@ class ServidorPublicoController extends Controller
             'apellido_paterno.required'    => 'El apellido paterno es obligatorio.',
         ]);
 
-        $data = $request->except('fotografia');
+        $data = $request->except('fotografia', 'accion_duplicado', 'cargo_a_reemplazar');
 
         // Detectar acefalía: sin nombre = acefalía
         $data['acefalia'] = empty(trim($request->nombre ?? ''));
+
+        // Buscar duplicados solo si hay nombre completo
+        if (!empty(trim($request->nombre ?? '')) && !empty(trim($request->apellido_paterno ?? ''))) {
+            $duplicados = ServidorPublico::buscarPorNombreCompleto(
+                $request->nombre,
+                $request->apellido_paterno,
+                $request->apellido_materno
+            );
+
+            if ($duplicados->count() > 0) {
+                // Si hay duplicados pero no se especificó acción, volver con advertencia
+                if (!$request->accion_duplicado) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with('duplicados', $duplicados)
+                        ->with('warning', 'Se encontraron registros existentes para esta persona. Por favor, seleccione una acción.');
+                }
+
+                // Validar que si se elige reemplazar, se seleccione un cargo
+                if ($request->accion_duplicado === 'reemplazar' && !$request->cargo_a_reemplazar) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with('duplicados', $duplicados)
+                        ->with('error', 'Debe seleccionar un cargo existente para reemplazar.');
+                }
+
+                // Manejar acción seleccionada
+                if ($request->accion_duplicado === 'reemplazar' && $request->cargo_a_reemplazar) {
+                    $cargoExistente = $duplicados->where('id', $request->cargo_a_reemplazar)->first();
+                    if ($cargoExistente) {
+                        // Marcar cargo anterior como acefalía pero conservar información del cargo
+                        $cargoExistente->update([
+                            'acefalia' => true,
+                            'nombre' => null,
+                            'apellido_paterno' => null,
+                            'apellido_materno' => null,
+                        ]);
+
+                        // Agregar mensaje informativo
+                        session()->flash('info', "El cargo '{$cargoExistente->cargo_descripcion}' ha quedado vacante (acefalía).");
+                    }
+                } elseif ($request->accion_duplicado === 'adicionar') {
+                    // Adicionar segundo cargo (se contará como acefalía en el organigrama)
+                    session()->flash('info', 'Se ha registrado un segundo cargo para esta persona. En el organigrama se contará como acefalía.');
+                }
+                // Si es 'nuevo', simplemente continuar sin mensajes especiales
+            }
+        }
 
         if ($request->hasFile('fotografia')) {
             $data['fotografia'] = $request->file('fotografia')->store('servidores', 'public');
