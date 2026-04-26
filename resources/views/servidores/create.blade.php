@@ -467,6 +467,12 @@ function previewImg(event, previewId) {
     document.getElementById('selectorTipo').value = 'consultoria';
 @endif
 
+// Si hay duplicados, mostrar el form de ítem automáticamente
+@if(session('duplicados'))
+    mostrarFormulario('item');
+    document.getElementById('selectorTipo').value = 'item';
+@endif
+
 function llenarSubUnidades(unidad, selectEl) {
     selectEl.innerHTML = '<option value="">Seleccionar Sub-Unidad</option>';
     const datos = {

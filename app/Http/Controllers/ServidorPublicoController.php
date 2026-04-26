@@ -43,6 +43,30 @@ class ServidorPublicoController extends Controller
 
     public function store(Request $request)
     {
+        // ── Detección de duplicados por número de ítem ──────────────────
+        if ($request->tipo === 'item' && $request->filled('numero_item') && !$request->filled('accion_duplicado')) {
+            $duplicados = ServidorPublico::where('numero_item', $request->numero_item)
+                ->where('tipo', 'item')
+                ->get()
+                ->map(function ($s) {
+                    $s->cargo_descripcion = $s->cargo ?? '(sin cargo)';
+                    return $s;
+                });
+
+            if ($duplicados->count() > 0) {
+                return back()
+                    ->withInput()
+                    ->with('duplicados', $duplicados);
+            }
+        }
+
+        // Si eligió "reemplazar", marcar el registro anterior como acefalía
+        if ($request->accion_duplicado === 'reemplazar' && $request->filled('numero_item')) {
+            ServidorPublico::where('numero_item', $request->numero_item)
+                ->where('tipo', 'item')
+                ->update(['acefalia' => true, 'nombre' => null, 'apellido_paterno' => null, 'apellido_materno' => null]);
+        }
+        // Si eligió "adicionar" o "nuevo", simplemente continúa y guarda normalmente
         $rules = [
             'tipo'             => 'required|in:item,consultoria',
             'unidad'           => 'required|string|max:150',
