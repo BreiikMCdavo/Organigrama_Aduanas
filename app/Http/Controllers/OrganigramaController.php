@@ -2,27 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\ServidorPublico;
+use Illuminate\Http\Request;
 
 class OrganigramaController extends Controller
 {
-    public function show($area)
-    {
-        $area = urldecode($area);
-
-        $servidores = ServidorPublico::whereHas('unidades', function ($query) use ($area) {
-                $query->where('nombre', $area);
-            })
-            ->with('persona')
+  public function info($area)
+{
+    // GERENCIA = todos
+    if ($area === 'GERENCIA REGIONAL LA PAZ - GRLPZ') {
+        $personal = ServidorPublico::all();
+    } else {
+        $personal = ServidorPublico::where('unidad', $area)
+            ->orWhere('sub_unidad', $area)
             ->get();
-
-        return response()->json([
-            "items" => $servidores->count(),
-            "acefalias" => 0,
-            "personal" => $servidores->map(function ($s) {
-                return $s->persona->nombre . ' ' . $s->persona->apellido_paterno;
-            })
-        ]);
     }
+
+    // ITEMS
+    $items = $personal->filter(fn($p) => !empty($p->numero_item))->count();
+
+    // ACEFALIAS
+    $acefalias = $personal->filter(fn($p) => empty($p->numero_item))->count();
+
+    // AGRUPAR POR CARGO
+    $cargos = $personal
+        ->groupBy(function ($p) {
+            return $p->cargo ?? $p->cargo_consultoria ?? 'Sin cargo';
+        })
+        ->map(function ($grupo) {
+            return $grupo->count();
+        });
+
+    return response()->json([
+        'items' => $items,
+        'acefalias' => $acefalias,
+        'cargos' => $cargos
+    ]);
+}
 }

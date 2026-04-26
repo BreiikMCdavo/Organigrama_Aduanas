@@ -12,27 +12,40 @@ class ServidorPublico extends Model
     protected $table = 'servidores_publicos';
 
     protected $fillable = [
-        'persona_id',
         'tipo',
-        'cargo',
+        // Datos comunes
+        'nombre',
+        'apellido_paterno',
+        'apellido_materno',
+        'fotografia',
+        'fecha_ingreso_aduana',
+        'designacion',
+        /* NUEVOS CAMPOS */
+        'unidad',
+        'sub_unidad',
+        // Datos ÍTEM
         'numero_item',
-        'fecha_ingreso'
+        'cite_memorandum',
+        'cargo',
+        'fecha_inicio_cargo',
+        // Datos CONSULTORÍA
+        'contrato_numero',
+        'cargo_consultoria',
+        'fecha_inicio_contrato',
+        'fecha_fin_contrato',
+        // Inamovilidad
+        'asignacion_familiar_desc',
+        'asignacion_familiar_grado',
+        'casos_especiales_desc',
+        'casos_especiales_grado',
+        'discapacidad_desc',
+        'discapacidad_grado',
     ];
 
-    // 🔥 RELACIÓN con persona
-    public function persona()
-    {
-        return $this->belongsTo(Persona::class);
-    }
-
-    // 🔥 RELACIÓN con unidades (CORREGIDO)
-    public function unidades()
-    {
-        return $this->belongsToMany(
-            Unidad::class,
-            'servidor_unidad',
-            'servidor_id',
-            'unidad_id'
-        );
-    }
+    protected $casts = [
+        'fecha_ingreso_aduana' => 'date',
+        'fecha_inicio_cargo' => 'date',
+        'fecha_inicio_contrato' => 'date',
+        'fecha_fin_contrato' => 'date',
+    ];
 }
