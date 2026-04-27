@@ -184,12 +184,12 @@
                                         <option value="Unidad Fiscalización">Unidad Fiscalización</option>
                                         <option value="Unidad Jurídica">Unidad Jurídica</option>
                                         <option value="Administración Aduana Interior La Paz">Administración Aduana Interior La Paz</option>
-                                        <option value="Aduana Frontera Guayaramerín">Aduana Frontera Guayaramerín</option>
-                                        <option value="Aduana Aeropuerto El Alto">Aduana Aeropuerto El Alto</option>
-                                        <option value="Administración Aduana Zona Franca Industrial Patacamaya">Administración Aduana Zona Franca Industrial Patacamaya</option>
+                                        <option value="Administración Aduana Frontera Guayaramerín">Administración Aduana Frontera Guayaramerín</option>
+                                        <option value="Administración Aduana Aeropuerto">Administración Aduana Aeropuerto</option>
+                                        <option value="Administración Aduana Zona Franca Patacamaya">Administración Aduana Zona Franca Patacamaya</option>
                                         <option value="Administración Aduana Frontera Desaguadero">Administración Aduana Frontera Desaguadero</option>
-                                        <option value="Zona Franca Comercial / Frontera Cobija">Zona Franca Comercial / Frontera Cobija</option>
-                                        <option value="Agencia Aduana Exterior Matarani">Agencia Aduana Exterior Matarani</option>
+                                        <option value="Administración Aduana Frontera Cobija">Administración Aduana Frontera Cobija</option>
+                                        <option value="Administración Agencia Aduana Exterior Matarani">Administración Agencia Aduana Exterior Matarani</option>
                                         <option value="Administración Aduana Frontera Charaña">Administración Aduana Frontera Charaña</option>
                                     </select>
                                 </div>
@@ -364,12 +364,12 @@
                                         <option value="Unidad Fiscalización">Unidad Fiscalización</option>
                                         <option value="Unidad Jurídica">Unidad Jurídica</option>
                                         <option value="Administración Aduana Interior La Paz">Administración Aduana Interior La Paz</option>
-                                        <option value="Aduana Frontera Guayaramerín">Aduana Frontera Guayaramerín</option>
-                                        <option value="Aduana Aeropuerto El Alto">Aduana Aeropuerto El Alto</option>
-                                        <option value="Administración Aduana Zona Franca Industrial Patacamaya">Administración Aduana Zona Franca Industrial Patacamaya</option>
+                                        <option value="Administración Aduana Frontera Guayaramerín">Administración Aduana Frontera Guayaramerín</option>
+                                        <option value="Administración Aduana Aeropuerto">Administración Aduana Aeropuerto</option>
+                                        <option value="Administración Aduana Zona Franca Patacamaya">Administración Aduana Zona Franca Patacamaya</option>
                                         <option value="Administración Aduana Frontera Desaguadero">Administración Aduana Frontera Desaguadero</option>
-                                        <option value="Zona Franca Comercial / Frontera Cobija">Zona Franca Comercial / Frontera Cobija</option>
-                                        <option value="Agencia Aduana Exterior Matarani">Agencia Aduana Exterior Matarani</option>
+                                        <option value="Administración Aduana Frontera Cobija">Administración Aduana Frontera Cobija</option>
+                                        <option value="Administración Agencia Aduana Exterior Matarani">Administración Agencia Aduana Exterior Matarani</option>
                                         <option value="Administración Aduana Frontera Charaña">Administración Aduana Frontera Charaña</option>
                                     </select>
                                 </div>
@@ -515,19 +515,18 @@ function previewImg(event, previewId) {
 function llenarSubUnidades(unidad, selectEl) {
     selectEl.innerHTML = '<option value="">Seleccionar Sub-Unidad</option>';
     const datos = {
-        "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","SECRETARIA","SISTEMAS","USO","ARCHIVO"],
-        "Unidad Administrativa": ["Contabilidad","Activos Fijos","Talento Humano","Contrataciones","Servicios Generales","Responsable Administrativo Financiero","Auxiliar Unidad Administrativa"],
-        "Unidad Fiscalización": ["Fiscalizaciones posteriores / Controles diferidos","Jefes Unidad Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización"],
-        "Unidad Jurídica": ["Cobranza coactiva","Técnica jurídica","Procesos administrativos","Servicios Generales","Responsable Administrativo Jurídica","Auxiliar Unidad Jurídica"],
-        "Administración Aduana Interior La Paz": ["SPCC (Comisos)","Disposición de mercancías","Despachos","Gestión","Secretaria Aduana Interior La Paz","Administrador Aduana Interior La Paz"],
-        "Aduana Frontera Guayaramerín": ["Secretaria Guayaramerin","Administrador Guayamerin","Gestion Aduanera / Operativa Guayamerin"],
-        "Aduana Aeropuerto El Alto": ["Secretaria Aeropuerto El Alto","Administrador Aeropuerto El Alto","Supervisor Aeropuerto El Alto","Despachos Aeropuerto El Alto","Tecnico gestion Aeropuerto El Alto","SPCC Aeropuerto El Alto"],
-        // "Administración Aduana Zona Franca": ["Operaciones","Control","Administración"],
-        "Administración Aduana Zona Franca Industrial Patacamaya": ["Secretaria Patacamaya","Administrador Patacamaya","Gestion Aduanera / Operativa Patacamaya"],
-        "Administración Aduana Frontera Desaguadero": ["Secretaria Frontera Desaguadero","Administrador Frontera Desaguadero","Gestion Aduanera / Operativa Desaguadero"],
-        "Zona Franca Comercial / Frontera Cobija": ["Secretaria Frontera Cobija","Administrador Frontera Cobija","Gestion Aduanera / Operativa Cobija","Zofra Cobija","Aeropuerto Cobija"],
-        "Agencia Aduana Exterior Matarani": ["Secretaria Exterior Matarani","Administrador Exterior Matarani","Gestion Aduanera / Operativa Matarani"],
-        "Administración Aduana Frontera Charaña": ["Secretaria Frontera Charaña","Administrador Frontera Charaña","Despachos / Minimas cuantrillas"],
+        "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","PLATAFORMA","SISTEMAS","ARCHIVO","SECRETARIA"],
+        "Unidad Administrativa": ["Auxiliar Unidad Administrativa","Bienes y Servicios / Activos Fijos","Bienes y Servicios / Servicios Generales","Bienes y Servicios / Contrataciones","Talento Humano / Regimiento Laboral","Talento Humano / Planillal","Finanzas / Contabilidad y Presupuesto","Finanzas / Tesorería y Archivo"],
+        "Unidad Fiscalización": ["Supervisores Fiscalización","Auxiliar Fiscalización","Fiscalizaciones Control Posterior"],
+        "Unidad Jurídica": ["Supervisor Jurídica","Procurador Jurídica","Auxiliar Unidad Jurídica","Cobranza Coactiva Jurídica","Técnica Jurídica","Procesos Judiciales y Administrativos Jurídica"],
+        "Administración Aduana Interior La Paz": ["Supervisor Aduana Interior La Paz","Auxiliar Aduana Interior La Paz","Archivo Aduana Interior La Paz","Administrador Aduana Interior La Paz","SPCC Aduana Interior La Paz","Disposición de mercancías Aduana Interior La Paz","Despachos Aduana Interior La Paz","Gestión Aduana Interior La Paz"],
+        "Administración Aduana Frontera Guayaramerín": ["Despachos Guayaramerín","Gestión Aduanera Guayaramerín"],
+        "Administración Aduana Aeropuerto": ["Supervisor Aeropuerto","Secretario Aeropuerto","Archivo Aeropuerto","Despachos Aeropuerto","Disposición Aeropuerto","Gestión Aduanera Aeropuerto"],
+        "Administración Aduana Zona Franca Patacamaya": ["Despachos Patacamaya","Gestión aduanera Patacamaya"],
+        "Administración Aduana Frontera Desaguadero": ["Secretario Frontera Desaguadero","Archivo Frontera Desaguadero","Despachos Frontera Desaguadero","Gestión aduanera Frontera Desaguadero","Disposición Frontera Desaguadero","Plataforma Frontera Desaguadero"],
+        "Administración Aduana Frontera Cobija": ["Despachos Frontera Cobija","Disposición Frontera Cobija","Gestión aduanera Frontera Cobija"],
+        "Administración Agencia Aduana Exterior Matarani": ["Despachos Exterior Mataraniones","Disposición Exterior Matarani","Gestión aduanera Exterior Matarani"],
+        "Administración Aduana Frontera Charaña": ["Gestión Frontera Charaña","Tránsitos Frontera Charaña"],
     };
     if (datos[unidad]) {
         datos[unidad].forEach(function(sub) {

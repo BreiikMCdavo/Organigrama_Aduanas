@@ -14,10 +14,10 @@
 
             <div class="box right" onclick="mostrarInfo('GERENTE')">GERENTE</div>
             <div class="box left" onclick="mostrarInfo('ASESORÍA')">ASESORÍA</div>
-            <div class="box right" onclick="mostrarInfo('SECRETARIA')">SECRETARIA</div>
+            <div class="box right" onclick="mostrarInfo('PLATAFORMA')">PLATAFORMA</div>
             <div class="box left" onclick="mostrarInfo('SISTEMAS')">SISTEMAS</div>
-            <div class="box right" onclick="mostrarInfo('USO')">USO</div>
-            <div class="box left" onclick="mostrarInfo('ARCHIVO')">ARCHIVO</div>
+            <div class="box right" onclick="mostrarInfo('ARCHIVO')">ARCHIVO</div>
+            <div class="box left" onclick="mostrarInfo('SECRETARIA')">SECRETARIA</div>
 
         </div>
 
@@ -36,13 +36,17 @@
                 
 
                 <div id="admin" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Responsable Administrativo Financiero')">Responsable Administrativo Financiero</div>
                     <div class="sub-box" onclick="mostrarInfo('Auxiliar Unidad Administrativa')">Auxiliar Unidad Administrativa</div>
-                    <div class="sub-box" onclick="mostrarInfo('Activos Fijos')">Activos Fijos</div>
-                    <div class="sub-box" onclick="mostrarInfo('Contabilidad')">Contabilidad</div>
-                    <div class="sub-box" onclick="mostrarInfo('Talento Humano')">Talento Humano</div>
-                    <div class="sub-box" onclick="mostrarInfo('Contrataciones')">Contrataciones</div>
-                    <div class="sub-box" onclick="mostrarInfo('Servicios Generales')">Servicios Generales</div>
+                    <!-- <div class="sub-box" onclick="mostrarInfo('Bienes y Servicios Unidad Administrativa')">Bienes y Servicios</div> -->
+                    <div class="sub-box" onclick="mostrarInfo('Bienes y Servicios / Activos Fijos')">Bienes y Servicios / Activos Fijos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Bienes y Servicios / Servicios Generales')">Bienes y Servicios / Servicios Generales</div>
+                    <div class="sub-box" onclick="mostrarInfo('Bienes y Servicios / Contrataciones')">Bienes y Servicios / Contrataciones</div>
+                    <!-- <div class="sub-box" onclick="mostrarInfo('Talento Humano Unidad Administrativa')">Talento Humano</div> -->
+                    <div class="sub-box" onclick="mostrarInfo('Talento Humano / Regimiento Laboral')">Talento Humano / Regimiento Laboral</div>
+                    <div class="sub-box" onclick="mostrarInfo('Talento Humano / Planillal')">Talento Humano / Planillal</div>
+                    <!-- <div class="sub-box" onclick="mostrarInfo('Finanzas Unidad Administrativa')"></div> -->
+                    <div class="sub-box" onclick="mostrarInfo('Finanzas / Contabilidad y Presupuesto')">Finanzas / Contabilidad y Presupuesto</div>
+                    <div class="sub-box" onclick="mostrarInfo('Finanzas / Tesorería y Archivo')">Finanzas / Tesorería y Archivo</div>
                 </div>
             </div>
 
@@ -56,10 +60,9 @@
                 <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#fiscal">Unidad Fiscalización</button> -->
 
                 <div id="fiscal" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Jefes Unidad Fiscalización')">Jefes Unidad Fiscalización</div>
                     <div class="sub-box" onclick="mostrarInfo('Supervisores Fiscalización')">Supervisores Fiscalización</div>
                     <div class="sub-box" onclick="mostrarInfo('Auxiliar Fiscalización')">Auxiliar Fiscalización</div>
-                    <div class="sub-box" onclick="mostrarInfo('Fiscalizaciones posteriores / Controles diferidos')">Fiscalizaciones posteriores / Controles diferidos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Fiscalizaciones Control Posterior')">Fiscalizaciones Control Posterior</div>
                 </div>
             </div>
 
@@ -71,11 +74,12 @@
                 </button>
 
                 <div id="juridica" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Responsable Administrativo Jurídica')">Responsable Administrativo Jurídica</div>
+                    <div class="sub-box" onclick="mostrarInfo('Supervisor Jurídica')">Supervisor Jurídica</div>
+                    <div class="sub-box" onclick="mostrarInfo('Procurador Jurídica')">Procurador Jurídica</div>
                     <div class="sub-box" onclick="mostrarInfo('Auxiliar Unidad Jurídica')">Auxiliar Unidad Jurídica</div>
-                    <div class="sub-box" onclick="mostrarInfo('Cobranza coactiva')">Cobranza coactiva</div>
-                    <div class="sub-box" onclick="mostrarInfo('Técnica jurídica')">Técnica jurídica</div>
-                    <div class="sub-box" onclick="mostrarInfo('Procesos administrativos')">Procesos administrativos</div>
+                    <div class="sub-box" onclick="mostrarInfo('Cobranza Coactiva Jurídica')">Cobranza Coactiva Jurídica</div>
+                    <div class="sub-box" onclick="mostrarInfo('Técnica Jurídica')">Técnica Jurídica</div>
+                    <div class="sub-box" onclick="mostrarInfo('Procesos Judiciales y Administrativos Jurídica')">Procesos Judiciales y Administrativos Jurídica</div>
 
                 </div>
             </div>
@@ -98,57 +102,57 @@
                 </button>
 
                 <div id="interior" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Secretaria Aduana Interior La Paz'">Secretaria Aduana Interior La Paz</div>
-                    <div class="sub-box" onclick="mostrarInfo('Administrador Aduana Interior La Paz'">Administrador Aduana Interior La Paz</div>
-                    <div class="sub-box" onclick="mostrarInfo('SPCC (Comisos)')">SPCC (Comisos)</div>
-                    <div class="sub-box" onclick="mostrarInfo('Disposición de mercancías')">Disposición de mercancías</div>
-                    <div class="sub-box" onclick="mostrarInfo('Despachos')">Despachos</div>
-                    <div class="sub-box" onclick="mostrarInfo('Gestión')">Gestión</div>
+                    <div class="sub-box" onclick="mostrarInfo('Supervisor Aduana Interior La Paz')">Supervisor Aduana Interior La Paz</div>
+                    <div class="sub-box" onclick="mostrarInfo('Auxiliar Aduana Interior La Paz')">Auxiliar Aduana Interior La Paz</div>
+                    <div class="sub-box" onclick="mostrarInfo('Archivo Aduana Interior La Paz')">Archivo Aduana Interior La Paz</div>
+                    <div class="sub-box" onclick="mostrarInfo('Administrador Aduana Interior La Paz')">Administrador Aduana Interior La Paz</div>
+                    <div class="sub-box" onclick="mostrarInfo('SPCC Aduana Interior La Paz')">SPCC Aduana Interior La Paz</div>
+                    <div class="sub-box" onclick="mostrarInfo('Disposición de mercancías Aduana Interior La Paz')">Disposición de mercancías Aduana Interior La Paz</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos Aduana Interior La Paz')">Despachos Aduana Interior La Paz</div>
+                    <div class="sub-box" onclick="mostrarInfo('Gestión Aduana Interior La Paz')">Gestión Aduana Interior La Paz</div>
                 </div>
             </div>
 
             <!-- GUAYARAMERIN -->
             <div class="col-md-4">
                 <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#guayaramerin"
-                    onclick="mostrarInfo('Aduana Frontera Guayaramerín')">
-                    Aduana Frontera Guayaramerín
+                    onclick="mostrarInfo('Administración Aduana Frontera Guayaramerín')">
+                    Administración Aduana Frontera Guayaramerín
                 </button>
 
                 <div id="guayaramerin" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Secretaria Guayaramerin')">Secretaria Guayaramerin</div>
-                    <div class="sub-box" onclick="mostrarInfo('Administrador Guayamerin')">Administrador Guayamerin</div>
-                    <div class="sub-box" onclick="mostrarInfo('Gestion Aduanera / Operativa Guayamerin')">Gestion Aduanera / Operativa Guayamerin</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos Guayaramerín')">Secretaria Guayaramerín</div>
+                    <div class="sub-box" onclick="mostrarInfo('Gestión aduanera Guayaramerín')">Gestion Aduanera Guayaramerín</div>
                 </div>
             </div>
 
             <!-- AEROPUERTO -->
             <div class="col-md-4">
                 <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#aeropuerto"
-                    onclick="mostrarInfo('Aduana Aeropuerto El Alto')">
-                    Aduana Aeropuerto El Alto
+                    onclick="mostrarInfo('Administración Aduana Aeropuerto')">
+                    Administración Aduana Aeropuerto
                 </button>
 
                 <div id="aeropuerto" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Secretaria Aeropuerto El Altoa')">Secretaria Aeropuerto El Alto</div>
-                    <div class="sub-box" onclick="mostrarInfo('Administrador Aeropuerto El Alto')">Administrador Aeropuerto El Alto</div>
-                    <div class="sub-box" onclick="mostrarInfo('Supervisor Aeropuerto El Alto')">Supervisor Aeropuerto El Alto Aérea</div>
-                    <div class="sub-box" onclick="mostrarInfo('Despachos Aeropuerto El Alto')">Despachos Aeropuerto El Alto</div>
-                    <div class="sub-box" onclick="mostrarInfo('Tecnico gestion Aeropuerto El Alto')">Tecnico gestion Aeropuerto El Alto</div>
-                    <div class="sub-box" onclick="mostrarInfo('SPCC Aeropuerto El Alto')">SPCC Aeropuerto El Alto </div>
+                    <div class="sub-box" onclick="mostrarInfo('Supervisor Aeropuerto')">Supervisor Aeropuerto</div>
+                    <div class="sub-box" onclick="mostrarInfo('Secretario Aeropuerto')">Secretario Aeropuerto</div>
+                    <div class="sub-box" onclick="mostrarInfo('Archivo Aeropuerto')">Archivo Aeropuerto</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos Aeropuerto')">Despachos Aeropuerto</div>
+                    <div class="sub-box" onclick="mostrarInfo('Disposición Aeropuerto')">Disposición Aeropuerto</div>
+                    <div class="sub-box" onclick="mostrarInfo('Gestión aduanera Aeropuerto')">Gestión aduanera Aeropuerto</div>
                 </div>
             </div>
 
             <!-- PATACAMAYA -->
             <div class="col-md-4">
                 <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#patacamaya"
-                    onclick="mostrarInfo('Administración Aduana Zona Franca Industrial Patacamaya')">
-                    Administración Aduana Zona Franca Industrial Patacamaya
+                    onclick="mostrarInfo('Administración Aduana Zona Franca Patacamaya')">
+                    Administración Aduana Zona Franca Patacamaya
                 </button>
 
                 <div id="patacamaya" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Secretaria Patacamaya')">Secretaria Patacamaya</div>
-                    <div class="sub-box" onclick="mostrarInfo('Administrador Patacamaya')">Administrador Patacamaya</div>
-                    <div class="sub-box" onclick="mostrarInfo('Gestion Aduanera / Operativa Patacamaya')">Gestion Aduanera / Operativa Patacamaya</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos Patacamaya')">Despachos Patacamaya</div>
+                    <div class="sub-box" onclick="mostrarInfo('Gestión aduanera Patacamaya')">Gestión aduanera Patacamaya</div>
                 </div>
             </div>
 
@@ -160,39 +164,40 @@
                 </button>
 
                 <div id="desaguadero" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Secretaria Frontera Desaguadero')">Secretaria Frontera Desaguadero</div>
-                    <div class="sub-box" onclick="mostrarInfo('Administrador Frontera Desaguadero')">Administrador Frontera Desaguadero</div>
-                    <div class="sub-box" onclick="mostrarInfo('Gestion Aduanera / Operativa Desaguadero')">Gestion Aduanera / Operativa Desaguadero</div>
+                    <div class="sub-box" onclick="mostrarInfo('Secretario Frontera Desaguadero')">Secretario Frontera Desaguadero</div>
+                    <div class="sub-box" onclick="mostrarInfo('Archivo Frontera Desaguadero')">Archivo Frontera Desaguadero</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos Frontera Desaguadero')">Despachos Frontera Desaguadero</div>
+                    <div class="sub-box" onclick="mostrarInfo('Gestión aduanera Frontera Desaguadero')">Gestión aduanera Frontera Desaguadero</div>
+                    <div class="sub-box" onclick="mostrarInfo('Disposición Frontera Desaguadero')">Disposición Frontera Desaguadero</div>
+                    <div class="sub-box" onclick="mostrarInfo('Plataforma Frontera Desaguadero')">Plataforma Frontera Desaguadero</div>
                 </div>
             </div>
 
             <!-- COBIJA -->
             <div class="col-md-4">
                 <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#cobija"
-                    onclick="mostrarInfo('Zona Franca Comercial / Frontera Cobija')">
-                    Zona Franca Comercial / Frontera Cobija
+                    onclick="mostrarInfo('Administración Aduana Frontera Cobija')">
+                    Administración Aduana Frontera Cobija
                 </button>
                 
                 <div id="cobija" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Secretaria Frontera Cobija')">Secretaria Frontera Cobija</div>
-                    <div class="sub-box" onclick="mostrarInfo('Administrador Frontera Cobija')">Administrador Frontera Cobija</div>
-                    <div class="sub-box" onclick="mostrarInfo('Gestion Aduanera / Operativa Cobija')">Gestion Aduanera / Operativa Cobija</div>
-                    <div class="sub-box" onclick="mostrarInfo('Zofra Cobija')">Zofra Cobija</div>
-                    <div class="sub-box" onclick="mostrarInfo('Aeropuerto Cobija')">Aeropuerto Cobija</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos Frontera Cobija')">Despachos Frontera Cobija</div>
+                    <div class="sub-box" onclick="mostrarInfo('Disposición Frontera Cobija')">Disposición Frontera Cobija</div>
+                    <div class="sub-box" onclick="mostrarInfo('Gestión aduanera Frontera Cobija')">Gestión aduanera Frontera Cobija</div>
                 </div>
             </div>
 
             <!-- MATARANI -->
             <div class="col-md-4">
                 <button class="box w-100" data-bs-toggle="collapse" data-bs-target="#matarani"
-                    onclick="mostrarInfo('Agencia Aduana Exterior Matarani')">
-                    Agencia Aduana Exterior Matarani
+                    onclick="mostrarInfo('Administración Agencia Aduana Exterior Matarani')">
+                    Administración Agencia Aduana Exterior Matarani
                 </button>
 
                 <div id="matarani" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('OperaciSecretaria Exterior Mataraniones')">Secretaria Exterior Matarani</div>
-                    <div class="sub-box" onclick="mostrarInfo('Administrador Exterior Matarani')">Administrador Exterior Matarani</div>
-                    <div class="sub-box" onclick="mostrarInfo('Gestion Aduanera / Operativa Matarani')">Gestion Aduanera / Operativa Matarani</div>
+                    <div class="sub-box" onclick="mostrarInfo('Despachos Exterior Mataraniones')">Despachos Exterior Mataraniones</div>
+                    <div class="sub-box" onclick="mostrarInfo('Disposición Exterior Matarani')">Disposición Exterior Matarani</div>
+                    <div class="sub-box" onclick="mostrarInfo('Gestión aduanera Exterior Matarani')">Gestión aduanera Exterior Matarani</div>
                 </div>
             </div>
 
@@ -204,9 +209,8 @@
                 </button>
 
                 <div id="charana" class="collapse mt-2">
-                    <div class="sub-box" onclick="mostrarInfo('Secretaria Frontera Charaña')">Secretaria Frontera Charaña</div>
-                    <div class="sub-box" onclick="mostrarInfo('Administrador Frontera Charaña')">Administrador Frontera Charaña</div>
-                    <div class="sub-box" onclick="mostrarInfo('Despachos / Minimas cuantrillas')">Despachos / Minimas cuantrillas</div>
+                    <div class="sub-box" onclick="mostrarInfo('Gestión aduanera Frontera Charaña')">Gestión Frontera Charaña</div>
+                    <div class="sub-box" onclick="mostrarInfo('Tránsitos Frontera Charaña')">Tránsitos Frontera Charaña</div>
                 </div>
             </div>
 
