@@ -195,7 +195,7 @@
 
     <!-- MODAL GLOBAL (puede usarse en todas las páginas) -->
     <div class="modal fade" id="modalInfo" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="max-width: 650px; width: 70vw;">
             <div class="modal-content">
 
                 <div class="modal-header bg-primary text-white">
@@ -203,7 +203,7 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
-                <div class="modal-body" id="contenidoModal"></div>
+                <div class="modal-body" id="contenidoModal" style="overflow-x: hidden; overflow-y: auto;"></div>
 
             </div>
         </div>
@@ -211,8 +211,8 @@
 
     <!-- MODAL PARA VISTA PREVIA DE PDFS -->
     <div class="modal fade" id="modalPdfPreview" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
+        <div class="modal-dialog modal-xl" style="max-width: 95vw; width: auto;">
+            <div class="modal-content" style="height: auto; max-height: none;">
                 <div class="modal-header bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                     <h5 class="modal-title" id="pdfPreviewTitle">
                         <i class="bi bi-file-earmark-pdf me-2"></i>
@@ -220,10 +220,10 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-0" style="height: 80vh; overflow: hidden;">
+                <div class="modal-body p-0" style="height: auto; max-height: none; overflow: visible;">
                     <!-- Contenido del PDF se cargará aquí -->
                     <iframe id="pdfPreviewFrame" 
-                            style="width: 100%; height: 100%; border: none;"
+                            style="width: 100%; height: auto; min-height: 600px; border: none;"
                             src=""></iframe>
                 </div>
                 <div class="modal-footer bg-light">
@@ -253,8 +253,8 @@
 
     <!-- MODAL PARA VISTA PREVIA DE EXCEL -->
     <div class="modal fade" id="modalExcelPreview" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
+        <div class="modal-dialog modal-xl" style="max-width: 95vw; width: auto;">
+            <div class="modal-content" style="height: auto; max-height: none;">
                 <div class="modal-header bg-gradient text-white" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                     <h5 class="modal-title" id="excelPreviewTitle">
                         <i class="bi bi-file-earmark-excel me-2"></i>
@@ -262,10 +262,10 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-0" style="height: 80vh; overflow: hidden;">
+                <div class="modal-body p-0" style="height: auto; max-height: none; overflow: visible;">
                     <!-- Contenido del Excel se cargará aquí -->
                     <iframe id="excelPreviewFrame" 
-                            style="width: 100%; height: 100%; border: none;"
+                            style="width: 100%; height: auto; min-height: 600px; border: none;"
                             src=""></iframe>
                 </div>
                 <div class="modal-footer bg-light">

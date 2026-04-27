@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ServidorPublico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class ServidorPublicoController extends Controller
 {
@@ -293,10 +294,9 @@ class ServidorPublicoController extends Controller
 
         $headers = [
             'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-            'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+            'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
             'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
-            'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
-            'TIPO DISC', 'CARNET DISC', 'VENCE DISC', 'FOTO'
+            'CASOS ESPECIALES', 'GRADO CE', 'FOTO'
         ];
 
         $csvData = [];
@@ -356,7 +356,7 @@ public function reporteItemsPdf()
 
     $headers = [
         'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-        'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+        'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
         'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
         'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
         'TIPO DISC', 'CARNET DISC', 'VENCE DISC'
@@ -530,8 +530,6 @@ public function reporteItemsPdf()
     </style>
 </head>
 <body>
-    <div class="watermark">ADUANA</div>
-    
     <div class="header">
         <h1>📊 REPORTE DE SERVIDORES PÚBLICOS CON ITEMS</h1>
         <div class="subtitle">
@@ -640,8 +638,7 @@ public function reporteItemsPdf()
             'CONTRATO', 'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CARGO', 
             'FECHA INICIO CARGO', 'FECHA FIN CARGO', 'DESIGNACION', 'FECHA INICIO DESIGNACION',
             'FECHA FIN DESIGNACION', 'ASIGNACION FAMILIAR', 'GRADO AF',
-            'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
-            'TIPO DISC', 'CARNET DISC', 'VENCE DISC'
+            'CASOS ESPECIALES', 'GRADO CE'
         ];
 
         $csvData = [];
@@ -705,8 +702,7 @@ public function reporteItemsPdf()
             'CONTRATO', 'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CARGO', 
             'FECHA INICIO CARGO', 'FECHA FIN CARGO', 'DESIGNACION', 'FECHA INICIO DESIGNACION',
             'FECHA FIN DESIGNACION', 'ASIGNACION FAMILIAR', 'GRADO AF',
-            'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
-            'TIPO DISC', 'CARNET DISC', 'VENCE DISC'
+            'CASOS ESPECIALES', 'GRADO CE'
         ];
 
         $html = '<!DOCTYPE html>
@@ -877,8 +873,6 @@ public function reporteItemsPdf()
     </style>
 </head>
 <body>
-    <div class="watermark">ADUANA</div>
-    
     <div class="header">
         <h1>📋 REPORTE DE SERVIDORES DE CONSULTORÍA</h1>
         <div class="subtitle">
@@ -983,7 +977,7 @@ public function reporteItemsPdf()
 
         $headers = [
             'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-            'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+            'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
             'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CONTRATO', 'DESIGNACION', 
             'FECHA INICIO DESIGNACION', 'FECHA FIN DESIGNACION'
         ];
@@ -1036,7 +1030,7 @@ public function reporteItemsPdf()
 
         $headers = [
             'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-            'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+            'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
             'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CONTRATO', 'DESIGNACION', 
             'FECHA INICIO DESIGNACION', 'FECHA FIN DESIGNACION'
         ];
@@ -1238,8 +1232,6 @@ public function reporteItemsPdf()
     </style>
 </head>
 <body>
-    <div class="watermark">ADUANA</div>
-    
     <div class="header">
         <h1>⚠️ REPORTE DE PLAZAS VACANTES (ACEFALÍAS)</h1>
         <div class="subtitle">
@@ -1459,10 +1451,9 @@ public function reporteItemsPdf()
         // Headers para el reporte
         $headers = [
             'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-            'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+            'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
             'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
-            'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
-            'TIPO DISC', 'CARNET DISC', 'VENCE DISC'
+            'CASOS ESPECIALES', 'GRADO CE'
         ];
 
         // Generar contenido CSV
@@ -1506,6 +1497,279 @@ public function reporteItemsPdf()
         return response($htmlContent)
             ->header('Content-Type', 'text/html')
             ->header('Content-Disposition', 'attachment; filename="' . $nombreArchivo . '"');
+    }
+
+    /**
+     * Generar reporte PDF individual por unidad usando DomPDF
+     */
+    public function reportePorUnidadPdf($nombre)
+    {
+        // Decodificar el nombre de la unidad (URL encoded)
+        $nombreUnidad = urldecode($nombre);
+        
+        // Obtener todos los servidores de la unidad específica
+        $servidores = ServidorPublico::where('unidad', $nombreUnidad)
+            ->orderBy('sub_unidad')
+            ->orderBy('tipo')
+            ->get();
+
+        // Headers para el reporte
+        $headers = [
+            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
+            'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
+            'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
+            'CASOS ESPECIALES', 'GRADO CE'
+        ];
+
+        // Generar HTML para PDF con estilos compatibles con DomPDF
+        $html = '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Reporte de ' . htmlspecialchars($nombreUnidad) . ' - Servidores Públicos</title>
+    <style>
+        @page {
+            margin: 3mm;
+            size: A4;
+            orientation: landscape;
+        }
+        
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 2px;
+            background: #ffffff;
+            font-size: 4px;
+            line-height: 0.8;
+        }
+        
+        .header {
+            background: #1a3a6b;
+            color: white;
+            padding: 2px;
+            text-align: center;
+            margin-bottom: 2px;
+            border: 1px solid #0a1628;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .header .subtitle {
+            margin: 1px 0 0 0;
+            font-size: 6px;
+            opacity: 0.9;
+        }
+        
+        .info-cards {
+            display: table;
+            width: 100%;
+            margin-bottom: 2px;
+            border-collapse: collapse;
+        }
+        
+        .info-card {
+            display: table-cell;
+            width: 33%;
+            padding: 1px;
+            text-align: center;
+            border: 1px solid #1a3a6b;
+            background: #f8f9fa;
+        }
+        
+        .info-card h3 {
+            margin: 0;
+            color: #1a3a6b;
+            font-size: 5px;
+            font-weight: bold;
+        }
+        
+        .info-card .value {
+            font-size: 7px;
+            font-weight: bold;
+            color: #2c5282;
+        }
+        
+        .table-container {
+            margin-bottom: 2px;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 0;
+            font-size: 3px;
+            border: 1px solid #1a3a6b;
+        }
+        
+        th { 
+            background: #1a3a6b;
+            color: white; 
+            padding: 1px 0px; 
+            text-align: center; 
+            font-size: 3px;
+            font-weight: bold;
+            border: 1px solid #0a1628;
+            white-space: nowrap;
+        }
+        
+        td { 
+            border: 1px solid #ddd; 
+            padding: 0px 0px; 
+            font-size: 3px;
+            color: #333;
+            vertical-align: middle;
+            white-space: nowrap;
+            text-align: center;
+        }
+        
+        td.nombre-columna {
+            font-weight: bold;
+            background-color: #e8f4fd;
+            text-align: left;
+        }
+        
+        td.numero-item {
+            font-weight: bold;
+            text-align: center;
+            background-color: #fff3cd;
+        }
+        
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #e3f2fd; }
+        
+        .footer {
+            margin-top: 12px;
+            text-align: center;
+            color: #666;
+            font-size: 7px;
+            padding: 8px;
+            border: 1px solid #1a3a6b;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .footer .total {
+            font-size: 10px;
+            font-weight: bold;
+            color: #1a3a6b;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80px;
+            color: rgba(26, 58, 107, 0.05);
+            font-weight: 900;
+            z-index: -1;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>REPORTE DE SERVIDORES PÚBLICOS</h1>
+        <div class="subtitle">
+            ' . htmlspecialchars($nombreUnidad) . '<br>
+            Sistema de Gestión de Servidores Públicos - Aduana Nacional de Bolivia
+        </div>
+    </div>
+    
+    <div class="info-cards">
+        <div class="info-card">
+            <h3>Total Servidores</h3>
+            <div class="value">' . $servidores->count() . '</div>
+        </div>
+        <div class="info-card">
+            <h3>Fecha Generación</h3>
+            <div class="value">' . date('d/m/Y H:i:s') . '</div>
+        </div>
+        <div class="info-card">
+            <h3>Unidad</h3>
+            <div class="value" style="font-size: 8px;">' . htmlspecialchars($nombreUnidad) . '</div>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>';
+
+        foreach ($headers as $header) {
+            $html .= '<th>' . htmlspecialchars($header) . '</th>';
+        }
+
+        $html .= '</tr>
+            </thead>
+            <tbody>';
+
+        foreach ($servidores as $servidor) {
+            $html .= '<tr>
+                <td>' . htmlspecialchars($servidor->tipo ?? '') . '</td>
+                <td class="nombre-columna">' . htmlspecialchars($servidor->nombre ?? '') . '</td>
+                <td class="nombre-columna">' . htmlspecialchars($servidor->apellido_paterno ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->apellido_materno ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->unidad ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->sub_unidad ?? '') . '</td>
+                <td class="numero-item">' . htmlspecialchars($servidor->numero_item ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->fecha_inicio_cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->fecha_fin_cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->cod_funcionario ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->escala_salarial ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->asignacion_familiar_desc ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->asignacion_familiar_grado ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->casos_especiales_desc ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->casos_especiales_grado ?? '') . '</td>
+            </tr>';
+        }
+
+        $html .= '</tbody>
+        </table>
+    </div>
+    
+    <div class="footer">
+        <div class="total">TOTAL DE REGISTROS: ' . $servidores->count() . '</div>
+        <div>
+            <strong>Reporte generado automáticamente por el Sistema de Gestión de Servidores Públicos</strong><br>
+            Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
+            © ' . date('Y') . ' Todos los derechos reservados
+        </div>
+    </div>
+</body>
+</html>';
+
+        // Generar PDF con DomPDF
+        $pdf = PDF::loadHTML($html);
+        $pdf->setPaper('A4', 'landscape');
+        $pdf->setOptions([
+            'defaultFont' => 'Arial',
+            'isRemoteEnabled' => false,
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true,
+            'isFontSubsettingEnabled' => true,
+            'dpi' => 96,
+            'defaultPaperSize' => 'a4',
+            'orientation' => 'landscape',
+            'margin_left' => 2,
+            'margin_right' => 2,
+            'margin_top' => 2,
+            'margin_bottom' => 2,
+        ]);
+
+        $filename = 'reporte_' . str_replace([' ', 'á', 'é', 'í', 'ó', 'ú', 'ñ'], ['_', 'a', 'e', 'i', 'o', 'u', 'n'], strtolower($nombreUnidad)) . '_' . date('Y-m-d_H-i-s') . '.pdf';
+        
+        return $pdf->download($filename);
     }
 
     private function generateCsv($data)

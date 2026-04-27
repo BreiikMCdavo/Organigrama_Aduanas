@@ -12,25 +12,36 @@
             </div>
             <div class="d-flex gap-2">
                 <div class="btn-group" role="group">
-                    <a href="{{ route('reporte.items') }}" class="btn btn-gradient-success btn-sm d-flex align-items-center px-3" style="background: linear-gradient(135deg, #28a745, #20c997); border: none; color: white; box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3); transition: all 0.3s;">
-                        <i class="bi bi-file-earmark-excel me-2"></i>
+                    <a href="{{ route('reporte.items') }}"
+                        class="btn btn-gradient-success btn-sm d-flex align-items-center px-3"
+                        style="background: linear-gradient(135deg, #28a745, #20c997); border: none; color: white; box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3); transition: all 0.3s;">
+
+                        <i class="bi bi-file-earmark-excel me-2 fs-3"></i>
+
                         <span>
-                            <strong>📊 Reporte Items</strong>
+                            <strong>Reporte Items</strong>
                             <br>
                             <small style="font-size: 0.7rem; opacity: 0.9;">Abrir en Excel</small>
                         </span>
                     </a>
-                    <a href="{{ route('reporte.consultoria') }}" class="btn btn-gradient-info btn-sm d-flex align-items-center px-3" style="background: linear-gradient(135deg, #17a2b8, #6610f2); border: none; color: white; box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3); transition: all 0.3s;">
-                        <i class="bi bi-file-earmark-excel me-2"></i>
+                    <a href="{{ route('reporte.consultoria') }}"
+                        class="btn btn-gradient-info btn-sm d-flex align-items-center px-3"
+                        style="background: linear-gradient(135deg, #17a2b8, #6610f2); border: none; color: white; box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3); transition: all 0.3s;">
+
+                        <i class="bi bi-file-earmark-excel me-2 fs-3"></i>
+
                         <span>
-                            <strong>📋 Reporte Consultoría</strong>
+                            <strong>Reporte Consultoría</strong>
                             <br>
                             <small style="font-size: 0.7rem; opacity: 0.9;">Abrir en Excel</small>
                         </span>
                     </a>
                 </div>
-                <a href="{{ route('servidores.create') }}" class="btn btn-primary btn-sm d-flex align-items-center px-3" style="box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3); transition: all 0.3s;">
-                    <i class="bi bi-person-plus-fill me-2"></i>
+                <a href="{{ route('servidores.create') }}" class="btn btn-primary btn-sm d-flex align-items-center px-3"
+                    style="box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3); transition: all 0.3s;">
+
+                    <i class="bi bi-person-plus-fill me-2 fs-3"></i>
+
                     <span>
                         <strong>+ Nuevo Servidor</strong>
                         <br>
@@ -52,7 +63,10 @@
                                         <i class="bi bi-briefcase-fill"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-success">{{ \App\Models\ServidorPublico::where('tipo', 'item')->where(function($q){ $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}</h6>
+                                        <h6 class="mb-0 fw-bold text-success">
+                                            {{ \App\Models\ServidorPublico::where('tipo', 'item')->where(function ($q) {
+        $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}
+                                        </h6>
                                         <small class="text-muted">Items Activos</small>
                                     </div>
                                 </div>
@@ -63,7 +77,10 @@
                                         <i class="bi bi-file-text-fill"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-info">{{ \App\Models\ServidorPublico::where('tipo', 'consultoria')->where(function($q){ $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}</h6>
+                                        <h6 class="mb-0 fw-bold text-info">
+                                            {{ \App\Models\ServidorPublico::where('tipo', 'consultoria')->where(function ($q) {
+        $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}
+                                        </h6>
                                         <small class="text-muted">Consultoría</small>
                                     </div>
                                 </div>
@@ -74,7 +91,11 @@
                                         <i class="bi bi-shield-fill"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-warning">{{ \App\Models\ServidorPublico::where(function($q){ $q->whereNotNull('asignacion_familiar_desc')->where('asignacion_familiar_desc', '!=', '')->orWhereNotNull('casos_especiales_desc')->where('casos_especiales_desc', '!=', '')->orWhereNotNull('discapacidad_desc')->where('discapacidad_desc', '!=', ''); })->where(function($q){ $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}</h6>
+                                        <h6 class="mb-0 fw-bold text-warning">
+                                            {{ \App\Models\ServidorPublico::where(function ($q) {
+        $q->whereNotNull('asignacion_familiar_desc')->where('asignacion_familiar_desc', '!=', '')->orWhereNotNull('casos_especiales_desc')->where('casos_especiales_desc', '!=', '')->orWhereNotNull('discapacidad_desc')->where('discapacidad_desc', '!=', ''); })->where(function ($q) {
+            $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}
+                                        </h6>
                                         <small class="text-muted">Inamovibles</small>
                                     </div>
                                 </div>
@@ -85,7 +106,9 @@
                                         <i class="bi bi-exclamation-triangle-fill"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-danger">{{ \App\Models\ServidorPublico::where('acefalia', true)->count() }}</h6>
+                                        <h6 class="mb-0 fw-bold text-danger">
+                                            {{ \App\Models\ServidorPublico::where('acefalia', true)->count() }}
+                                        </h6>
                                         <small class="text-muted">Acefalías</small>
                                     </div>
                                 </div>
@@ -127,7 +150,7 @@
                                 <h5 class="mb-1 fw-bold servidor-nombre" style="font-size: 1.25rem;">
                                     {{ $servidor->nombre }} {{ $servidor->apellido_paterno }} {{ $servidor->apellido_materno }}
                                 </h5>
-                                
+
                                 {{-- Badge de estado --}}
                                 @if($servidor->acefalia)
                                     <span class="badge bg-danger me-2 px-3 py-1 servidor-badge">
@@ -158,10 +181,12 @@
                                     </div>
                                 @else
                                     <div class="text-muted">
-                                        <i class="bi bi-file-text me-1"></i><strong>Contrato:</strong> {{ $servidor->contrato_numero }}
+                                        <i class="bi bi-file-text me-1"></i><strong>Contrato:</strong>
+                                        {{ $servidor->contrato_numero }}
                                     </div>
                                     <div class="text-muted">
-                                        <i class="bi bi-briefcase me-1"></i><strong>Cargo:</strong> {{ $servidor->cargo_consultoria }}
+                                        <i class="bi bi-briefcase me-1"></i><strong>Cargo:</strong>
+                                        {{ $servidor->cargo_consultoria }}
                                     </div>
                                     <div class="text-muted">
                                         <i class="bi bi-award me-1"></i><strong>Designación:</strong> {{ $servidor->designacion }}
@@ -181,7 +206,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <i class="bi bi-calendar-event me-1"></i>
-                                    <strong>Ingreso Aduana:</strong> 
+                                    <strong>Ingreso Aduana:</strong>
                                     {{ $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('d/m/Y') : '—' }}
                                 </div>
                             </div>
@@ -198,22 +223,26 @@
                                             <div class="mb-1">
                                                 <i class="bi bi-check-circle-fill text-success me-1"></i>
                                                 <strong>Asignación Familiar:</strong> {{ $servidor->asignacion_familiar_desc }}
-                                                @if($servidor->asignacion_familiar_grado) <span class="badge bg-secondary ms-1">{{ $servidor->asignacion_familiar_grado }}</span>@endif
+                                                @if($servidor->asignacion_familiar_grado) <span
+                                                class="badge bg-secondary ms-1">{{ $servidor->asignacion_familiar_grado }}</span>@endif
                                             </div>
                                         @endif
                                         @if($servidor->casos_especiales_desc)
                                             <div class="mb-1">
                                                 <i class="bi bi-check-circle-fill text-success me-1"></i>
                                                 <strong>Casos Especiales:</strong> {{ $servidor->casos_especiales_desc }}
-                                                @if($servidor->casos_especiales_grado) <span class="badge bg-secondary ms-1">{{ $servidor->casos_especiales_grado }}</span>@endif
+                                                @if($servidor->casos_especiales_grado) <span
+                                                class="badge bg-secondary ms-1">{{ $servidor->casos_especiales_grado }}</span>@endif
                                             </div>
                                         @endif
                                         @if($servidor->discapacidad_desc)
                                             <div class="mb-1">
                                                 <i class="bi bi-check-circle-fill text-success me-1"></i>
                                                 <strong>Discapacidad Ley N° 223:</strong> {{ $servidor->discapacidad_desc }}
-                                                @if($servidor->discapacidad_grado) <span class="badge bg-secondary ms-1">{{ $servidor->discapacidad_grado }}</span>@endif
-                                                @if($servidor->discapacidad_tipo) <small class="text-muted ms-2">({{ $servidor->discapacidad_tipo }})</small>@endif
+                                                @if($servidor->discapacidad_grado) <span
+                                                class="badge bg-secondary ms-1">{{ $servidor->discapacidad_grado }}</span>@endif
+                                                @if($servidor->discapacidad_tipo) <small
+                                                class="text-muted ms-2">({{ $servidor->discapacidad_tipo }})</small>@endif
                                             </div>
                                         @endif
                                     </div>
@@ -224,16 +253,14 @@
                         {{-- Acciones --}}
                         <div class="col-md-auto text-center">
                             <div class="d-flex flex-column gap-2">
-                                <a href="{{ route('servidores.show', $servidor->id) }}" 
-                                   class="btn btn-sm btn-primary px-3">
+                                <a href="{{ route('servidores.show', $servidor->id) }}" class="btn btn-sm btn-primary px-3">
                                     <i class="bi bi-eye me-1"></i>Ver
                                 </a>
-                                <a href="{{ route('servidores.edit', $servidor->id) }}"
-                                   class="btn btn-sm btn-warning px-3">
+                                <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-sm btn-warning px-3">
                                     <i class="bi bi-pencil me-1"></i>Editar
                                 </a>
                                 <form action="{{ route('servidores.destroy', $servidor->id) }}" method="POST"
-                                      onsubmit="return confirm('¿Está seguro de eliminar este servidor?')">
+                                    onsubmit="return confirm('¿Está seguro de eliminar este servidor?')">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-danger px-3">
                                         <i class="bi bi-trash me-1"></i>Eliminar

@@ -293,12 +293,17 @@ async function cargarDatosUnidades() {
 
     // Generar HTML para mostrar los datos
     const htmlUnidades = datosUnidades.map(unidad => {
-        const porcentaje = unidad.total > 0 ? Math.round((unidad.items / unidad.total) * 100) : 0;
-        const colorPorcentaje = porcentaje >= 80 ? 'success' : porcentaje >= 50 ? 'warning' : 'danger';
-        
-        return `
-        <div class="card-datos">
-            <div class="card-body d-flex flex-column p-2" style="min-height: 160px;">
+            const total = unidad.total || 0;
+            const porcentaje = Math.round((total / unidad.maximo) * 100);
+            const colorPorcentaje = porcentaje >= 80 ? 'success' : porcentaje >= 50 ? 'warning' : 'danger';
+            
+            // Si es GERENCIA, hacer la tarjeta más grande
+            const esGerencia = unidad.nombre === 'GERENCIA REGIONAL LA PAZ - GRLPZ';
+            const gridClass = esGerencia ? 'col-span-2' : '';
+            
+            return `
+            <div class="card-datos ${gridClass}" style="${esGerencia ? 'grid-column: span 2;' : ''}">
+                <div class="card-body p-3 flex flex-column" style="${esGerencia ? 'min-height: 200px;' : 'min-height: 160px;'}">
                 <!-- Header compacto -->
                 <div class="text-center mb-2">
                     <h6 class="titulo-unidad mb-1" style="font-size: 1rem; line-height: 1.2; word-wrap: break-word; font-weight: 600;">
@@ -338,14 +343,19 @@ async function cargarDatosUnidades() {
                     </div>
                 </div>
                 
-                <!-- Estado y botón compactos -->
+                <!-- Estado y botones compactos -->
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="badge bg-${colorPorcentaje} bg-opacity-10 text-${colorPorcentaje}" style="font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.8rem;">
                         ${porcentaje >= 80 ? '✅ Óptimo' : porcentaje >= 50 ? '⚠️ Regular' : '🚨 Crítico'}
                     </span>
-                    <button class="btn-generate-report" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;" onclick="generateReport('${unidad.nombre}')">
-                        <i class="bi bi-file-earmark-text me-1"></i>Report
-                    </button>
+                    <div class="d-flex gap-1">
+                        <button class="btn-generate-report-excel" style="font-size: 0.7rem; padding: 0.3rem 0.5rem;" onclick="generateReportExcel('${unidad.nombre}')">
+                            <i class="bi bi-file-earmark-excel me-1"></i>Excel
+                        </button>
+                        <button class="btn-generate-report-pdf" style="font-size: 0.7rem; padding: 0.3rem 0.5rem;" onclick="generateReportPdf('${unidad.nombre}')">
+                            <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -412,15 +422,15 @@ function exportarDatosUnidad(unidad) {
 }
 
 // Función para generar reporte de cada unidad
-function generateReport(unidad) {
-    console.log('Generando reporte para:', unidad);
+function generateReportExcel(unidad) {
+    console.log('Generando reporte Excel para:', unidad);
     
     // Crear alerta flotante
     const alerta = document.createElement('div');
-    alerta.className = 'alert alert-info alert-dismissible fade show position-fixed';
+    alerta.className = 'alert alert-success alert-dismissible fade show position-fixed';
     alerta.style.cssText = 'bottom: 20px; right: 20px; z-index: 9999; min-width: 250px;';
     alerta.innerHTML = `
-        <strong><i class="bi bi-file-earmark-text me-2"></i>Generando Reporte</strong><br>
+        <strong><i class="bi bi-file-earmark-excel me-2"></i>Generando Excel</strong><br>
         <small>${unidad}...</small>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
@@ -429,7 +439,7 @@ function generateReport(unidad) {
     // Codificar el nombre de la unidad para URL
     const unidadCodificada = encodeURIComponent(unidad);
     
-    // Descargar el reporte desde el backend
+    // Descargar el reporte Excel desde el backend
     const link = document.createElement('a');
     link.href = `/reporte/unidad/${unidadCodificada}`;
     link.download = ''; // El navegador usará el nombre del archivo del backend
@@ -439,10 +449,54 @@ function generateReport(unidad) {
     
     // Actualizar alerta a éxito
     setTimeout(() => {
-        alerta.classList.remove('alert-info');
+        alerta.classList.remove('alert-success');
         alerta.classList.add('alert-success');
         alerta.innerHTML = `
-            <strong><i class="bi bi-check-circle me-2"></i>¡Reporte Descargado!</strong><br>
+            <strong><i class="bi bi-check-circle me-2"></i>¡Excel Descargado!</strong><br>
+            <small>${unidad} descargado exitosamente</small>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        // Remover alerta después de 3 segundos
+        setTimeout(() => {
+            if (alerta.parentNode) {
+                alerta.parentNode.removeChild(alerta);
+            }
+        }, 3000);
+    }, 1500);
+}
+
+function generateReportPdf(unidad) {
+    console.log('Generando reporte PDF para:', unidad);
+    
+    // Crear alerta flotante
+    const alerta = document.createElement('div');
+    alerta.className = 'alert alert-danger alert-dismissible fade show position-fixed';
+    alerta.style.cssText = 'bottom: 20px; right: 20px; z-index: 9999; min-width: 250px;';
+    alerta.innerHTML = `
+        <strong><i class="bi bi-file-earmark-pdf me-2"></i>Generando PDF</strong><br>
+        <small>${unidad}...</small>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(alerta);
+    
+    // Codificar el nombre de la unidad para URL
+    const unidadCodificada = encodeURIComponent(unidad);
+    
+    // Descargar el reporte PDF desde el backend
+    const link = document.createElement('a');
+    link.href = `/reporte/unidad/${unidadCodificada}/pdf`;
+    link.download = ''; // El navegador usará el nombre del archivo del backend
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Actualizar alerta a éxito
+    setTimeout(() => {
+        alerta.classList.remove('alert-danger');
+        alerta.classList.add('alert-success');
+        alerta.innerHTML = `
+            <strong><i class="bi bi-check-circle me-2"></i>¡PDF Descargado!</strong><br>
             <small>${unidad} descargado exitosamente</small>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;

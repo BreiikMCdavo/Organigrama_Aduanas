@@ -43,4 +43,5 @@ Route::get('/reporte/acefalias/pdf', [ServidorPublicoController::class, 'reporte
 
 // Rutas para reportes individuales por unidad
 Route::get('/reporte/unidad/{nombre}', [ServidorPublicoController::class, 'reportePorUnidad'])->name('reporte.unidad');
+Route::get('/reporte/unidad/{nombre}/pdf', [ServidorPublicoController::class, 'reportePorUnidadPdf'])->name('reporte.unidad.pdf');
 

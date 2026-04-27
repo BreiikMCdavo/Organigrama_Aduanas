@@ -263,21 +263,70 @@ body {
     background: linear-gradient(135deg, #0b5ed7, #0a58ca);
 }
 
-/* ===== GRID DE UNIDADES - 2 COLUMNAS RESPONSIVE ===== */
+/* ===== GRID DE UNIDADES - 2 COLUMNAS FIJAS ===== */
 .unidades-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 2rem 1rem;
-    max-width: 800px;
-    margin: 0 auto;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+    overflow-x: hidden;
+    padding: 1rem;
 }
 
 @media (min-width: 768px) {
     .unidades-grid {
         grid-template-columns: repeat(2, 1fr);
-        padding: 2rem 2rem;
+        gap: 20px;
+        padding: 2rem;
     }
+}
+
+@media (min-width: 1200px) {
+    .unidades-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .unidades-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 1rem;
+    }
+    
+    .unidades-grid .col-span-2 {
+        grid-column: span 1;
+    }
+}
+
+/* ===== TARJETA ESPECIAL PARA GERENCIA ===== */
+.unidades-grid .col-span-2 {
+    grid-column: span 2;
+}
+
+.unidades-grid .col-span-2 .card-body {
+    min-height: 200px !important;
+    padding: 1.5rem !important;
+}
+
+.unidades-grid .col-span-2 .titulo-unidad {
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+}
+
+.unidades-grid .col-span-2 .badge-total {
+    font-size: 1.1rem !important;
+    padding: 0.5rem 1rem !important;
+}
+
+.unidades-grid .col-span-2 .icon-datos {
+    font-size: 2rem !important;
+}
+
+.unidades-grid .col-span-2 .numero-dato {
+    font-size: 2rem !important;
 }
 
 /* ===== BOTÓN FIJO EN MODAL ===== */
@@ -312,7 +361,7 @@ body {
     padding-bottom: 0;
 }
 
-/* ===== BOTÓN GENERATE REPORT ===== */
+/* ===== BOTONES GENERATE REPORT ===== */
 .btn-generate-report {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
@@ -327,6 +376,40 @@ body {
     background: linear-gradient(135deg, #5a6268, #343a40);
     transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-generate-report-excel {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
+}
+
+.btn-generate-report-excel:hover {
+    background: linear-gradient(135deg, #218838, #1ea085);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
+
+.btn-generate-report-pdf {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+}
+
+.btn-generate-report-pdf:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
 }
 
 /* ===== SERVIDORES CARD ESTILOS ===== */
