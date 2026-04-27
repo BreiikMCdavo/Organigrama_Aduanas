@@ -91,7 +91,7 @@ function mostrarInfo(area){
                         <div class="mt-4">
                             <div class="bg-light rounded-3 p-4">
                                 <h5 class="text-center mb-4 fw-bold text-primary">
-                                    <i class="bi bi-graph-up me-2"></i>📊 Datos Generales por Unidad
+                                    <i class="bi bi-graph-up me-2"></i> Datos Generales por Unidad
                                 </h5>
                                 <div id="datos-unidades">
                                     <div class="text-center py-4">
@@ -426,13 +426,24 @@ function generateReport(unidad) {
     `;
     document.body.appendChild(alerta);
     
-    // Simular generación
+    // Codificar el nombre de la unidad para URL
+    const unidadCodificada = encodeURIComponent(unidad);
+    
+    // Descargar el reporte desde el backend
+    const link = document.createElement('a');
+    link.href = `/reporte/unidad/${unidadCodificada}`;
+    link.download = ''; // El navegador usará el nombre del archivo del backend
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Actualizar alerta a éxito
     setTimeout(() => {
         alerta.classList.remove('alert-info');
         alerta.classList.add('alert-success');
         alerta.innerHTML = `
-            <strong><i class="bi bi-check-circle me-2"></i>¡Reporte Generado!</strong><br>
-            <small>${unidad} listo para descargar</small>
+            <strong><i class="bi bi-check-circle me-2"></i>¡Reporte Descargado!</strong><br>
+            <small>${unidad} descargado exitosamente</small>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
         

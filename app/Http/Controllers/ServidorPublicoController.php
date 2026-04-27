@@ -164,13 +164,11 @@ class ServidorPublicoController extends Controller
                         // Agregar mensaje informativo
                         session()->flash('info', "El cargo '{$cargoExistente->cargo_descripcion}' ha quedado vacante (acefalía).");
                     }
-                } elseif ($request->accion_duplicado === 'adicionar') {
-                    // Adicionar segundo cargo (se contará como acefalía en el organigrama)
-                    session()->flash('info', 'Se ha registrado un segundo cargo para esta persona. En el organigrama se contará como acefalía.');
-                }
+
                 // Si es 'nuevo', simplemente continuar sin mensajes especiales
             }
         }
+    }
 
         if ($request->hasFile('fotografia')) {
             $data['fotografia'] = $request->file('fotografia')->store('servidores', 'public');
@@ -278,5 +276,1244 @@ class ServidorPublicoController extends Controller
 
         return redirect()->route('servidores.index')
             ->with('success', 'Servidor eliminado correctamente.');
+    }
+
+    /**
+     * Generar reporte de servidores con items
+     */
+    public function reporteItems()
+    {
+        $servidores = ServidorPublico::where('tipo', 'item')
+            ->where(function($query) {
+                $query->whereNull('acefalia')->orWhere('acefalia', false);
+            })
+            ->orderBy('unidad')
+            ->orderBy('sub_unidad')
+            ->get();
+
+        $headers = [
+            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
+            'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+            'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
+            'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
+            'TIPO DISC', 'CARNET DISC', 'VENCE DISC', 'FOTO'
+        ];
+
+        $csvData = [];
+        $csvData[] = implode(',', $headers);
+
+        foreach ($servidores as $servidor) {
+            $row = [
+                $servidor->tipo ?? '',
+                $this->escapeCsv($servidor->nombre ?? ''),
+                $this->escapeCsv($servidor->apellido_paterno ?? ''),
+                $this->escapeCsv($servidor->apellido_materno ?? ''),
+                $this->escapeCsv($servidor->unidad ?? ''),
+                $this->escapeCsv($servidor->sub_unidad ?? ''),
+                $servidor->numero_item ?? '',
+                $this->escapeCsv($servidor->cite_memorandum ?? ''),
+                $this->escapeCsv($servidor->cargo ?? ''),
+                $servidor->fecha_inicio_cargo ?? '',
+                $servidor->fecha_fin_cargo ?? '',
+                $servidor->cod_funcionario ?? '',
+                $servidor->escala_salarial ?? '',
+                $this->escapeCsv($servidor->asignacion_familiar_desc ?? ''),
+                $servidor->asignacion_familiar_grado ?? '',
+                $this->escapeCsv($servidor->casos_especiales_desc ?? ''),
+                $servidor->casos_especiales_grado ?? '',
+                $this->escapeCsv($servidor->discapacidad_desc ?? ''),
+                $servidor->discapacidad_grado ?? '',
+                $this->escapeCsv($servidor->discapacidad_tipo ?? ''),
+                $servidor->discapacidad_carnet ?? '',
+                $servidor->discapacidad_vence ?? '',
+                $servidor->fotografia ?? ''
+            ];
+            $csvData[] = implode(',', $row);
+        }
+
+        $filename = 'reporte_items_' . date('Y-m-d_H-i-s') . '.xls';
+        
+        // Generar contenido HTML que Excel puede abrir
+        $htmlContent = $this->generateExcelHtml($csvData, 'Reporte de Items - Servidores Públicos');
+        
+        return response($htmlContent)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+}
+
+/**
+ * Generar reporte de servidores con items en PDF
+ */
+public function reporteItemsPdf()
+{
+    $servidores = ServidorPublico::where('tipo', 'item')
+        ->where(function($query) {
+            $query->whereNull('acefalia')->orWhere('acefalia', false);
+        })
+        ->orderBy('unidad')
+        ->orderBy('sub_unidad')
+        ->get();
+
+    $headers = [
+        'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
+        'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+        'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
+        'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
+        'TIPO DISC', 'CARNET DISC', 'VENCE DISC'
+    ];
+
+    $html = '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Reporte de Items - Servidores Públicos</title>
+    <style>
+        @page {
+            margin: 20mm;
+            @bottom-center {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 10px;
+                color: #666;
+            }
+        }
+        
+        body { 
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 50%, #bcccdc 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 50%, #2c5282 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(10, 22, 40, 0.4);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #1565c0;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.95) 0%, rgba(26, 58, 107, 0.95) 50%, rgba(44, 82, 130, 0.95) 100%);
+            z-index: 0;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            text-align: center;
+            margin-top: 10px;
+            opacity: 0.9;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .info-cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #1565c0;
+            border-top: 1px solid #1565c0;
+        }
+        
+        .info-card h3 {
+            margin: 0 0 10px 0;
+            color: #0a1628;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .info-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 0;
+        }
+        
+        th { 
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 100%); 
+            color: white; 
+            padding: 12px 8px; 
+            text-align: left; 
+            font-weight: 700; 
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        th:last-child {
+            border-right: none;
+        }
+        
+        td { 
+            border-bottom: 1px solid #e8e8e8; 
+            padding: 10px 8px; 
+            font-size: 10px;
+            color: #333;
+        }
+        
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #e3f2fd; }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 11px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .footer .total {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a1628;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            color: rgba(10, 22, 40, 0.03);
+            font-weight: 900;
+            z-index: -1;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="watermark">ADUANA</div>
+    
+    <div class="header">
+        <h1>📊 REPORTE DE SERVIDORES PÚBLICOS CON ITEMS</h1>
+        <div class="subtitle">
+            Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
+            Sistema de Gestión de Servidores Públicos
+        </div>
+    </div>
+    
+    <div class="info-cards">
+        <div class="info-card">
+            <h3>📋 TOTAL DE SERVIDORES</h3>
+            <div class="value">' . $servidores->count() . '</div>
+        </div>
+        <div class="info-card">
+            <h3>📅 FECHA DE GENERACIÓN</h3>
+            <div class="value" style="font-size: 14px;">' . date('d/m/Y H:i:s') . '</div>
+        </div>
+        <div class="info-card">
+            <h3>🏢 TIPO DE REPORTE</h3>
+            <div class="value" style="font-size: 14px;">ITEMS</div>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>';
+
+        foreach ($headers as $header) {
+            $html .= '<th>' . htmlspecialchars($header) . '</th>';
+        }
+
+        $html .= '</tr>
+            </thead>
+            <tbody>';
+
+        $rowNumber = 1;
+        foreach ($servidores as $servidor) {
+            $rowClass = $rowNumber % 2 === 0 ? 'even' : 'odd';
+            $html .= '<tr class="' . $rowClass . '">
+                <td>' . htmlspecialchars($servidor->tipo ?? '') . '</td>
+                <td><strong>' . htmlspecialchars($servidor->nombre ?? '') . '</strong></td>
+                <td><strong>' . htmlspecialchars($servidor->apellido_paterno ?? '') . '</strong></td>
+                <td>' . htmlspecialchars($servidor->apellido_materno ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->unidad ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->sub_unidad ?? '') . '</td>
+                <td><strong>' . htmlspecialchars($servidor->numero_item ?? '') . '</strong></td>
+                <td>' . htmlspecialchars($servidor->cite_memorandum ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->fecha_inicio_cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->fecha_fin_cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->cod_funcionario ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->escala_salarial ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->asignacion_familiar_desc ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->asignacion_familiar_grado ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->casos_especiales_desc ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->casos_especiales_grado ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_desc ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_grado ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_tipo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_carnet ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_vence ?? '') . '</td>
+            </tr>';
+            $rowNumber++;
+        }
+
+        $html .= '</tbody>
+        </table>
+    </div>
+    
+    <div class="footer">
+        <div class="total">
+            📊 TOTAL DE SERVIDORES CON ITEMS: ' . $servidores->count() . '
+        </div>
+        <div>
+            <strong>Reporte generado automáticamente por el Sistema de Gestión de Servidores Públicos</strong><br>
+            Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
+            © ' . date('Y') . ' Todos los derechos reservados
+        </div>
+    </div>
+</body>
+</html>';
+
+        $filename = 'reporte_items_' . date('Y-m-d_H-i-s') . '.pdf';
+        
+        return response($html)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+    }
+
+    /**
+     * Generar reporte de servidores de consultoría en Excel
+     */
+    public function reporteConsultoria()
+    {
+        $servidores = ServidorPublico::where('tipo', 'consultoria')
+            ->where(function($query) {
+                $query->whereNull('acefalia')->orWhere('acefalia', false);
+            })
+            ->orderBy('unidad')
+            ->orderBy('sub_unidad')
+            ->get();
+
+        $headers = [
+            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
+            'CONTRATO', 'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CARGO', 
+            'FECHA INICIO CARGO', 'FECHA FIN CARGO', 'DESIGNACION', 'FECHA INICIO DESIGNACION',
+            'FECHA FIN DESIGNACION', 'ASIGNACION FAMILIAR', 'GRADO AF',
+            'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
+            'TIPO DISC', 'CARNET DISC', 'VENCE DISC'
+        ];
+
+        $csvData = [];
+        $csvData[] = implode(',', $headers);
+
+        foreach ($servidores as $servidor) {
+            $row = [
+                $servidor->tipo ?? '',
+                $this->escapeCsv($servidor->nombre ?? ''),
+                $this->escapeCsv($servidor->apellido_paterno ?? ''),
+                $this->escapeCsv($servidor->apellido_materno ?? ''),
+                $this->escapeCsv($servidor->unidad ?? ''),
+                $this->escapeCsv($servidor->sub_unidad ?? ''),
+                $servidor->contrato ?? '',
+                $servidor->cod_funcionario ?? '',
+                $servidor->escala_salarial ?? '',
+                $this->escapeCsv($servidor->cargo ?? ''),
+                $servidor->fecha_inicio_cargo ?? '',
+                $servidor->fecha_fin_cargo ?? '',
+                $this->escapeCsv($servidor->designacion ?? ''),
+                $servidor->fecha_inicio_designacion ?? '',
+                $servidor->fecha_fin_designacion ?? '',
+                $this->escapeCsv($servidor->asignacion_familiar_desc ?? ''),
+                $servidor->asignacion_familiar_grado ?? '',
+                $this->escapeCsv($servidor->casos_especiales_desc ?? ''),
+                $servidor->casos_especiales_grado ?? '',
+                $this->escapeCsv($servidor->discapacidad_desc ?? ''),
+                $servidor->discapacidad_grado ?? '',
+                $this->escapeCsv($servidor->discapacidad_tipo ?? ''),
+                $servidor->discapacidad_carnet ?? '',
+                $servidor->discapacidad_vence ?? ''
+            ];
+            $csvData[] = implode(',', $row);
+        }
+
+        $filename = 'reporte_consultoria_' . date('Y-m-d_H-i-s') . '.xls';
+        
+        // Generar contenido HTML que Excel puede abrir
+        $htmlContent = $this->generateExcelHtml($csvData, 'Reporte de Consultoría - Servidores Públicos');
+        
+        return response($htmlContent)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+    }
+
+    /**
+     * Generar reporte de servidores de consultoría en PDF
+     */
+    public function reporteConsultoriaPdf()
+    {
+        $servidores = ServidorPublico::where('tipo', 'consultoria')
+            ->where(function($query) {
+                $query->whereNull('acefalia')->orWhere('acefalia', false);
+            })
+            ->orderBy('unidad')
+            ->orderBy('sub_unidad')
+            ->get();
+
+        $headers = [
+            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
+            'CONTRATO', 'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CARGO', 
+            'FECHA INICIO CARGO', 'FECHA FIN CARGO', 'DESIGNACION', 'FECHA INICIO DESIGNACION',
+            'FECHA FIN DESIGNACION', 'ASIGNACION FAMILIAR', 'GRADO AF',
+            'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
+            'TIPO DISC', 'CARNET DISC', 'VENCE DISC'
+        ];
+
+        $html = '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Reporte de Consultoría - Servidores Públicos</title>
+    <style>
+        @page {
+            margin: 20mm;
+            @bottom-center {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 10px;
+                color: #666;
+            }
+        }
+        
+        body { 
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 50%, #bcccdc 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 50%, #2c5282 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(10, 22, 40, 0.4);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #1565c0;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.95) 0%, rgba(26, 58, 107, 0.95) 50%, rgba(44, 82, 130, 0.95) 100%);
+            z-index: 0;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            text-align: center;
+            margin-top: 10px;
+            opacity: 0.9;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .info-cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #1565c0;
+            border-top: 1px solid #1565c0;
+        }
+        
+        .info-card h3 {
+            margin: 0 0 10px 0;
+            color: #0a1628;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .info-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 0;
+        }
+        
+        th { 
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 100%); 
+            color: white; 
+            padding: 12px 8px; 
+            text-align: left; 
+            font-weight: 700; 
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        th:last-child {
+            border-right: none;
+        }
+        
+        td { 
+            border-bottom: 1px solid #e8e8e8; 
+            padding: 10px 8px; 
+            font-size: 10px;
+            color: #333;
+        }
+        
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #e8f5e8; }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 11px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .footer .total {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a1628;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            color: rgba(10, 22, 40, 0.03);
+            font-weight: 900;
+            z-index: -1;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="watermark">ADUANA</div>
+    
+    <div class="header">
+        <h1>📋 REPORTE DE SERVIDORES DE CONSULTORÍA</h1>
+        <div class="subtitle">
+            Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
+            Sistema de Gestión de Servidores Públicos
+        </div>
+    </div>
+    
+    <div class="info-cards">
+        <div class="info-card">
+            <h3>📋 TOTAL DE SERVIDORES</h3>
+            <div class="value">' . $servidores->count() . '</div>
+        </div>
+        <div class="info-card">
+            <h3>📅 FECHA DE GENERACIÓN</h3>
+            <div class="value" style="font-size: 14px;">' . date('d/m/Y H:i:s') . '</div>
+        </div>
+        <div class="info-card">
+            <h3>🏢 TIPO DE REPORTE</h3>
+            <div class="value" style="font-size: 14px;">CONSULTORÍA</div>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>';
+
+        foreach ($headers as $header) {
+            $html .= '<th>' . htmlspecialchars($header) . '</th>';
+        }
+
+        $html .= '</tr>
+            </thead>
+            <tbody>';
+
+        $rowNumber = 1;
+        foreach ($servidores as $servidor) {
+            $rowClass = $rowNumber % 2 === 0 ? 'even' : 'odd';
+            $html .= '<tr class="' . $rowClass . '">
+                <td>' . htmlspecialchars($servidor->tipo ?? '') . '</td>
+                <td><strong>' . htmlspecialchars($servidor->nombre ?? '') . '</strong></td>
+                <td><strong>' . htmlspecialchars($servidor->apellido_paterno ?? '') . '</strong></td>
+                <td>' . htmlspecialchars($servidor->apellido_materno ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->unidad ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->sub_unidad ?? '') . '</td>
+                <td><strong>' . htmlspecialchars($servidor->contrato_numero ?? '') . '</strong></td>
+                <td>' . htmlspecialchars($servidor->cod_funcionario ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->escala_salarial ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->fecha_inicio_cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->fecha_fin_cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->designacion ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->designacion_inicio ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->designacion_fin ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->asignacion_familiar_desc ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->asignacion_familiar_grado ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->casos_especiales_desc ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->casos_especiales_grado ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_desc ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_grado ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_tipo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_carnet ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->discapacidad_vence ?? '') . '</td>
+            </tr>';
+            $rowNumber++;
+        }
+
+        $html .= '</tbody>
+        </table>
+    </div>
+    
+    <div class="footer">
+        <div class="total">
+            📋 TOTAL DE SERVIDORES DE CONSULTORÍA: ' . $servidores->count() . '
+        </div>
+        <div>
+            <strong>Reporte generado automáticamente por el Sistema de Gestión de Servidores Públicos</strong><br>
+            Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
+            © ' . date('Y') . ' Todos los derechos reservados
+        </div>
+    </div>
+</body>
+</html>';
+
+        $filename = 'reporte_consultoria_' . date('Y-m-d_H-i-s') . '.pdf';
+        
+        return response($html)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+    }
+
+    /**
+     * Generar reporte de acefalías en Excel
+     */
+    public function reporteAcefalias()
+    {
+        $servidores = ServidorPublico::where('acefalia', true)
+            ->orderBy('unidad')
+            ->orderBy('sub_unidad')
+            ->get();
+
+        $headers = [
+            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
+            'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+            'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CONTRATO', 'DESIGNACION', 
+            'FECHA INICIO DESIGNACION', 'FECHA FIN DESIGNACION'
+        ];
+
+        $csvData = [];
+        $csvData[] = implode(',', $headers);
+
+        foreach ($servidores as $servidor) {
+            $row = [
+                $servidor->tipo ?? '',
+                $this->escapeCsv($servidor->nombre ?? ''),
+                $this->escapeCsv($servidor->apellido_paterno ?? ''),
+                $this->escapeCsv($servidor->apellido_materno ?? ''),
+                $this->escapeCsv($servidor->unidad ?? ''),
+                $this->escapeCsv($servidor->sub_unidad ?? ''),
+                $servidor->numero_item ?? '',
+                $this->escapeCsv($servidor->cite_memorandum ?? ''),
+                $this->escapeCsv($servidor->cargo ?? ''),
+                $servidor->fecha_inicio_cargo ?? '',
+                $servidor->fecha_fin_cargo ?? '',
+                $servidor->cod_funcionario ?? '',
+                $servidor->escala_salarial ?? '',
+                $this->escapeCsv($servidor->contrato_numero ?? ''),
+                $this->escapeCsv($servidor->designacion ?? ''),
+                $servidor->designacion_inicio ?? '',
+                $servidor->designacion_fin ?? ''
+            ];
+            $csvData[] = implode(',', $row);
+        }
+
+        $filename = 'reporte_acefalias_' . date('Y-m-d_H-i-s') . '.xls';
+        
+        // Generar contenido HTML que Excel puede abrir
+        $htmlContent = $this->generateExcelHtml($csvData, 'Reporte de Acefalías - Plazas Vacantes');
+        
+        return response($htmlContent)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+    }
+
+    /**
+     * Generar reporte de acefalías en PDF
+     */
+    public function reporteAcefaliasPdf()
+    {
+        $servidores = ServidorPublico::where('acefalia', true)
+            ->orderBy('unidad')
+            ->orderBy('sub_unidad')
+            ->get();
+
+        $headers = [
+            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
+            'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+            'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CONTRATO', 'DESIGNACION', 
+            'FECHA INICIO DESIGNACION', 'FECHA FIN DESIGNACION'
+        ];
+
+        $html = '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Reporte de Acefalías - Plazas Vacantes</title>
+    <style>
+        @page {
+            margin: 20mm;
+            @bottom-center {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 10px;
+                color: #666;
+            }
+        }
+        
+        body { 
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 50%, #bcccdc 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 50%, #2c5282 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(10, 22, 40, 0.4);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #1565c0;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.95) 0%, rgba(26, 58, 107, 0.95) 50%, rgba(44, 82, 130, 0.95) 100%);
+            z-index: 0;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            text-align: center;
+            margin-top: 10px;
+            opacity: 0.9;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .alert-banner {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .alert-banner .icon {
+            font-size: 40px;
+            opacity: 0.8;
+        }
+        
+        .alert-banner .content h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .alert-banner .content p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .info-cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #1565c0;
+            border-top: 1px solid #1565c0;
+        }
+        
+        .info-card h3 {
+            margin: 0 0 10px 0;
+            color: #0a1628;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .info-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 0;
+        }
+        
+        th { 
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 100%); 
+            color: white; 
+            padding: 12px 8px; 
+            text-align: left; 
+            font-weight: 700; 
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        th:last-child {
+            border-right: none;
+        }
+        
+        td { 
+            border-bottom: 1px solid #e8e8e8; 
+            padding: 10px 8px; 
+            font-size: 10px;
+            color: #333;
+        }
+        
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #ffe8e8; }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 11px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .footer .total {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a1628;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            color: rgba(10, 22, 40, 0.03);
+            font-weight: 900;
+            z-index: -1;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="watermark">ADUANA</div>
+    
+    <div class="header">
+        <h1>⚠️ REPORTE DE PLAZAS VACANTES (ACEFALÍAS)</h1>
+        <div class="subtitle">
+            Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
+            Sistema de Gestión de Servidores Públicos
+        </div>
+    </div>
+    
+    <div class="alert-banner">
+        <div class="icon">⚠️</div>
+        <div class="content">
+            <h3>ATENCIÓN: PLAZAS VACANTES</h3>
+            <p>Este reporte muestra todas las plazas vacantes (acefalías) registradas en el sistema. Requiere acción inmediata para cobertura.</p>
+        </div>
+    </div>
+    
+    <div class="info-cards">
+        <div class="info-card">
+            <h3>⚠️ TOTAL DE ACEFALÍAS</h3>
+            <div class="value">' . $servidores->count() . '</div>
+        </div>
+        <div class="info-card">
+            <h3>📅 FECHA DE GENERACIÓN</h3>
+            <div class="value" style="font-size: 14px;">' . date('d/m/Y H:i:s') . '</div>
+        </div>
+        <div class="info-card">
+            <h3>🏢 ESTADO CRÍTICO</h3>
+            <div class="value" style="font-size: 14px;">PLAZAS VACANTES</div>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>';
+
+        foreach ($headers as $header) {
+            $html .= '<th>' . htmlspecialchars($header) . '</th>';
+        }
+
+        $html .= '</tr>
+            </thead>
+            <tbody>';
+
+        $rowNumber = 1;
+        foreach ($servidores as $servidor) {
+            $rowClass = $rowNumber % 2 === 0 ? 'even' : 'odd';
+            $html .= '<tr class="' . $rowClass . '">
+                <td>' . htmlspecialchars($servidor->tipo ?? '') . '</td>
+                <td><strong>' . htmlspecialchars($servidor->nombre ?? '') . '</strong></td>
+                <td><strong>' . htmlspecialchars($servidor->apellido_paterno ?? '') . '</strong></td>
+                <td>' . htmlspecialchars($servidor->apellido_materno ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->unidad ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->sub_unidad ?? '') . '</td>
+                <td><strong>' . htmlspecialchars($servidor->numero_item ?? '') . '</strong></td>
+                <td>' . htmlspecialchars($servidor->cite_memorandum ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->fecha_inicio_cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->fecha_fin_cargo ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->cod_funcionario ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->escala_salarial ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->contrato_numero ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->designacion ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->designacion_inicio ?? '') . '</td>
+                <td>' . htmlspecialchars($servidor->designacion_fin ?? '') . '</td>
+            </tr>';
+            $rowNumber++;
+        }
+
+        $html .= '</tbody>
+        </table>
+    </div>
+    
+    <div class="footer">
+        <div class="total">
+            ⚠️ TOTAL DE PLAZAS VACANTES (ACEFALÍAS): ' . $servidores->count() . '
+        </div>
+        <div>
+            <strong>Reporte generado automáticamente por el Sistema de Gestión de Servidores Públicos</strong><br>
+            Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
+            © ' . date('Y') . ' Todos los derechos reservados
+        </div>
+    </div>
+</body>
+</html>';
+
+        $filename = 'reporte_acefalias_' . date('Y-m-d_H-i-s') . '.pdf';
+        
+        return response($html)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+    }
+
+    /**
+     * Generar contenido HTML que Excel puede abrir
+     */
+    private function generateExcelHtml($csvData, $title)
+    {
+        $html = '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>' . htmlspecialchars($title) . '</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 50%, #2c5282 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #1a3a6b;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .footer {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>' . htmlspecialchars($title) . '</h1>
+        <p>Generado el ' . date('d/m/Y H:i:s') . '</p>
+    </div>
+    
+    <table>';
+
+        // Agregar filas de datos
+        foreach ($csvData as $row) {
+            $cells = explode(',', $row);
+            $html .= '<tr>';
+            foreach ($cells as $cell) {
+                $html .= '<td>' . htmlspecialchars($cell) . '</td>';
+            }
+            $html .= '</tr>';
+        }
+
+        $html .= '</table>
+    
+    <div class="footer">
+        <strong>Reporte generado automáticamente por el Sistema de Gestión de Servidores Públicos</strong><br>
+        Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
+        © ' . date('Y') . ' Todos los derechos reservados
+    </div>
+</body>
+</html>';
+
+        return $html;
+    }
+
+    /**
+     * Escapar caracteres especiales para CSV
+     */
+    private function escapeCsv($value)
+    {
+        if (str_contains($value, ',') || str_contains($value, '"') || str_contains($value, "\n")) {
+            $value = str_replace('"', '""', $value);
+            return '"' . $value . '"';
+        }
+        return $value;
+    }
+
+    /**
+     * Generar contenido CSV (mantener como respaldo)
+     */
+    /**
+     * Generar reporte individual por unidad
+     */
+    public function reportePorUnidad($nombre)
+    {
+        // Decodificar el nombre de la unidad (URL encoded)
+        $nombreUnidad = urldecode($nombre);
+        
+        // Obtener todos los servidores de la unidad específica
+        $servidores = ServidorPublico::where('unidad', $nombreUnidad)
+            ->orderBy('sub_unidad')
+            ->orderBy('tipo')
+            ->get();
+
+        // Headers para el reporte
+        $headers = [
+            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
+            'N° ITEM', 'CITE MEMORANDUM', 'CARGO', 'FECHA INICIO CARGO', 'FECHA FIN CARGO',
+            'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
+            'CASOS ESPECIALES', 'GRADO CE', 'DISCAPACIDAD', 'GRADO DISC', 
+            'TIPO DISC', 'CARNET DISC', 'VENCE DISC'
+        ];
+
+        // Generar contenido CSV
+        $csvData = [];
+        $csvData[] = implode(',', $headers);
+
+        foreach ($servidores as $servidor) {
+            $row = [
+                $servidor->tipo ?? '',
+                $this->escapeCsv($servidor->nombre ?? ''),
+                $this->escapeCsv($servidor->apellido_paterno ?? ''),
+                $this->escapeCsv($servidor->apellido_materno ?? ''),
+                $this->escapeCsv($servidor->unidad ?? ''),
+                $this->escapeCsv($servidor->sub_unidad ?? ''),
+                $servidor->numero_item ?? '',
+                $this->escapeCsv($servidor->cite_memorandum ?? ''),
+                $this->escapeCsv($servidor->cargo ?? ''),
+                $servidor->fecha_inicio_cargo ?? '',
+                $servidor->fecha_fin_cargo ?? '',
+                $servidor->cod_funcionario ?? '',
+                $servidor->escala_salarial ?? '',
+                $this->escapeCsv($servidor->asignacion_familiar_desc ?? ''),
+                $servidor->asignacion_familiar_grado ?? '',
+                $this->escapeCsv($servidor->casos_especiales_desc ?? ''),
+                $servidor->casos_especiales_grado ?? '',
+                $this->escapeCsv($servidor->discapacidad_desc ?? ''),
+                $servidor->discapacidad_grado ?? '',
+                $this->escapeCsv($servidor->discapacidad_tipo ?? ''),
+                $servidor->discapacidad_carnet ?? '',
+                $servidor->discapacidad_vence ?? ''
+            ];
+            $csvData[] = implode(',', $row);
+        }
+
+        // Generar nombre de archivo
+        $nombreArchivo = 'reporte_' . str_replace(' ', '_', strtolower($nombreUnidad)) . '_' . date('Y-m-d_H-i-s') . '.xls';
+        
+        // Generar contenido HTML que Excel puede abrir
+        $htmlContent = $this->generateExcelHtml($csvData, 'Reporte de ' . $nombreUnidad . ' - Servidores Públicos');
+        
+        return response($htmlContent)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'attachment; filename="' . $nombreArchivo . '"');
+    }
+
+    private function generateCsv($data)
+    {
+        $csv = '';
+        foreach ($data as $row) {
+            $csv .= $row . "\n";
+        }
+        return $csv;
     }
 }

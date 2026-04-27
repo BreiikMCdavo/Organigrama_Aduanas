@@ -4,8 +4,96 @@
     <div class="container py-4">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0">Servidores Públicos Registrados</h5>
-            <a href="{{ route('servidores.create') }}" class="btn btn-primary btn-sm">+ Agregar Servidor Público</a>
+            <div>
+                <h5 class="fw-bold mb-0 text-primary">
+                    <i class="bi bi-people-fill me-2"></i>Servidores Públicos Registrados
+                </h5>
+                <small class="text-muted">Gestión completa del personal</small>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="btn-group" role="group">
+                    <a href="{{ route('reporte.items') }}" class="btn btn-gradient-success btn-sm d-flex align-items-center px-3" style="background: linear-gradient(135deg, #28a745, #20c997); border: none; color: white; box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3); transition: all 0.3s;">
+                        <i class="bi bi-file-earmark-excel me-2"></i>
+                        <span>
+                            <strong>📊 Reporte Items</strong>
+                            <br>
+                            <small style="font-size: 0.7rem; opacity: 0.9;">Abrir en Excel</small>
+                        </span>
+                    </a>
+                    <a href="{{ route('reporte.consultoria') }}" class="btn btn-gradient-info btn-sm d-flex align-items-center px-3" style="background: linear-gradient(135deg, #17a2b8, #6610f2); border: none; color: white; box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3); transition: all 0.3s;">
+                        <i class="bi bi-file-earmark-excel me-2"></i>
+                        <span>
+                            <strong>📋 Reporte Consultoría</strong>
+                            <br>
+                            <small style="font-size: 0.7rem; opacity: 0.9;">Abrir en Excel</small>
+                        </span>
+                    </a>
+                </div>
+                <a href="{{ route('servidores.create') }}" class="btn btn-primary btn-sm d-flex align-items-center px-3" style="box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3); transition: all 0.3s;">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    <span>
+                        <strong>+ Nuevo Servidor</strong>
+                        <br>
+                        <small style="font-size: 0.7rem; opacity: 0.9;">Agregar registro</small>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tarjeta de estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card border-0 bg-light rounded-3 shadow-sm">
+                    <div class="card-body p-3">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="badge bg-success bg-opacity-10 text-success p-2 me-2">
+                                        <i class="bi bi-briefcase-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-success">{{ \App\Models\ServidorPublico::where('tipo', 'item')->where(function($q){ $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}</h6>
+                                        <small class="text-muted">Items Activos</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="badge bg-info bg-opacity-10 text-info p-2 me-2">
+                                        <i class="bi bi-file-text-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-info">{{ \App\Models\ServidorPublico::where('tipo', 'consultoria')->where(function($q){ $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}</h6>
+                                        <small class="text-muted">Consultoría</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="badge bg-warning bg-opacity-10 text-warning p-2 me-2">
+                                        <i class="bi bi-shield-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-warning">{{ \App\Models\ServidorPublico::where(function($q){ $q->whereNotNull('asignacion_familiar_desc')->where('asignacion_familiar_desc', '!=', '')->orWhereNotNull('casos_especiales_desc')->where('casos_especiales_desc', '!=', '')->orWhereNotNull('discapacidad_desc')->where('discapacidad_desc', '!=', ''); })->where(function($q){ $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}</h6>
+                                        <small class="text-muted">Inamovibles</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="badge bg-danger bg-opacity-10 text-danger p-2 me-2">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-danger">{{ \App\Models\ServidorPublico::where('acefalia', true)->count() }}</h6>
+                                        <small class="text-muted">Acefalías</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         @if(session('success'))

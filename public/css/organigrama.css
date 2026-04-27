@@ -74,7 +74,7 @@ body {
 }
 
 .modal-title {
-    color: white;
+    color: rgb(0, 0, 0);
     font-weight: 600;
     font-size: 1.25rem;
 }
@@ -317,7 +317,7 @@ body {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
-    background: linear-gradient(135deg, #6c757d, #495057);
+    background: linear-gradient(135deg, #6c757d, #00ffb8);
     border: none;
     color: white;
     transition: all 0.3s ease;
