@@ -122,9 +122,17 @@
                                     <label class="form-label small mb-1">N° Ítem</label>
                                     <input type="text" name="numero_item" class="form-control form-control-sm" value="{{ old('numero_item') }}">
                                 </div>
-                                <div class="col-5">
+                                <div class="col-3">
                                     <label class="form-label small mb-1">CITE Memorandum</label>
                                     <input type="text" name="cite_memorandum" class="form-control form-control-sm" value="{{ old('cite_memorandum') }}">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">Cód. Funcionario</label>
+                                    <input type="text" name="cod_funcionario" class="form-control form-control-sm" value="{{ old('cod_funcionario') }}">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">Escala Salarial</label>
+                                    <input type="text" name="escala_salarial" class="form-control form-control-sm" value="{{ old('escala_salarial') }}">
                                 </div>
                             </div>
 
@@ -214,11 +222,11 @@
 
                             <p class="fw-bold small mb-2">Inamovilidad:</p>
                             @foreach([
-                                ['label'=>'1. Asignación Familiar:','desc'=>'asignacion_familiar_desc','grado'=>'asignacion_familiar_grado'],
-                                ['label'=>'2. Casos especiales:','desc'=>'casos_especiales_desc','grado'=>'casos_especiales_grado'],
+                                ['label'=>'1. Asignación Familiar:','desc'=>'asignacion_familiar_desc','grado'=>'asignacion_familiar_grado','check'=>'asignacion_familiar_check'],
+                                ['label'=>'2. Casos especiales:','desc'=>'casos_especiales_desc','grado'=>'casos_especiales_grado','check'=>'casos_especiales_check'],
                             ] as $campo)
                             <div class="row g-2 align-items-center mb-2">
-                                <div class="col-1 text-center"><input type="checkbox" class="form-check-input"></div>
+                                <div class="col-1 text-center"><input type="checkbox" name="{{ $campo['check'] }}" class="form-check-input" {{ old($campo['check']) ? 'checked' : '' }}></div>
                                 <div class="col-6">
                                     <label class="form-label small mb-0">{{ $campo['label'] }}</label>
                                     <input type="text" name="{{ $campo['desc'] }}" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
@@ -238,7 +246,7 @@
                             <div class="mb-2">
                                 <div class="row g-2 align-items-center">
                                     <div class="col-1 text-center">
-                                        <input type="checkbox" class="form-check-input" id="chk_disc_item" onchange="document.getElementById('disc_detalle_item').style.display=this.checked?'block':'none'">
+                                        <input type="checkbox" name="discapacidad_check" class="form-check-input" id="chk_disc_item" {{ old('discapacidad_check') ? 'checked' : '' }} onchange="document.getElementById('disc_detalle_item').style.display=this.checked?'block':'none'">
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label small mb-0">3. Discapacidad Ley N° 223:</label>
@@ -300,9 +308,19 @@
                             <h6 class="fw-bold mb-3">Datos de Consultoría</h6>
 
                             {{-- 1. Contrato --}}
-                            <div class="mb-2">
-                                <label class="form-label small mb-1">Contrato</label>
-                                <input type="text" name="contrato_numero" class="form-control form-control-sm" value="{{ old('contrato_numero') }}">
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label small mb-1">Contrato</label>
+                                    <input type="text" name="contrato_numero" class="form-control form-control-sm" value="{{ old('contrato_numero') }}">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">Cód. Funcionario</label>
+                                    <input type="text" name="cod_funcionario" class="form-control form-control-sm" value="{{ old('cod_funcionario') }}">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">Escala Salarial</label>
+                                    <input type="text" name="escala_salarial" class="form-control form-control-sm" value="{{ old('escala_salarial') }}">
+                                </div>
                             </div>
 
                             {{-- 2. Nombres --}}

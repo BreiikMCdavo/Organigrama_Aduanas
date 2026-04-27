@@ -32,18 +32,17 @@
                                     <label class="form-label small mb-1">N° Ítem</label>
                                     <input type="text" name="numero_item" class="form-control form-control-sm" value="{{ old('numero_item', $servidor->numero_item) }}">
                                 </div>
-                                <div class="col-5">
+                                <div class="col-3">
                                     <label class="form-label small mb-1">CITE Memorandum</label>
                                     <input type="text" name="cite_memorandum" class="form-control form-control-sm" value="{{ old('cite_memorandum', $servidor->cite_memorandum) }}">
                                 </div>
-                                <div class="col-4">
-                                    <label class="form-label small mb-1">Cargo (Designación)</label>
-                                    <select name="designacion" class="form-select form-select-sm">
-                                        <option value="">Seleccionar</option>
-                                        @foreach(['Designación','Interinato','Comisión'] as $op)
-                                            <option value="{{ $op }}" {{ old('designacion', $servidor->designacion)==$op?'selected':'' }}>{{ $op }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">Cód. Funcionario</label>
+                                    <input type="text" name="cod_funcionario" class="form-control form-control-sm" value="{{ old('cod_funcionario', $servidor->cod_funcionario) }}">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">Escala Salarial</label>
+                                    <input type="text" name="escala_salarial" class="form-control form-control-sm" value="{{ old('escala_salarial', $servidor->escala_salarial) }}">
                                 </div>
                             </div>
 
@@ -111,18 +110,17 @@
                             <h6 class="fw-bold mb-3">Editar Datos de Consultoría</h6>
 
                             <div class="row g-2 mb-2">
-                                <div class="col-7">
+                                <div class="col-6">
                                     <label class="form-label small mb-1">Contrato</label>
                                     <input type="text" name="contrato_numero" class="form-control form-control-sm" value="{{ old('contrato_numero', $servidor->contrato_numero) }}">
                                 </div>
-                                <div class="col-5">
-                                    <label class="form-label small mb-1">Cargo (Designación)</label>
-                                    <select name="designacion" class="form-select form-select-sm">
-                                        <option value="">Seleccionar</option>
-                                        @foreach(['Designación','Interinato','Comisión'] as $op)
-                                            <option value="{{ $op }}" {{ old('designacion', $servidor->designacion)==$op?'selected':'' }}>{{ $op }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">Cód. Funcionario</label>
+                                    <input type="text" name="cod_funcionario" class="form-control form-control-sm" value="{{ old('cod_funcionario', $servidor->cod_funcionario) }}">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label small mb-1">Escala Salarial</label>
+                                    <input type="text" name="escala_salarial" class="form-control form-control-sm" value="{{ old('escala_salarial', $servidor->escala_salarial) }}">
                                 </div>
                             </div>
 
@@ -193,20 +191,21 @@
                         <p class="fw-bold small mb-2">Inamovilidad:</p>
 
                         @foreach([
-                            ['label'=>'1. Asignación Familiar:', 'desc'=>'asignacion_familiar_desc', 'grado'=>'asignacion_familiar_grado'],
-                            ['label'=>'2. Casos especiales:', 'desc'=>'casos_especiales_desc', 'grado'=>'casos_especiales_grado'],
-                            ['label'=>'3. Discapacidad Ley N° 223:', 'desc'=>'discapacidad_desc', 'grado'=>'discapacidad_grado'],
+                            ['label'=>'1. Asignación Familiar:', 'desc'=>'asignacion_familiar_desc', 'grado'=>'asignacion_familiar_grado', 'check'=>'asignacion_familiar_check'],
+                            ['label'=>'2. Casos especiales:', 'desc'=>'casos_especiales_desc', 'grado'=>'casos_especiales_grado', 'check'=>'casos_especiales_check'],
                         ] as $campo)
                         <div class="row g-2 align-items-center mb-2">
-                            <div class="col-7">
+                            <div class="col-1 text-center">
+                                <input type="checkbox" name="{{ $campo['check'] }}" class="form-check-input"
+                                    {{ old($campo['check'], $servidor->{$campo['check']}) ? 'checked' : '' }}>
+                            </div>
+                            <div class="col-6">
                                 <label class="form-label small mb-0">{{ $campo['label'] }}</label>
                                 <input type="text" name="{{ $campo['desc'] }}" class="form-control form-control-sm"
                                        placeholder="Ingresar descripción..."
                                        value="{{ old($campo['desc'], $servidor->{$campo['desc']}) }}">
                             </div>
-                            <div class="col-2">
-                                <label class="form-label small mb-0">Grado:</label>
-                            </div>
+                            <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
                             <div class="col-3">
                                 <select name="{{ $campo['grado'] }}" class="form-select form-select-sm">
                                     @foreach(['G','MG','M','L'] as $g)
@@ -216,6 +215,53 @@
                             </div>
                         </div>
                         @endforeach
+
+                        {{-- 3. Discapacidad --}}
+                        <div class="mb-2">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-1 text-center">
+                                    <input type="checkbox" name="discapacidad_check" class="form-check-input" id="chk_disc_edit"
+                                        {{ old('discapacidad_check', $servidor->discapacidad_check) ? 'checked' : '' }}
+                                        onchange="document.getElementById('disc_detalle_edit').style.display=this.checked?'block':'none'">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small mb-0">3. Discapacidad Ley N° 223:</label>
+                                    <input type="text" name="discapacidad_desc" class="form-control form-control-sm"
+                                           placeholder="Ingresar descripción..."
+                                           value="{{ old('discapacidad_desc', $servidor->discapacidad_desc) }}">
+                                </div>
+                                <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
+                                <div class="col-3">
+                                    <select name="discapacidad_grado" class="form-select form-select-sm">
+                                        @foreach(['G','MG','M','L'] as $g)
+                                            <option value="{{ $g }}" {{ old('discapacidad_grado', $servidor->discapacidad_grado)==$g?'selected':'' }}>{{ $g }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="disc_detalle_edit" class="mt-2 ms-4 ps-2 border-start border-2 border-primary"
+                                 style="display:{{ $servidor->discapacidad_tipo || $servidor->discapacidad_carnet || $servidor->discapacidad_vence ? 'block' : 'none' }};">
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <label class="form-label small mb-1">Tipo de discapacidad</label>
+                                        <input type="text" name="discapacidad_tipo" class="form-control form-control-sm"
+                                               placeholder="Ej: Visual, Motriz..."
+                                               value="{{ old('discapacidad_tipo', $servidor->discapacidad_tipo) }}">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label small mb-1">Carnet de discapacidad</label>
+                                        <input type="text" name="discapacidad_carnet" class="form-control form-control-sm"
+                                               placeholder="N° carnet"
+                                               value="{{ old('discapacidad_carnet', $servidor->discapacidad_carnet) }}">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label small mb-1">Vence</label>
+                                        <input type="date" name="discapacidad_vence" class="form-control form-control-sm"
+                                               value="{{ old('discapacidad_vence', $servidor->discapacidad_vence ? \Carbon\Carbon::parse($servidor->discapacidad_vence)->format('Y-m-d') : '') }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         {{-- Foto --}}
                         <div class="mt-3">
