@@ -130,6 +130,15 @@ body {
     font-size: 0.8rem;
 }
 
+.badge-inamoviles {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    color: white;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
 /* ===== PROGRESS BARS PERSONALIZADOS ===== */
 .progress {
     background-color: #e9ecef;
@@ -155,6 +164,10 @@ body {
 
 .icon-danger {
     color: #dc3545;
+}
+
+.icon-warning {
+    color: #ffc107;
 }
 
 .icon-primary {

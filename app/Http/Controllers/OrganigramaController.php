@@ -13,9 +13,30 @@ class OrganigramaController extends Controller
     if ($area === 'GERENCIA REGIONAL LA PAZ - GRLPZ') {
         $personal = ServidorPublico::all();
     } else {
-        $personal = ServidorPublico::where('unidad', $area)
-            ->orWhere('sub_unidad', $area)
-            ->get();
+        // Si es GERENCIA, incluir todas sus sub-unidades
+        if ($area === 'GERENCIA REGIONAL LA PAZ - GRLPZ') {
+            $subUnidadesGerencia = [
+                'GERENTE', 'ASESORÍA', 'SECRETARIA', 'SISTEMAS', 
+                'USO', 'ARCHIVO', 'Unidad Administrativa', 
+                'Unidad Fiscalización', 'Unidad Jurídica',
+                'Administración Aduana Interior La Paz',
+                'Aduana Frontera Guayaramerín',
+                'Aduana Aeropuerto El Alto',
+                'Administración Aduana Zona Franca Industrial Patacamaya',
+                'Administración Aduana Frontera Desaguadero',
+                'Zona Franca Comercial / Frontera Cobija',
+                'Agencia Aduana Exterior Matarani',
+                'Administración Aduana Frontera Charaña'
+            ];
+            
+            $personal = ServidorPublico::where('unidad', $area)
+                ->orWhereIn('sub_unidad', $subUnidadesGerencia)
+                ->get();
+        } else {
+            $personal = ServidorPublico::where('unidad', $area)
+                ->orWhere('sub_unidad', $area)
+                ->get();
+        }
     }
 
     // OBTENER TODOS LOS REGISTROS PARA VERIFICAR DUPLICADOS POR NOMBRE COMPLETO
@@ -74,10 +95,53 @@ class OrganigramaController extends Controller
             return $grupo->count();
         });
 
+    // CALCULAR INAMOVILES CON DEPURACIÓN
+    $inamoviles = 0;
+    $encontrados = [];
+    
+    foreach ($personal as $persona) {
+        // Verificar si tiene algún campo de inamovilidad lleno
+        $tieneInamovilidad = false;
+        $campos = [];
+        
+        // Revisar cada campo de inamovilidad
+        if (!empty($persona->asignacion_familiar_desc) && trim($persona->asignacion_familiar_desc) !== '') {
+            $tieneInamovilidad = true;
+            $campos[] = 'asignacion_familiar';
+        }
+        if (!empty($persona->casos_especiales_desc) && trim($persona->casos_especiales_desc) !== '') {
+            $tieneInamovilidad = true;
+            $campos[] = 'casos_especiales';
+        }
+        if (!empty($persona->discapacidad_desc) && trim($persona->discapacidad_desc) !== '') {
+            $tieneInamovilidad = true;
+            $campos[] = 'discapacidad';
+        }
+        
+        // Si tiene inamovilidad, nombre y no es acefalía, contar
+        if ($tieneInamovilidad && 
+            !empty($persona->nombre) && 
+            trim($persona->nombre) !== '' && 
+            !$persona->acefalia) {
+            $inamoviles++;
+            $encontrados[] = [
+                'nombre' => $persona->nombre,
+                'unidad' => $persona->unidad,
+                'sub_unidad' => $persona->sub_unidad,
+                'campos' => $campos
+            ];
+        }
+    }
+
     return response()->json([
         'items'     => $items,
         'acefalias' => $acefalias,
-        'cargos'    => $cargos
+        'inamoviles' => $inamoviles,
+        'cargos'    => $cargos,
+        'debug' => [
+            'total_personas' => count($personal),
+            'encontrados_inamoviles' => $encontrados
+        ]
     ]);
 }
 }

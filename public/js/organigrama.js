@@ -10,11 +10,14 @@ function mostrarInfo(area){
             if (area === 'GERENCIA REGIONAL LA PAZ - GRLPZ') {
                 const totalItems = data.items || 0;
                 const totalAcefalias = data.acefalias || 0;
+                const totalInamoviles = data.inamoviles || 0;
                 const totalPlazas = totalItems + totalAcefalias;
                 
                 // Calcular porcentajes
                 const porcentajeItems = totalPlazas > 0 ? Math.round((totalItems / totalPlazas) * 100) : 0;
                 const porcentajeAcefalias = totalPlazas > 0 ? Math.round((totalAcefalias / totalPlazas) * 100) : 0;
+                const porcentajeInamoviles = totalPlazas > 0 ? Math.round((totalInamoviles / totalPlazas) * 100) : 0;
+                const porcentajeInamovilesDisplay = porcentajeInamoviles;
 
                 html = `
                     <div class="text-center">
@@ -44,6 +47,18 @@ function mostrarInfo(area){
                                         <div class="numero-dato text-danger">${totalAcefalias}</div>
                                         <div class="texto-dato">Acefalía</div>
                                         <div class="badge-acefalias mt-2">${porcentajeAcefalias}%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Inamovibles -->
+                            <div class="col-md-6">
+                                <div class="card-datos h-100">
+                                    <div class="card-body text-center p-4">
+                                        <i class="bi bi-shield-fill icon-datos icon-warning"></i>
+                                        <div class="numero-dato text-warning">${totalInamoviles}</div>
+                                        <div class="texto-dato">Inamovibles</div>
+                                        <div class="badge-inamoviles mt-2">${porcentajeInamovilesDisplay}%</div>
                                     </div>
                                 </div>
                             </div>
@@ -104,6 +119,7 @@ function mostrarInfo(area){
                 // Para otras áreas, mostrar el modal con el mismo diseño
                 const totalItems = data.items || 0;
                 const totalAcefalias = data.acefalias || 0;
+                const totalInamoviles = data.inamoviles || 0;
                 const totalPlazas = totalItems + totalAcefalias;
                 const porcentaje = totalPlazas > 0 ? Math.round((totalItems / totalPlazas) * 100) : 0;
                 const colorPorcentaje = porcentaje >= 80 ? 'success' : porcentaje >= 50 ? 'warning' : 'danger';
@@ -126,20 +142,28 @@ function mostrarInfo(area){
                                 
                                 <!-- Métricas principales -->
                                 <div class="row text-center mb-4">
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <div class="bg-success bg-opacity-10 rounded p-3 border border-success">
-                                            <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
-                                            <h3 class="text-success mb-1" style="font-size: 2rem; font-weight: 700;">${totalItems}</h3>
-                                            <div class="text-success" style="font-size: 0.9rem; font-weight: 600;">Items</div>
-                                            <div class="badge bg-success mt-2" style="font-size: 0.8rem;">${Math.round((totalItems / totalPlazas) * 100)}%</div>
+                                            <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                                            <h3 class="text-success mb-1" style="font-size: 1.5rem; font-weight: 700;">${totalItems}</h3>
+                                            <div class="text-success" style="font-size: 0.8rem; font-weight: 600;">Items</div>
+                                            <div class="badge bg-success mt-1" style="font-size: 0.7rem;">${Math.round((totalItems / totalPlazas) * 100)}%</div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <div class="bg-danger bg-opacity-10 rounded p-3 border border-danger">
-                                            <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 2rem;"></i>
-                                            <h3 class="text-danger mb-1" style="font-size: 2rem; font-weight: 700;">${totalAcefalias}</h3>
-                                            <div class="text-danger" style="font-size: 0.9rem; font-weight: 600;">Acefalías</div>
-                                            <div class="badge bg-danger mt-2" style="font-size: 0.8rem;">${Math.round((totalAcefalias / totalPlazas) * 100)}%</div>
+                                            <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 1.5rem;"></i>
+                                            <h3 class="text-danger mb-1" style="font-size: 1.5rem; font-weight: 700;">${totalAcefalias}</h3>
+                                            <div class="text-danger" style="font-size: 0.8rem; font-weight: 600;">Acefalías</div>
+                                            <div class="badge bg-danger mt-1" style="font-size: 0.7rem;">${Math.round((totalAcefalias / totalPlazas) * 100)}%</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="bg-warning bg-opacity-10 rounded p-3 border border-warning">
+                                            <i class="bi bi-shield-fill text-warning" style="font-size: 1.5rem;"></i>
+                                            <h3 class="text-warning mb-1" style="font-size: 1.5rem; font-weight: 700;">${totalInamoviles}</h3>
+                                            <div class="text-warning" style="font-size: 0.8rem; font-weight: 600;">Inamoviles</div>
+                                            <div class="badge bg-warning mt-1" style="font-size: 0.7rem;">${Math.round((totalInamoviles / totalPlazas) * 100)}%</div>
                                         </div>
                                     </div>
                                 </div>
@@ -160,17 +184,21 @@ function mostrarInfo(area){
                                 <!-- Totales -->
                                 <div class="bg-light rounded p-3 mb-4">
                                     <div class="row text-center">
-                                        <div class="col-4">
-                                            <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 0.5rem;">Total Items:</div>
-                                            <div style="font-size: 1.2rem; font-weight: 700; color: #0d6efd;">${totalPlazas}</div>
+                                        <div class="col-3">
+                                            <div style="font-size: 0.7rem; color: #6c757d; margin-bottom: 0.5rem;">Total Items:</div>
+                                            <div style="font-size: 1.1rem; font-weight: 700; color: #0d6efd;">${totalPlazas}</div>
                                         </div>
-                                        <div class="col-4">
-                                            <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 0.5rem;">Con Items:</div>
-                                            <div style="font-size: 1.2rem; font-weight: 700; color: #198754;">${totalItems}</div>
+                                        <div class="col-3">
+                                            <div style="font-size: 0.7rem; color: #6c757d; margin-bottom: 0.5rem;">Con Items:</div>
+                                            <div style="font-size: 1.1rem; font-weight: 700; color: #198754;">${totalItems}</div>
                                         </div>
-                                        <div class="col-4">
-                                            <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 0.5rem;">Acefalías:</div>
-                                            <div style="font-size: 1.2rem; font-weight: 700; color: #dc3545;">${totalAcefalias}</div>
+                                        <div class="col-3">
+                                            <div style="font-size: 0.7rem; color: #6c757d; margin-bottom: 0.5rem;">Acefalías:</div>
+                                            <div style="font-size: 1.1rem; font-weight: 700; color: #dc3545;">${totalAcefalias}</div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div style="font-size: 0.7rem; color: #6c757d; margin-bottom: 0.5rem;">Inamoviles:</div>
+                                            <div style="font-size: 1.1rem; font-weight: 700; color: #ffc107;">${totalInamoviles}</div>
                                         </div>
                                     </div>
                                 </div>

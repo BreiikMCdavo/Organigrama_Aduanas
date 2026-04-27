@@ -97,6 +97,40 @@
                                     {{ $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('d/m/Y') : '—' }}
                                 </div>
                             </div>
+
+                            {{-- Inamovilidad --}}
+                            @if($servidor->asignacion_familiar_desc || $servidor->casos_especiales_desc || $servidor->discapacidad_desc)
+                                <div class="mt-2 p-2 bg-light rounded border-start border-4 border-warning">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="bi bi-shield-fill text-warning me-2"></i>
+                                        <strong class="text-warning">Inamovilidad:</strong>
+                                    </div>
+                                    <div class="small text-muted">
+                                        @if($servidor->asignacion_familiar_desc)
+                                            <div class="mb-1">
+                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                <strong>Asignación Familiar:</strong> {{ $servidor->asignacion_familiar_desc }}
+                                                @if($servidor->asignacion_familiar_grado) <span class="badge bg-secondary ms-1">{{ $servidor->asignacion_familiar_grado }}</span>@endif
+                                            </div>
+                                        @endif
+                                        @if($servidor->casos_especiales_desc)
+                                            <div class="mb-1">
+                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                <strong>Casos Especiales:</strong> {{ $servidor->casos_especiales_desc }}
+                                                @if($servidor->casos_especiales_grado) <span class="badge bg-secondary ms-1">{{ $servidor->casos_especiales_grado }}</span>@endif
+                                            </div>
+                                        @endif
+                                        @if($servidor->discapacidad_desc)
+                                            <div class="mb-1">
+                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                <strong>Discapacidad Ley N° 223:</strong> {{ $servidor->discapacidad_desc }}
+                                                @if($servidor->discapacidad_grado) <span class="badge bg-secondary ms-1">{{ $servidor->discapacidad_grado }}</span>@endif
+                                                @if($servidor->discapacidad_tipo) <small class="text-muted ms-2">({{ $servidor->discapacidad_tipo }})</small>@endif
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         {{-- Acciones --}}
