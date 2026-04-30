@@ -123,7 +123,7 @@
                                     <input type="text" name="numero_item" class="form-control form-control-sm" value="{{ old('numero_item') }}">
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label small mb-1">CITE Memorandum</label>
+                                    <label class="form-label small mb-1">CITE Mem.</label>
                                     <input type="text" name="cite_memorandum" class="form-control form-control-sm" value="{{ old('cite_memorandum') }}">
                                 </div>
                                 <div class="col-3">
@@ -534,17 +534,17 @@ function llenarSubUnidades(unidad, selectEl) {
     selectEl.innerHTML = '<option value="">Seleccionar Sub-Unidad</option>';
     const datos = {
         "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","PLATAFORMA","SISTEMAS","ARCHIVO","SECRETARIA"],
-        "Unidad Administrativa": ["Auxiliar Unidad Administrativa","Bienes y Servicios / Activos Fijos","Bienes y Servicios / Servicios Generales","Bienes y Servicios / Contrataciones","Talento Humano / Regimiento Laboral","Talento Humano / Planillal","Finanzas / Contabilidad y Presupuesto","Finanzas / Tesorería y Archivo"],
-        "Unidad Fiscalización": ["Supervisores Fiscalización","Auxiliar Fiscalización","Fiscalizaciones Control Posterior"],
-        "Unidad Jurídica": ["Supervisor Jurídica","Procurador Jurídica","Auxiliar Unidad Jurídica","Cobranza Coactiva Jurídica","Técnica Jurídica","Procesos Judiciales y Administrativos Jurídica"],
-        "Administración Aduana Interior La Paz": ["Supervisor Aduana Interior La Paz","Auxiliar Aduana Interior La Paz","Archivo Aduana Interior La Paz","Administrador Aduana Interior La Paz","SPCC Aduana Interior La Paz","Disposición de mercancías Aduana Interior La Paz","Despachos Aduana Interior La Paz","Gestión Aduana Interior La Paz"],
-        "Administración Aduana Frontera Guayaramerín": ["Despachos Guayaramerín","Gestión Aduanera Guayaramerín"],
-        "Administración Aduana Aeropuerto": ["Supervisor Aeropuerto","Secretario Aeropuerto","Archivo Aeropuerto","Despachos Aeropuerto","Disposición Aeropuerto","Gestión Aduanera Aeropuerto"],
-        "Administración Aduana Zona Franca Patacamaya": ["Despachos Patacamaya","Gestión aduanera Patacamaya"],
-        "Administración Aduana Frontera Desaguadero": ["Secretario Frontera Desaguadero","Archivo Frontera Desaguadero","Despachos Frontera Desaguadero","Gestión aduanera Frontera Desaguadero","Disposición Frontera Desaguadero","Plataforma Frontera Desaguadero"],
-        "Administración Aduana Frontera Cobija": ["Despachos Frontera Cobija","Disposición Frontera Cobija","Gestión aduanera Frontera Cobija"],
-        "Administración Agencia Aduana Exterior Matarani": ["Despachos Exterior Mataraniones","Disposición Exterior Matarani","Gestión aduanera Exterior Matarani"],
-        "Administración Aduana Frontera Charaña": ["Gestión Frontera Charaña","Tránsitos Frontera Charaña"],
+        "Unidad Administrativa": ["Resposanble Administrativa","Auxiliar Unidad Administrativa","Bienes y Servicios / Activos Fijos","Bienes y Servicios / Servicios Generales","Bienes y Servicios / Contrataciones","Talento Humano / Regimiento Laboral","Talento Humano / Planillal","Finanzas / Contabilidad y Presupuesto","Finanzas / Tesorería y Archivo"],
+        "Unidad Fiscalización": ["Jefe de Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización","Fiscalizaciones Control Posterior"],
+        "Unidad Jurídica": ["Jefe de Jurídica","Supervisor Jurídica","Procurador Jurídica","Auxiliar Unidad Jurídica","Cobranza Coactiva Jurídica","Técnica Jurídica","Procesos Judiciales y Administrativos Jurídica"],
+        "Administración Aduana Interior La Paz": ["Administrador Aduana Interior La Paz","Supervisor Aduana Interior La Paz","Auxiliar Aduana Interior La Paz","Archivo Aduana Interior La Paz","Administrador Aduana Interior La Paz","SPCC Aduana Interior La Paz","Disposición de mercancías Aduana Interior La Paz","Despachos Aduana Interior La Paz","Gestión Aduana Interior La Paz"],
+        "Administración Aduana Frontera Guayaramerín": ["Administrador Guayaramerín","Despachos Guayaramerín","Gestión Aduanera Guayaramerín"],
+        "Administración Aduana Aeropuerto": ["Administrador Aeropuerto","Supervisor Aeropuerto","Secretario Aeropuerto","Archivo Aeropuerto","Despachos Aeropuerto","Disposición Aeropuerto","Gestión Aduanera Aeropuerto"],
+        "Administración Aduana Zona Franca Patacamaya": ["Administrador Patacamaya","Despachos Patacamaya","Gestión aduanera Patacamaya"],
+        "Administración Aduana Frontera Desaguadero": ["Administrador Frontera Desaguadero","Secretario Frontera Desaguadero","Archivo Frontera Desaguadero","Despachos Frontera Desaguadero","Gestión aduanera Frontera Desaguadero","Disposición Frontera Desaguadero","Plataforma Frontera Desaguadero"],
+        "Administración Aduana Frontera Cobija": ["Administrador Frontera Cobija","Despachos Frontera Cobija","Disposición Frontera Cobija","Gestión aduanera Frontera Cobija"],
+        "Administración Agencia Aduana Exterior Matarani": ["Administrador Exterior Mataraniones","Despachos Exterior Mataraniones","Disposición Exterior Matarani","Gestión aduanera Exterior Matarani"],
+        "Administración Aduana Frontera Charaña": ["Administrador aduanera Frontera Charaña","Gestión Frontera Charaña","Tránsitos Frontera Charaña"],
     };
     if (datos[unidad]) {
         datos[unidad].forEach(function(sub) {
