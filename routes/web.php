@@ -29,6 +29,12 @@ Route::get('/index', function () {
     return view('index');
 })->name('index');
 
+// Ruta para Diagramas (debe estar antes de /organigrama/{area})
+Route::get('/organigrama}', function () {
+    $content = file_get_contents(public_path('diagramas/index.html'));
+    return response($content, 200)->header('Content-Type', 'text/html');
+})->name('diagramas');
+
 Route::get('/organigrama/{area}', [OrganigramaController::class, 'info'])
     ->where('area', '.*');
 Route::resource('servidores', ServidorPublicoController::class);
@@ -44,4 +50,9 @@ Route::get('/reporte/acefalias/pdf', [ServidorPublicoController::class, 'reporte
 // Rutas para reportes individuales por unidad
 Route::get('/reporte/unidad/{nombre}', [ServidorPublicoController::class, 'reportePorUnidad'])->name('reporte.unidad');
 Route::get('/reporte/unidad/{nombre}/pdf', [ServidorPublicoController::class, 'reportePorUnidadPdf'])->name('reporte.unidad.pdf');
+
+// Ruta para Gafetes
+Route::get('/gafetes', function () {
+    return view('gafetes');
+})->name('gafetes');
 

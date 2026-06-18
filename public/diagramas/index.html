@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Diagramas del Sistema - Aduana Nacional</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+
+      font-family: Calibri, Arial, sans-serif;
+      background: #f2f2f2;
+
+    }
+
+    header {
+
+      background: #8B0000;
+      color: white;
+      padding: 20px;
+
+      box-shadow: 0 5px 15px rgba(0, 0, 0, .2);
+
+    }
+
+    .encabezado {
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+
+    }
+
+    .logo {
+
+      width: 90px;
+
+    }
+
+    .titulo {
+
+      text-align: center;
+
+    }
+
+    .titulo h1 {
+
+      font-size: 34px;
+
+    }
+
+    .titulo h2 {
+
+      font-size: 22px;
+      font-weight: normal;
+
+      margin-top: 5px;
+
+    }
+
+    .titulo h3 {
+
+      margin-top: 8px;
+      font-size: 18px;
+
+    }
+
+    .contenedor {
+
+      width: 95%;
+      max-width: 1600px;
+
+      margin: auto;
+
+      padding: 30px 0;
+
+    }
+
+    .presentacion {
+
+      background: white;
+
+      padding: 25px;
+
+      border-radius: 15px;
+
+      box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+
+      text-align: center;
+
+      margin-bottom: 30px;
+
+    }
+
+    .presentacion h2 {
+
+      color: #8B0000;
+
+      margin-bottom: 10px;
+
+    }
+
+    .linea {
+
+      width: 220px;
+      height: 4px;
+
+      background: #8B0000;
+
+      margin: auto;
+
+      margin-top: 10px;
+      margin-bottom: 20px;
+
+    }
+
+    .presentacion p {
+
+      font-size: 18px;
+
+      color: #555;
+
+    }
+
+    .galeria {
+
+      display: grid;
+
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+
+      gap: 30px;
+
+    }
+
+    .card {
+
+      background: white;
+
+      border-radius: 15px;
+
+      padding: 20px;
+
+      box-shadow: 0 5px 15px rgba(0, 0, 0, .12);
+
+      transition: .3s;
+
+    }
+
+    .card:hover {
+
+      transform: translateY(-5px);
+
+    }
+
+    .card h3 {
+
+      text-align: center;
+
+      color: #8B0000;
+
+      margin-bottom: 15px;
+
+    }
+
+    .card img {
+
+      width: 100%;
+
+      border-radius: 10px;
+
+      border: 2px solid #ddd;
+
+      transition: .3s;
+
+      cursor: pointer;
+
+    }
+
+    .card img:hover {
+
+      transform: scale(1.02);
+
+    }
+
+    .descripcion {
+
+      margin-top: 15px;
+
+      text-align: center;
+
+      color: #555;
+
+      font-size: 16px;
+
+    }
+
+    footer {
+
+      margin-top: 40px;
+
+      background: #333;
+
+      color: white;
+
+      text-align: center;
+
+      padding: 20px;
+
+      font-size: 15px;
+
+    }
+
+    @media(max-width:700px) {
+
+      .encabezado {
+
+        flex-direction: column;
+
+      }
+
+      .logo {
+
+        width: 70px;
+
+      }
+
+      .titulo h1 {
+
+        font-size: 28px;
+
+      }
+
+      .galeria {
+
+        grid-template-columns: 1fr;
+
+      }
+
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="encabezado">
+
+      <img src="http://127.0.0.1:8000/img/logo_aduana.png" alt="Aduana Nacional"
+        style="height:46px;width:auto;object-fit:contain;">
+      <div class="titulo">
+
+        <h1>ADUANA NACIONAL</h1>
+
+        <h2>GERENCIA REGIONAL</h2>
+
+        <h3>Sistema de Organigrama Institucional</h3>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <div class="contenedor">
+
+    <div class="presentacion">
+
+      <h2>DOCUMENTACIÓN DEL SISTEMA</h2>
+
+      <div class="linea"></div>
+
+      <p>
+
+        En esta sección se presentan los diagramas correspondientes al
+        Sistema de Organigrama Institucional desarrollado para la
+        Aduana Nacional.
+
+      </p>
+
+    </div>
+
+    <div class="galeria">
+
+      <div class="card">
+
+        <h3>Diagrama General del Sistema</h3>
+
+        <a href="/diagramas/proyecto1.drawio.png" target="_blank">
+
+          <img src="/diagramas/proyecto1.drawio.png">
+
+        </a>
+
+        <div class="descripcion">
+
+          Click sobre la imagen para visualizar el diagrama en tamaño completo.
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Diagrama 2</h3>
+
+        <a href="/diagramas/proyecto2.png" target="_blank">
+
+          <img src="/diagramas/proyecto2.png">
+
+        </a>
+
+        <div class="descripcion">
+
+          Descripción del diagrama.
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Diagrama 3</h3>
+
+        <a href="/diagramas/proyecto3.png" target="_blank">
+
+          <img src="/diagramas/proyecto3.png">
+
+        </a>
+
+        <div class="descripcion">
+
+          Descripción del diagrama.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+
+    <b>Universidad Pública de El Alto</b><br>
+
+    Carrera de Ingeniería de Sistemas<br>
+
+    Proyecto: Sistema de Organigrama Institucional<br>
+
+    Aduana Nacional - Gerencia Regional © 2026
+
+  </footer>
+
+</body>
+
+</html>
