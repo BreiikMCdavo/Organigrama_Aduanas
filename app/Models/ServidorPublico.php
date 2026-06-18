@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class ServidorPublico extends Model
 {
@@ -95,5 +96,26 @@ class ServidorPublico extends Model
     public function getCargoDescripcionAttribute()
     {
         return $this->tipo === 'item' ? ($this->cargo ?? 'Sin cargo') : ($this->cargo_consultoria ?? 'Sin cargo');
+    }
+
+    /**
+     * Obtener URL de la fotografía verificando que exista
+     */
+    public function getFotografiaUrlAttribute()
+    {
+        if (!$this->fotografia) {
+            return null;
+        }
+
+        $rutaCompleta = storage_path('app/public/' . $this->fotografia);
+        
+        if (!file_exists($rutaCompleta)) {
+            // Si el archivo no existe, limpiar la referencia
+            $this->fotografia = null;
+            $this->saveQuietly();
+            return null;
+        }
+
+        return Storage::url($this->fotografia);
     }
 }

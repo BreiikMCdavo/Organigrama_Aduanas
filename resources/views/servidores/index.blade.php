@@ -133,8 +133,8 @@
                     <div class="row align-items-center">
                         {{-- Foto --}}
                         <div class="col-md-auto text-center mb-3 mb-md-0">
-                            @if($servidor->fotografia)
-                                <img src="{{ asset('storage/' . $servidor->fotografia) }}" class="rounded-circle"
+                            @if($servidor->fotografia_url)
+                                <img src="{{ $servidor->fotografia_url }}" class="rounded-circle"
                                     style="width:80px;height:80px;object-fit:cover;border:3px solid #1565c0;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
                             @else
                                 <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white"

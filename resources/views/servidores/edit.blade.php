@@ -267,8 +267,8 @@
                         <div class="mt-3">
                             <label class="form-label small mb-1">📷 Fotografía</label>
                             <div class="d-flex align-items-center gap-3">
-                                @if($servidor->fotografia)
-                                    <img src="{{ asset('storage/' . $servidor->fotografia) }}"
+                                @if($servidor->fotografia_url)
+                                    <img src="{{ $servidor->fotografia_url }}"
                                          id="preview-edit" class="rounded-circle"
                                          style="width:50px;height:50px;object-fit:cover;border:2px solid #1565c0;">
                                 @else

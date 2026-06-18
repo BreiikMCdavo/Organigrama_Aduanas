@@ -17,8 +17,8 @@
                 </div>
 
                 {{-- Foto --}}
-                @if($servidor->fotografia)
-                    <img src="{{ asset('storage/' . $servidor->fotografia) }}" class="foto-circulo" alt="Foto">
+                @if($servidor->fotografia_url)
+                    <img src="{{ $servidor->fotografia_url }}" class="foto-circulo" alt="Foto">
                 @else
                     <div class="foto-placeholder">👤</div>
                 @endif
