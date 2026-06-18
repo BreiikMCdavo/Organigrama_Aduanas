@@ -417,6 +417,8 @@
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/organigrama.js') }}"></script>
 
+    @stack('scripts')
+
 </body>
 
 </html>

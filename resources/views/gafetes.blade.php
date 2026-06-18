@@ -6,8 +6,115 @@
   <title>Gafetes - Aduana Nacional</title>
   <link rel="icon" type="image/png" href="{{ asset('img/favicon.ico') }}"/>
   <link rel="stylesheet" href="{{ asset('css/gafetes.css') }}"/>
+  <style>
+    .menu-burbuja {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+    }
+
+    .menu-burbuja .boton-menu {
+      width: 60px;
+      height: 60px;
+      background: #8B0000;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .3);
+      transition: .3s;
+      border: none;
+      color: white;
+      font-size: 24px;
+    }
+
+    .menu-burbuja .boton-menu:hover {
+      transform: scale(1.1);
+      background: #a00000;
+    }
+
+    .menu-burbuja .opciones {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      opacity: 0;
+      visibility: hidden;
+      transition: .3s;
+    }
+
+    .menu-burbuja .opciones.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .menu-burbuja .opcion {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
+      transition: .3s;
+      text-decoration: none;
+      color: #8B0000;
+      font-weight: bold;
+      font-size: 14px;
+      border: 2px solid #8B0000;
+    }
+
+    .menu-burbuja .opcion:hover {
+      transform: scale(1.1);
+      background: #8B0000;
+      color: white;
+    }
+
+    .menu-burbuja .opcion span {
+      position: absolute;
+      right: 60px;
+      background: #8B0000;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: .3s;
+    }
+
+    .menu-burbuja .opcion:hover span {
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
 </head>
 <body>
+
+<div class="menu-burbuja">
+  <div class="opciones">
+    <a href="/index" class="opcion">
+      1
+      <span>Organigrama</span>
+    </a>
+    <a href="/gafetes" class="opcion">
+      2
+      <span>Gafetes</span>
+    </a>
+    <a href="/diagramas" class="opcion">
+      3
+      <span>Diagramas</span>
+    </a>
+  </div>
+  <button class="boton-menu" onclick="toggleMenu()">☰</button>
+</div>
 
 <!-- ENCABEZADO -->
 <div class="page-header">
@@ -193,6 +300,13 @@
 <script src="{{ asset('js/gafetes/constructor_gafetes.js') }}"></script>
 <script src="{{ asset('js/gafetes/lector_excel.js') }}"></script>
 <script src="{{ asset('js/gafetes/app.js') }}"></script>
+
+<script>
+  function toggleMenu() {
+    const opciones = document.querySelector('.menu-burbuja .opciones');
+    opciones.classList.toggle('active');
+  }
+</script>
 
 </body>
 </html>
