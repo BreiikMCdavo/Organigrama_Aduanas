@@ -87,19 +87,31 @@ body {
 /* ===== TARJETAS DE DATOS ===== */
 .card-datos {
     border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     transition: all 0.3s ease;
     background: white;
 }
 
 .card-datos:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
 }
 
 .card-datos .card-body {
     padding: 1.25rem;
+}
+
+/* Metric cards in gerencia dashboard */
+.col-xl {
+    flex: 1 0 0%;
+}
+
+@media (max-width: 767px) {
+    .col-xl {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
 }
 
 /* ===== BADGES PERSONALIZADOS ===== */
@@ -362,54 +374,51 @@ body {
 }
 
 /* ===== BOTONES GENERATE REPORT ===== */
-.btn-generate-report {
+.btn-generate-report-excel,
+.btn-generate-report-pdf {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    background: linear-gradient(135deg, #6c757d, #00ffb8);
+    font-weight: 600;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
     border: none;
     color: white;
-    transition: all 0.3s ease;
-}
-
-.btn-generate-report:hover {
-    background: linear-gradient(135deg, #5a6268, #343a40);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .btn-generate-report-excel {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.5rem;
-    border-radius: 4px;
-    background: linear-gradient(135deg, #28a745, #20c997);
-    border: none;
-    color: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
 }
 
 .btn-generate-report-excel:hover {
-    background: linear-gradient(135deg, #218838, #1ea085);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+    background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.45);
 }
 
 .btn-generate-report-pdf {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.5rem;
-    border-radius: 4px;
-    background: linear-gradient(135deg, #dc3545, #c82333);
-    border: none;
-    color: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+    background: linear-gradient(135deg, #dc3545 0%, #e4606d 100%);
+    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
 }
 
 .btn-generate-report-pdf:hover {
-    background: linear-gradient(135deg, #c82333, #bd2130);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+    background: linear-gradient(135deg, #c82333 0%, #d64555 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.45);
+}
+
+.btn-generate-report-excel:active,
+.btn-generate-report-pdf:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 /* ===== SERVIDORES CARD ESTILOS ===== */
