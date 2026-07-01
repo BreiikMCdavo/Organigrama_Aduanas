@@ -98,9 +98,6 @@ class ServidorPublico extends Model
         return $this->tipo === 'item' ? ($this->cargo ?? 'Sin cargo') : ($this->cargo_consultoria ?? 'Sin cargo');
     }
 
-    /**
-     * Obtener URL de la fotografía verificando que exista
-     */
     public function getFotografiaUrlAttribute()
     {
         if (!$this->fotografia) {
@@ -108,14 +105,11 @@ class ServidorPublico extends Model
         }
 
         $rutaCompleta = storage_path('app/public/' . $this->fotografia);
-        
+
         if (!file_exists($rutaCompleta)) {
-            // Si el archivo no existe, limpiar la referencia
-            $this->fotografia = null;
-            $this->saveQuietly();
             return null;
         }
 
-        return Storage::url($this->fotografia);
+        return asset('storage/' . $this->fotografia);
     }
 }

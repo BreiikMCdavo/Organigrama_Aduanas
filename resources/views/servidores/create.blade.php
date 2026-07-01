@@ -1,22 +1,84 @@
 @extends('layouts.app')
 
+@php
+$subUnidades = [
+    "GERENCIA REGIONAL LA PAZ - GRLPZ" => ["GERENTE","ASESORÍA","PLATAFORMA","SISTEMAS","ARCHIVO","SECRETARIA"],
+    "Unidad Administrativa" => ["Resposanble Administrativa","Auxiliar Unidad Administrativa","Bienes y Servicios / Activos Fijos","Bienes y Servicios / Servicios Generales","Bienes y Servicios / Contrataciones","Talento Humano / Regimiento Laboral","Talento Humano / Planillal","Finanzas / Contabilidad y Presupuesto","Finanzas / Tesorería y Archivo"],
+    "Unidad Fiscalización" => ["Jefe de Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización","Fiscalizaciones Control Posterior"],
+    "Unidad Jurídica" => ["Jefe de Jurídica","Supervisor Jurídica","Procurador Jurídica","Auxiliar Unidad Jurídica","Cobranza Coactiva Jurídica","Técnica Jurídica","Procesos Judiciales y Administrativos Jurídica"],
+    "Administración Aduana Interior La Paz" => ["Administrador Aduana Interior La Paz","Supervisor Aduana Interior La Paz","Auxiliar Aduana Interior La Paz","Archivo Aduana Interior La Paz","Administrador Aduana Interior La Paz","SPCC Aduana Interior La Paz","Disposición de mercancías Aduana Interior La Paz","Despachos Aduana Interior La Paz","Gestión Aduana Interior La Paz"],
+    "Administración Aduana Frontera Guayaramerín" => ["Administrador Guayaramerín","Despachos Guayaramerín","Gestión Aduanera Guayaramerín"],
+    "Administración Aduana Aeropuerto" => ["Administrador Aeropuerto","Supervisor Aeropuerto","Secretario Aeropuerto","Archivo Aeropuerto","Despachos Aeropuerto","Disposición Aeropuerto","Gestión Aduanera Aeropuerto"],
+    "Administración Aduana Zona Franca Patacamaya" => ["Administrador Patacamaya","Despachos Patacamaya","Gestión aduanera Patacamaya"],
+    "Administración Aduana Frontera Desaguadero" => ["Administrador Frontera Desaguadero","Secretario Frontera Desaguadero","Archivo Frontera Desaguadero","Despachos Frontera Desaguadero","Gestión aduanera Frontera Desaguadero","Disposición Frontera Desaguadero","Plataforma Frontera Desaguadero"],
+    "Administración Aduana Frontera Cobija" => ["Administrador Frontera Cobija","Despachos Frontera Cobija","Disposición Frontera Cobija","Gestión aduanera Frontera Cobija"],
+    "Administración Agencia Aduana Exterior Matarani" => ["Administrador Exterior Mataraniones","Despachos Exterior Mataraniones","Disposición Exterior Matarani","Gestión aduanera Exterior Matarani"],
+    "Administración Aduana Frontera Charaña" => ["Administrador aduanera Frontera Charaña","Gestión Frontera Charaña","Tránsitos Frontera Charaña"],
+];
+@endphp
+
+@push('styles')
+<style>
+    .form-card { border: none; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); overflow: hidden; }
+    .form-card-header { background: linear-gradient(135deg, #1a237e, #0d47a1); padding: 1.25rem 1.5rem; }
+    .form-card-body { padding: 2rem 1.75rem; }
+    .section-divider { border: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(26,35,126,0.15), transparent); margin: 1.75rem 0; }
+    .form-section { background: #f8f9fc; border-radius: 12px; padding: 1.25rem 1.5rem; border: 1px solid rgba(26,35,126,0.06); margin-bottom: 1.5rem; }
+    .section-title { font-size: 0.85rem; font-weight: 700; color: #1a237e; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .section-title i { font-size: 1rem; }
+    .form-control, .form-select { border: 1.5px solid #e0e3eb; border-radius: 10px; padding: 0.55rem 0.85rem; font-size: 0.9rem; transition: all 0.2s; background: #fff; }
+    .form-control:focus, .form-select:focus { border-color: #1a237e; box-shadow: 0 0 0 3px rgba(26,35,126,0.1); outline: none; }
+    .form-control::placeholder { color: #b0b7c8; font-size: 0.85rem; }
+    .form-label-custom { font-size: 0.82rem; font-weight: 600; color: #2c3e50; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.3rem; }
+    .badge-required { display: inline-block; background: #e74c3c; color: #fff; font-size: 0.6rem; font-weight: 700; padding: 0.05rem 0.4rem; border-radius: 4px; vertical-align: top; }
+    .btn-gradient-primary { background: linear-gradient(135deg, #1a237e, #0d47a1); color: #fff; border: none; padding: 0.6rem 1.75rem; border-radius: 10px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 4px 15px rgba(13,71,161,0.25); transition: all 0.25s; }
+    .btn-gradient-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(13,71,161,0.35); color: #fff; }
+    .btn-gradient-secondary { background: #e9ecef; color: #495057; border: none; padding: 0.6rem 1.75rem; border-radius: 10px; font-size: 0.9rem; font-weight: 600; transition: all 0.25s; }
+    .btn-gradient-secondary:hover { background: #dee2e6; transform: translateY(-2px); color: #212529; }
+    .upload-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: #f0f2f7; border: 2px dashed #c5cad9; border-radius: 12px; padding: 0.7rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #495057; cursor: pointer; transition: all 0.2s; }
+    .upload-btn:hover { border-color: #1a237e; background: rgba(26,35,126,0.04); color: #1a237e; }
+    .custom-checkbox { width: 1.15rem; height: 1.15rem; border-radius: 4px; border: 2px solid #c5cad9; cursor: pointer; transition: all 0.15s; }
+    .custom-checkbox:checked { background-color: #1a237e; border-color: #1a237e; }
+    .elegant-alert { border: none; border-radius: 12px; padding: 1rem 1.25rem; font-size: 0.9rem; }
+</style>
+@endpush
+
 @section('content')
 <div class="container py-4">
-    <div class="row align-items-start justify-content-center">
+    <div class="row g-4 align-items-start justify-content-center">
 
         {{-- Selector izquierda --}}
         <div class="col-md-2 text-center">
-            <h6 class="text-muted fw-bold mb-3">AGREGAR SERVIDORES PÚBLICOS</h6>
-            <select id="selectorTipo" class="form-select shadow-sm" onchange="mostrarFormulario(this.value)">
-                <option value="">Selecciona una opción</option>
-                <option value="item">Ítem</option>
-                <option value="consultoria">Consultoría</option>
-            </select>
+            <div class="card form-card">
+                <div class="form-card-header">
+                    <h6 class="mb-0 text-white fw-semibold" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                        <i class="bi bi-person-plus-fill me-1"></i> AGREGAR SERVIDOR
+                    </h6>
+                </div>
+                <div class="p-3">
+                    <select id="selectorTipo" class="form-select" onchange="mostrarFormulario(this.value)">
+                        <option value="">Selecciona una opción</option>
+                        <option value="item">Ítem</option>
+                        <option value="consultoria">Consultoría</option>
+                    </select>
+                    <div class="mt-2 text-start">
+                        <small class="text-muted" style="font-size: 0.7rem;">
+                            <i class="bi bi-info-circle me-1"></i>Seleccione el tipo de servidor a registrar
+                        </small>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {{-- Formularios --}}
-        <div class="col-md-6">
-            <h6 class="text-muted fw-bold mb-3 text-center">REGISTRO</h6>
+        <div class="col-md-7">
+            <div class="card form-card">
+                <div class="form-card-header text-center">
+                    <h6 class="mb-0 text-white fw-bold" style="font-size: 1rem; letter-spacing: 1px;">
+                        <i class="bi bi-pencil-square me-2"></i>REGISTRO DE SERVIDOR PÚBLICO
+                    </h6>
+                </div>
+                <div class="form-card-body">
 
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -50,251 +112,211 @@
                 <form action="{{ route('servidores.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="tipo" value="item">
-                    <div class="card shadow-sm border-0 rounded-3">
-                        <div class="card-body p-4">
-                            <h6 class="fw-bold mb-3">Datos del Ítem</h6>
 
-                            {{-- SECCIÓN DE DUPLICADOS - VERSIÓN SIMPLE --}}
-                            @if(session('duplicados') && session('duplicados')->count() > 0)
-                                <div class="alert alert-warning mb-3">
-                                    <h6 class="alert-heading">
-                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                        ¡Esta persona ya tiene un cargo registrado!
-                                    </h6>
-                                    
-                                    <div class="mb-3">
-                                        <strong>Cargo actual:</strong> 
-                                        {{ session('duplicados')->first()->cargo_descripcion }}
-                                        <br>
-                                        <small class="text-muted">
-                                            {{ session('duplicados')->first()->sub_unidad ?? session('duplicados')->first()->unidad }}
-                                        </small>
-                                    </div>
 
-                                    <div class="alert alert-light">
-                                        <h6 class="mb-2">¿Qué quieres hacer?</h6>
-                                        
-                                        <div class="mb-2">
-                                            <label class="form-check">
-                                                <input class="form-check-input" type="radio" 
-                                                       name="accion_duplicado" 
-                                                       value="reemplazar" 
-                                                       required>
-                                                <span class="form-check-label">
-                                                    <strong>🔄 Cambiar de cargo</strong>
-                                                    <br>
-                                                    <small>Dejar el cargo actual vacante y asignar el nuevo</small>
-                                                </span>
-                                            </label>
-                                        </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-3">
+                            <label class="form-label-custom"><i class="bi bi-hash"></i> N° Ítem</label>
+                            <input type="text" name="numero_item" class="form-control" value="{{ old('numero_item') }}">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label-custom"><i class="bi bi-file-text"></i> CITE Mem.</label>
+                            <input type="text" name="cite_memorandum" class="form-control" value="{{ old('cite_memorandum') }}">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label-custom"><i class="bi bi-person-badge"></i> Cód. Funcionario</label>
+                            <input type="text" name="cod_funcionario" class="form-control" value="{{ old('cod_funcionario') }}">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label-custom"><i class="bi bi-currency-dollar"></i> Escala Salarial</label>
+                            <input type="text" name="escala_salarial" class="form-control" value="{{ old('escala_salarial') }}">
+                        </div>
+                    </div>
 
-                                        <div class="mb-2">
-                                            <label class="form-check">
-                                                <input class="form-check-input" type="radio" 
-                                                       name="accion_duplicado" 
-                                                       value="adicionar">
-                                                <span class="form-check-label">
-                                                    <strong>➕ Agregar segundo cargo</strong>
-                                                    <br>
-                                                    <small class="text-warning">La persona tendrá dos cargos (se contará como vacante)</small>
-                                                </span>
-                                            </label>
-                                        </div>
+                    <hr class="section-divider">
 
-                                        <div class="mb-2">
-                                            <label class="form-check">
-                                                <input class="form-check-input" type="radio" 
-                                                       name="accion_duplicado" 
-                                                       value="nuevo">
-                                                <span class="form-check-label">
-                                                    <strong>👤 Es otra persona</strong>
-                                                    <br>
-                                                    <small>Son nombres iguales pero personas diferentes</small>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <div class="row g-2 mb-2">
-                                <div class="col-3">
-                                    <label class="form-label small mb-1">N° Ítem</label>
-                                    <input type="text" name="numero_item" class="form-control form-control-sm" value="{{ old('numero_item') }}">
-                                </div>
-                                <div class="col-3">
-                                    <label class="form-label small mb-1">CITE Mem.</label>
-                                    <input type="text" name="cite_memorandum" class="form-control form-control-sm" value="{{ old('cite_memorandum') }}">
-                                </div>
-                                <div class="col-3">
-                                    <label class="form-label small mb-1">Cód. Funcionario</label>
-                                    <input type="text" name="cod_funcionario" class="form-control form-control-sm" value="{{ old('cod_funcionario') }}">
-                                </div>
-                                <div class="col-3">
-                                    <label class="form-label small mb-1">Escala Salarial</label>
-                                    <input type="text" name="escala_salarial" class="form-control form-control-sm" value="{{ old('escala_salarial') }}">
-                                </div>
+                    <div class="form-section">
+                        <div class="section-title"><i class="bi bi-person-fill"></i> Nombres del Servidor</div>
+                        <div class="row g-3">
+                            <div class="col-4">
+                                <input type="text" name="nombre" class="form-control" placeholder="Nombres" value="{{ old('nombre') }}">
                             </div>
-
-                            <div class="row g-2 mb-2">
-                                <div class="col-4">
-                                    <input type="text" name="nombre" class="form-control form-control-sm" placeholder="Nombres" value="{{ old('nombre') }}">
-                                </div>
-                                <div class="col-4">
-                                    <input type="text" name="apellido_paterno" class="form-control form-control-sm" placeholder="Apellido Paterno" value="{{ old('apellido_paterno') }}">
-                                </div>
-                                <div class="col-4">
-                                    <input type="text" name="apellido_materno" class="form-control form-control-sm" placeholder="Apellido Materno" value="{{ old('apellido_materno') }}">
-                                </div>
+                            <div class="col-4">
+                                <input type="text" name="apellido_paterno" class="form-control" placeholder="Apellido Paterno" value="{{ old('apellido_paterno') }}">
                             </div>
-
-                            <div class="mb-2">
-                                <input type="text" name="cargo" class="form-control form-control-sm" placeholder="Ingresar nombre del cargo..." value="{{ old('cargo') }}">
-                            </div>
-
-                            {{-- Designación --}}
-                            <div class="border rounded p-2 mb-2 bg-light">
-                                <label class="form-label small fw-bold mb-1">Designación:</label>
-                                <div class="row g-2 align-items-start">
-                                    <div class="col-5 d-flex flex-column gap-1">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Designación" id="chk_des_item"
-                                                {{ is_array(old('designacion_tipos')) && in_array('Designación', old('designacion_tipos')) ? 'checked' : '' }}>
-                                            <label class="form-check-label small" for="chk_des_item">Designación</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Interinato" id="chk_int_item"
-                                                {{ is_array(old('designacion_tipos')) && in_array('Interinato', old('designacion_tipos')) ? 'checked' : '' }}>
-                                            <label class="form-check-label small" for="chk_int_item">Interinato</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Comisión" id="chk_com_item"
-                                                {{ is_array(old('designacion_tipos')) && in_array('Comisión', old('designacion_tipos')) ? 'checked' : '' }}>
-                                            <label class="form-check-label small" for="chk_com_item">Comisión</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <input type="date" name="designacion_inicio" class="form-control form-control-sm" title="Fecha inicio" value="{{ old('designacion_inicio') }}">
-                                    </div>
-                                    <div class="col-3">
-                                        <input type="date" name="designacion_fin" class="form-control form-control-sm" title="Fecha fin" value="{{ old('designacion_fin') }}">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row g-2 mb-2">
-                                <div class="col-6">
-                                    <label class="form-label small mb-1">Unidad</label>
-                                    <select name="unidad" id="unidad" class="form-select form-select-sm" onchange="cargarSubUnidades()">
-                                        <option value="">Seleccionar Unidad</option>
-                                        <option value="GERENCIA REGIONAL LA PAZ - GRLPZ">GERENCIA REGIONAL LA PAZ - GRLPZ</option>
-                                        <option value="Unidad Administrativa">Unidad Administrativa</option>
-                                        <option value="Unidad Fiscalización">Unidad Fiscalización</option>
-                                        <option value="Unidad Jurídica">Unidad Jurídica</option>
-                                        <option value="Administración Aduana Interior La Paz">Administración Aduana Interior La Paz</option>
-                                        <option value="Administración Aduana Frontera Guayaramerín">Administración Aduana Frontera Guayaramerín</option>
-                                        <option value="Administración Aduana Aeropuerto">Administración Aduana Aeropuerto</option>
-                                        <option value="Administración Aduana Zona Franca Patacamaya">Administración Aduana Zona Franca Patacamaya</option>
-                                        <option value="Administración Aduana Frontera Desaguadero">Administración Aduana Frontera Desaguadero</option>
-                                        <option value="Administración Aduana Frontera Cobija">Administración Aduana Frontera Cobija</option>
-                                        <option value="Administración Agencia Aduana Exterior Matarani">Administración Agencia Aduana Exterior Matarani</option>
-                                        <option value="Administración Aduana Frontera Charaña">Administración Aduana Frontera Charaña</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label small mb-1">Sub-Unidad</label>
-                                    <select name="sub_unidad" id="sub_unidad" class="form-select form-select-sm">
-                                        <option value="">Seleccionar Sub-Unidad</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row g-2 mb-3">
-                                <div class="col-6">
-                                    <label class="form-label small mb-1">Fecha de ingreso a la Aduana</label>
-                                    <input type="date" name="fecha_ingreso_aduana" class="form-control form-control-sm" value="{{ old('fecha_ingreso_aduana') }}">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label small mb-1">Fecha de inicio cargo</label>
-                                    <input type="date" name="fecha_inicio_cargo" class="form-control form-control-sm" value="{{ old('fecha_inicio_cargo') }}">
-                                </div>
-                            </div>
-
-                            <p class="fw-bold small mb-2">Inamovilidad:</p>
-                            @foreach([
-                                ['label'=>'1. Asignación Familiar:','desc'=>'asignacion_familiar_desc','grado'=>'asignacion_familiar_grado','check'=>'asignacion_familiar_check'],
-                                ['label'=>'2. Casos especiales:','desc'=>'casos_especiales_desc','grado'=>'casos_especiales_grado','check'=>'casos_especiales_check'],
-                            ] as $campo)
-                            <div class="row g-2 align-items-center mb-2">
-                                <div class="col-1 text-center"><input type="checkbox" name="{{ $campo['check'] }}" class="form-check-input" {{ old($campo['check']) ? 'checked' : '' }}></div>
-                                <div class="col-6">
-                                    <label class="form-label small mb-0">{{ $campo['label'] }}</label>
-                                    <input type="text" name="{{ $campo['desc'] }}" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
-                                </div>
-                                <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
-                                <div class="col-3">
-                                    <select name="{{ $campo['grado'] }}" class="form-select form-select-sm">
-                                        @foreach(['G','MG','M','L'] as $g)
-                                            <option value="{{ $g }}" {{ old($campo['grado'])==$g?'selected':'' }}>{{ $g }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            @endforeach
-
-                            {{-- 3. Discapacidad con detalle --}}
-                            <div class="mb-2">
-                                <div class="row g-2 align-items-center">
-                                    <div class="col-1 text-center">
-                                        <input type="checkbox" name="discapacidad_check" class="form-check-input" id="chk_disc_item" {{ old('discapacidad_check') ? 'checked' : '' }} onchange="document.getElementById('disc_detalle_item').style.display=this.checked?'block':'none'">
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label small mb-0">3. Discapacidad Ley N° 223:</label>
-                                        <input type="text" name="discapacidad_desc" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old('discapacidad_desc') }}">
-                                    </div>
-                                    <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
-                                    <div class="col-3">
-                                        <select name="discapacidad_grado" class="form-select form-select-sm">
-                                            @foreach(['G','MG','M','L'] as $g)
-                                                <option value="{{ $g }}" {{ old('discapacidad_grado')==$g?'selected':'' }}>{{ $g }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div id="disc_detalle_item" class="mt-2 ms-4 ps-2 border-start border-2 border-primary" style="display:{{ old('discapacidad_tipo') || old('discapacidad_carnet') ? 'block' : 'none' }};">
-                                    <div class="row g-2">
-                                        <div class="col-4">
-                                            <label class="form-label small mb-1">Tipo de discapacidad</label>
-                                            <input type="text" name="discapacidad_tipo" class="form-control form-control-sm" placeholder="Ej: Visual, Motriz..." value="{{ old('discapacidad_tipo') }}">
-                                        </div>
-                                        <div class="col-4">
-                                            <label class="form-label small mb-1">Carnet de discapacidad</label>
-                                            <input type="text" name="discapacidad_carnet" class="form-control form-control-sm" placeholder="N° carnet" value="{{ old('discapacidad_carnet') }}">
-                                        </div>
-                                        <div class="col-4">
-                                            <label class="form-label small mb-1">Vence</label>
-                                            <input type="date" name="discapacidad_vence" class="form-control form-control-sm" value="{{ old('discapacidad_vence') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-3">
-                                <label class="form-label small mb-1">📷 Fotografía</label>
-                                <div class="d-flex align-items-center gap-2">
-                                    <label class="btn btn-sm btn-outline-secondary mb-0">
-                                        Subir Imagen <input type="file" name="fotografia" accept="image/*" class="d-none" onchange="previewImg(event,'preview-item')">
-                                    </label>
-                                    <img id="preview-item" src="" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;display:none;">
-                                </div>
-                            </div>
-
-                            <div class="d-flex gap-2 mt-3">
-                                <button type="submit" class="btn btn-primary btn-sm px-4">Guardar</button>
-                                <a href="{{ route('servidores.index') }}" class="btn btn-secondary btn-sm px-4">Cancelar</a>
+                            <div class="col-4">
+                                <input type="text" name="apellido_materno" class="form-control" placeholder="Apellido Materno" value="{{ old('apellido_materno') }}">
                             </div>
                         </div>
                     </div>
+
+                    <div class="mb-3">
+                        <input type="text" name="cargo" class="form-control" placeholder="Ingresar nombre del cargo..." value="{{ old('cargo') }}">
+                    </div>
+
+                    <hr class="section-divider">
+
+                    {{-- Designación --}}
+                    <div class="form-section">
+                        <div class="section-title"><i class="bi bi-pen"></i> Designación</div>
+                        <div class="row g-3 align-items-start">
+                            <div class="col-5 d-flex flex-column gap-2">
+                                <div class="form-check">
+                                    <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Designación" id="chk_des_item"
+                                        {{ is_array(old('designacion_tipos')) && in_array('Designación', old('designacion_tipos')) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="chk_des_item" style="font-size: 0.9rem;">Designación</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Interinato" id="chk_int_item"
+                                        {{ is_array(old('designacion_tipos')) && in_array('Interinato', old('designacion_tipos')) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="chk_int_item" style="font-size: 0.9rem;">Interinato</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Comisión" id="chk_com_item"
+                                        {{ is_array(old('designacion_tipos')) && in_array('Comisión', old('designacion_tipos')) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="chk_com_item" style="font-size: 0.9rem;">Comisión</label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label-custom" style="font-size: 0.75rem;">Fecha inicio</label>
+                                <input type="date" name="designacion_inicio" class="form-control" value="{{ old('designacion_inicio') }}">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label-custom" style="font-size: 0.75rem;">Fecha fin</label>
+                                <input type="date" name="designacion_fin" class="form-control" value="{{ old('designacion_fin') }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <div class="form-section">
+                        <div class="section-title"><i class="bi bi-building"></i> Ubicación</div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label-custom">Unidad</label>
+                                <select name="unidad" id="unidad" class="form-select" onchange="cargarSubUnidades()">
+                                    <option value="">Seleccionar Unidad</option>
+                                    <option value="GERENCIA REGIONAL LA PAZ - GRLPZ">GERENCIA REGIONAL LA PAZ - GRLPZ</option>
+                                    <option value="Unidad Administrativa">Unidad Administrativa</option>
+                                    <option value="Unidad Fiscalización">Unidad Fiscalización</option>
+                                    <option value="Unidad Jurídica">Unidad Jurídica</option>
+                                    <option value="Administración Aduana Interior La Paz">Administración Aduana Interior La Paz</option>
+                                    <option value="Administración Aduana Frontera Guayaramerín">Administración Aduana Frontera Guayaramerín</option>
+                                    <option value="Administración Aduana Aeropuerto">Administración Aduana Aeropuerto</option>
+                                    <option value="Administración Aduana Zona Franca Patacamaya">Administración Aduana Zona Franca Patacamaya</option>
+                                    <option value="Administración Aduana Frontera Desaguadero">Administración Aduana Frontera Desaguadero</option>
+                                    <option value="Administración Aduana Frontera Cobija">Administración Aduana Frontera Cobija</option>
+                                    <option value="Administración Agencia Aduana Exterior Matarani">Administración Agencia Aduana Exterior Matarani</option>
+                                    <option value="Administración Aduana Frontera Charaña">Administración Aduana Frontera Charaña</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Sub-Unidad</label>
+                                <select name="sub_unidad" id="sub_unidad" class="form-select">
+                                    <option value="">Seleccionar Sub-Unidad</option>
+                                    @if(isset($subUnidades[old('unidad')]))
+                                        @foreach($subUnidades[old('unidad')] as $sub)
+                                            <option value="{{ $sub }}" {{ old('sub_unidad') == $sub ? 'selected' : '' }}>{{ $sub }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label-custom"><i class="bi bi-calendar"></i> Ingreso a la Aduana</label>
+                                <input type="date" name="fecha_ingreso_aduana" class="form-control" value="{{ old('fecha_ingreso_aduana') }}">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom"><i class="bi bi-calendar-check"></i> Inicio cargo</label>
+                                <input type="date" name="fecha_inicio_cargo" class="form-control" value="{{ old('fecha_inicio_cargo') }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <div class="form-section">
+                        <div class="section-title"><i class="bi bi-shield-check"></i> Inamovilidad</div>
+                        @foreach([
+                            ['label'=>'1. Asignación Familiar:','desc'=>'asignacion_familiar_desc','grado'=>'asignacion_familiar_grado','check'=>'asignacion_familiar_check'],
+                            ['label'=>'2. Casos especiales:','desc'=>'casos_especiales_desc','grado'=>'casos_especiales_grado','check'=>'casos_especiales_check'],
+                        ] as $campo)
+                        <div class="row g-3 align-items-center mb-3">
+                            <div class="col-1 text-center"><input type="checkbox" name="{{ $campo['check'] }}" class="form-check-input custom-checkbox" {{ old($campo['check']) ? 'checked' : '' }}></div>
+                            <div class="col-6">
+                                <label class="form-label-custom mb-0">{{ $campo['label'] }}</label>
+                                <input type="text" name="{{ $campo['desc'] }}" class="form-control" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
+                            </div>
+                            <div class="col-2"><label class="form-label-custom mb-0">Grado:</label></div>
+                            <div class="col-3">
+                                <select name="{{ $campo['grado'] }}" class="form-select">
+                                    @foreach(['G','MG','M','L'] as $g) <option value="{{ $g }}" {{ old($campo['grado'])==$g?'selected':'' }}>{{ $g }}</option> @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{-- 3. Discapacidad --}}
+                        <div class="mb-2">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-1 text-center">
+                                    <input type="checkbox" name="discapacidad_check" class="form-check-input custom-checkbox" id="chk_disc_item" {{ old('discapacidad_check') ? 'checked' : '' }} onchange="document.getElementById('disc_detalle_item').style.display=this.checked?'block':'none'">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label-custom mb-0">3. Discapacidad Ley N° 223:</label>
+                                    <input type="text" name="discapacidad_desc" class="form-control" placeholder="Ingresar descripción..." value="{{ old('discapacidad_desc') }}">
+                                </div>
+                                <div class="col-2"><label class="form-label-custom mb-0">Grado:</label></div>
+                                <div class="col-3">
+                                    <select name="discapacidad_grado" class="form-select">
+                                        @foreach(['G','MG','M','L'] as $g) <option value="{{ $g }}" {{ old('discapacidad_grado')==$g?'selected':'' }}>{{ $g }}</option> @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="disc_detalle_item" class="mt-3 ms-4 ps-3 border-start border-2" style="border-color: #1a237e !important; display:{{ old('discapacidad_tipo') || old('discapacidad_carnet') ? 'block' : 'none' }};">
+                                <div class="row g-3">
+                                    <div class="col-4">
+                                        <label class="form-label-custom">Tipo de discapacidad</label>
+                                        <input type="text" name="discapacidad_tipo" class="form-control" placeholder="Ej: Visual, Motriz..." value="{{ old('discapacidad_tipo') }}">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label-custom">Carnet de discapacidad</label>
+                                        <input type="text" name="discapacidad_carnet" class="form-control" placeholder="N° carnet" value="{{ old('discapacidad_carnet') }}">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label-custom">Vence</label>
+                                        <input type="date" name="discapacidad_vence" class="form-control" value="{{ old('discapacidad_vence') }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <div class="form-section">
+                        <div class="section-title"><i class="bi bi-camera"></i> Fotografía</div>
+                        <div class="d-flex align-items-center gap-3">
+                            <button type="button" class="upload-btn" onclick="document.getElementById('foto_item').click()">
+                                <i class="bi bi-cloud-arrow-up" style="font-size: 1.2rem;"></i>
+                                Subir Imagen
+                            </button>
+                            <input type="file" name="fotografia" id="foto_item" accept="image/*" class="d-none" onchange="previewImg(event,'preview-item')">
+                            <img id="preview-item" src="" class="rounded-circle border border-2" style="border-color: #1a237e !important; width:55px;height:55px;object-fit:cover;display:none;">
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 justify-content-end mt-4">
+                        <button type="submit" class="btn btn-gradient-primary">
+                            <i class="bi bi-check-lg me-1"></i> Guardar
+                        </button>
+                        <a href="{{ route('servidores.index') }}" class="btn btn-gradient-secondary">
+                            <i class="bi bi-x-lg me-1"></i> Cancelar
+                        </a>
+                    </div>
+
                 </form>
             </div>
 
@@ -303,79 +325,81 @@
                 <form action="{{ route('servidores.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="tipo" value="consultoria">
-                    <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card shadow-sm border-0 rounded-4">
                         <div class="card-body p-4">
-                            <h6 class="fw-bold mb-3">Datos de Consultoría</h6>
+                            <h6 class="fw-bold mb-4" style="color: #1a237e; font-size: 1rem;"><i class="bi bi-briefcase me-2"></i>Datos de Consultoría</h6>
 
                             {{-- 1. Contrato --}}
-                            <div class="row g-2 mb-2">
+                            <div class="row g-3 mb-3">
                                 <div class="col-6">
-                                    <label class="form-label small mb-1">Contrato</label>
-                                    <input type="text" name="contrato_numero" class="form-control form-control-sm" value="{{ old('contrato_numero') }}">
+                                    <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Contrato</label>
+                                    <input type="text" name="contrato_numero" class="form-control" value="{{ old('contrato_numero') }}">
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label small mb-1">Cód. Funcionario</label>
-                                    <input type="text" name="cod_funcionario" class="form-control form-control-sm" value="{{ old('cod_funcionario') }}">
+                                    <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Cód. Funcionario</label>
+                                    <input type="text" name="cod_funcionario" class="form-control" value="{{ old('cod_funcionario') }}">
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label small mb-1">Escala Salarial</label>
-                                    <input type="text" name="escala_salarial" class="form-control form-control-sm" value="{{ old('escala_salarial') }}">
+                                    <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Escala Salarial</label>
+                                    <input type="text" name="escala_salarial" class="form-control" value="{{ old('escala_salarial') }}">
                                 </div>
                             </div>
 
                             {{-- 2. Nombres --}}
-                            <div class="row g-2 mb-2">
+                            <div class="row g-3 mb-3">
                                 <div class="col-4">
-                                    <input type="text" name="nombre" class="form-control form-control-sm" placeholder="Nombres" value="{{ old('nombre') }}">
+                                    <input type="text" name="nombre" class="form-control" placeholder="Nombres" value="{{ old('nombre') }}">
                                 </div>
                                 <div class="col-4">
-                                    <input type="text" name="apellido_paterno" class="form-control form-control-sm" placeholder="Apellido Paterno" value="{{ old('apellido_paterno') }}">
+                                    <input type="text" name="apellido_paterno" class="form-control" placeholder="Apellido Paterno" value="{{ old('apellido_paterno') }}">
                                 </div>
                                 <div class="col-4">
-                                    <input type="text" name="apellido_materno" class="form-control form-control-sm" placeholder="Apellido Materno" value="{{ old('apellido_materno') }}">
+                                    <input type="text" name="apellido_materno" class="form-control" placeholder="Apellido Materno" value="{{ old('apellido_materno') }}">
                                 </div>
                             </div>
 
                             {{-- 3. Cargo --}}
-                            <div class="mb-2">
-                                <input type="text" name="cargo_consultoria" class="form-control form-control-sm" placeholder="Ingresar descripción del cargo..." value="{{ old('cargo_consultoria') }}">
+                            <div class="mb-3">
+                                <input type="text" name="cargo_consultoria" class="form-control" placeholder="Ingresar descripción del cargo..." value="{{ old('cargo_consultoria') }}">
                             </div>
 
                             {{-- 4. Designación --}}
-                            <div class="border rounded p-2 mb-2 bg-light">
-                                <label class="form-label small fw-bold mb-1">Designación:</label>
-                                <div class="row g-2 align-items-start">
-                                    <div class="col-5 d-flex flex-column gap-1">
+                            <div class="border rounded-3 p-3 mb-3 bg-light">
+                                <label class="form-label fw-bold mb-2" style="font-size: 0.9rem; color: #495057;"><i class="bi bi-pen me-1"></i>Designación:</label>
+                                <div class="row g-3 align-items-start">
+                                    <div class="col-5 d-flex flex-column gap-2">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Designación" id="chk_des_cons"
                                                 {{ is_array(old('designacion_tipos')) && in_array('Designación', old('designacion_tipos')) ? 'checked' : '' }}>
-                                            <label class="form-check-label small" for="chk_des_cons">Designación</label>
+                                            <label class="form-check-label" for="chk_des_cons" style="font-size: 0.9rem;">Designación</label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Interinato" id="chk_int_cons"
                                                 {{ is_array(old('designacion_tipos')) && in_array('Interinato', old('designacion_tipos')) ? 'checked' : '' }}>
-                                            <label class="form-check-label small" for="chk_int_cons">Interinato</label>
+                                            <label class="form-check-label" for="chk_int_cons" style="font-size: 0.9rem;">Interinato</label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="designacion_tipos[]" value="Comisión" id="chk_com_cons"
                                                 {{ is_array(old('designacion_tipos')) && in_array('Comisión', old('designacion_tipos')) ? 'checked' : '' }}>
-                                            <label class="form-check-label small" for="chk_com_cons">Comisión</label>
+                                            <label class="form-check-label" for="chk_com_cons" style="font-size: 0.9rem;">Comisión</label>
                                         </div>
                                     </div>
                                     <div class="col-3">
-                                        <input type="date" name="designacion_inicio" class="form-control form-control-sm" title="Fecha inicio" value="{{ old('designacion_inicio') }}">
+                                        <label class="form-label" style="font-size: 0.8rem; color: #6c757d;">Fecha inicio</label>
+                                        <input type="date" name="designacion_inicio" class="form-control" value="{{ old('designacion_inicio') }}">
                                     </div>
                                     <div class="col-3">
-                                        <input type="date" name="designacion_fin" class="form-control form-control-sm" title="Fecha fin" value="{{ old('designacion_fin') }}">
+                                        <label class="form-label" style="font-size: 0.8rem; color: #6c757d;">Fecha fin</label>
+                                        <input type="date" name="designacion_fin" class="form-control" value="{{ old('designacion_fin') }}">
                                     </div>
                                 </div>
                             </div>
 
                             {{-- 5. Unidad / Sub-Unidad --}}
-                            <div class="row g-2 mb-2">
+                            <div class="row g-3 mb-3">
                                 <div class="col-6">
-                                    <label class="form-label small mb-1">Unidad</label>
-                                    <select name="unidad" id="unidad_cons" class="form-select form-select-sm" onchange="cargarSubUnidadesCons()">
+                                    <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Unidad</label>
+                                    <select name="unidad" id="unidad_cons" class="form-select" onchange="cargarSubUnidadesCons()">
                                         <option value="">Seleccionar Unidad</option>
                                         <option value="GERENCIA REGIONAL LA PAZ - GRLPZ">GERENCIA REGIONAL LA PAZ - GRLPZ</option>
                                         <option value="Unidad Administrativa">Unidad Administrativa</option>
@@ -392,45 +416,50 @@
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <label class="form-label small mb-1">Sub-Unidad</label>
-                                    <select name="sub_unidad" id="sub_unidad_cons" class="form-select form-select-sm">
+                                    <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Sub-Unidad</label>
+                                    <select name="sub_unidad" id="sub_unidad_cons" class="form-select">
                                         <option value="">Seleccionar Sub-Unidad</option>
+                                        @if(isset($subUnidades[old('unidad')]))
+                                            @foreach($subUnidades[old('unidad')] as $sub)
+                                                <option value="{{ $sub }}" {{ old('sub_unidad') == $sub ? 'selected' : '' }}>{{ $sub }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="row g-2 mb-2">
+                            <div class="row g-3 mb-3">
                                 <div class="col-6">
-                                    <label class="form-label small mb-1">Fecha de ingreso a la Aduana</label>
-                                    <input type="date" name="fecha_ingreso_aduana" class="form-control form-control-sm" value="{{ old('fecha_ingreso_aduana') }}">
+                                    <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Fecha de ingreso a la Aduana</label>
+                                    <input type="date" name="fecha_ingreso_aduana" class="form-control" value="{{ old('fecha_ingreso_aduana') }}">
                                 </div>
                                 <div class="col-6">
-                                    <label class="form-label small mb-1">Fecha de inicio contrato</label>
-                                    <input type="date" name="fecha_inicio_contrato" class="form-control form-control-sm" value="{{ old('fecha_inicio_contrato') }}">
-                                </div>
-                            </div>
-
-                            <div class="row g-2 mb-3">
-                                <div class="col-6">
-                                    <label class="form-label small mb-1">Fecha de fin contrato</label>
-                                    <input type="date" name="fecha_fin_contrato" class="form-control form-control-sm" value="{{ old('fecha_fin_contrato') }}">
+                                    <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Fecha de inicio contrato</label>
+                                    <input type="date" name="fecha_inicio_contrato" class="form-control" value="{{ old('fecha_inicio_contrato') }}">
                                 </div>
                             </div>
 
-                            <p class="fw-bold small mb-2">Inamovilidad:</p>
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Fecha de fin contrato</label>
+                                    <input type="date" name="fecha_fin_contrato" class="form-control" value="{{ old('fecha_fin_contrato') }}">
+                                </div>
+                            </div>
+
+                            <p class="fw-bold mb-3" style="color: #1a237e; font-size: 0.9rem;"><i class="bi bi-shield-check me-1"></i>Inamovilidad:</p>
                             @foreach([
                                 ['label'=>'1. Asignación Familiar:','desc'=>'asignacion_familiar_desc','grado'=>'asignacion_familiar_grado'],
                                 ['label'=>'2. Casos especiales:','desc'=>'casos_especiales_desc','grado'=>'casos_especiales_grado'],
                             ] as $campo)
-                            <div class="row g-2 align-items-center mb-2">
-                                <div class="col-1 text-center"><input type="checkbox" class="form-check-input"></div>
+                            <div class="row g-3 align-items-center mb-3">
+                                <div class="col-1 text-center"><input type="checkbox" class="form-check-input" style="width: 1.1rem; height: 1.1rem;"></div>
                                 <div class="col-6">
-                                    <label class="form-label small mb-0">{{ $campo['label'] }}</label>
-                                    <input type="text" name="{{ $campo['desc'] }}" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
+                                    <label class="form-label mb-0 fw-semibold" style="font-size: 0.85rem; color: #495057;">{{ $campo['label'] }}</label>
+                                    <input type="text" name="{{ $campo['desc'] }}" class="form-control" placeholder="Ingresar descripción..." value="{{ old($campo['desc']) }}">
                                 </div>
-                                <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
+                                <div class="col-2"><label class="form-label mb-0 fw-semibold" style="font-size: 0.85rem; color: #495057;">Grado:</label></div>
                                 <div class="col-3">
-                                    <select name="{{ $campo['grado'] }}" class="form-select form-select-sm">
+                                    <select name="{{ $campo['grado'] }}" class="form-select">
                                         @foreach(['G','MG','M','L'] as $g)
                                             <option value="{{ $g }}" {{ old($campo['grado'])==$g?'selected':'' }}>{{ $g }}</option>
                                         @endforeach
@@ -440,62 +469,71 @@
                             @endforeach
 
                             {{-- 3. Discapacidad con detalle --}}
-                            <div class="mb-2">
-                                <div class="row g-2 align-items-center">
+                            <div class="mb-3">
+                                <div class="row g-3 align-items-center">
                                     <div class="col-1 text-center">
-                                        <input type="checkbox" class="form-check-input" id="chk_disc_cons" onchange="document.getElementById('disc_detalle_cons').style.display=this.checked?'block':'none'">
+                                        <input type="checkbox" class="form-check-input" style="width: 1.1rem; height: 1.1rem;" id="chk_disc_cons" onchange="document.getElementById('disc_detalle_cons').style.display=this.checked?'block':'none'">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label small mb-0">3. Discapacidad Ley N° 223:</label>
-                                        <input type="text" name="discapacidad_desc" class="form-control form-control-sm" placeholder="Ingresar descripción..." value="{{ old('discapacidad_desc') }}">
+                                        <label class="form-label mb-0 fw-semibold" style="font-size: 0.85rem; color: #495057;">3. Discapacidad Ley N° 223:</label>
+                                        <input type="text" name="discapacidad_desc" class="form-control" placeholder="Ingresar descripción..." value="{{ old('discapacidad_desc') }}">
                                     </div>
-                                    <div class="col-2"><label class="form-label small mb-0">Grado:</label></div>
+                                    <div class="col-2"><label class="form-label mb-0 fw-semibold" style="font-size: 0.85rem; color: #495057;">Grado:</label></div>
                                     <div class="col-3">
-                                        <select name="discapacidad_grado" class="form-select form-select-sm">
+                                        <select name="discapacidad_grado" class="form-select">
                                             @foreach(['G','MG','M','L'] as $g)
                                                 <option value="{{ $g }}" {{ old('discapacidad_grado')==$g?'selected':'' }}>{{ $g }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div id="disc_detalle_cons" class="mt-2 ms-4 ps-2 border-start border-2 border-primary" style="display:{{ old('discapacidad_tipo') || old('discapacidad_carnet') ? 'block' : 'none' }};">
-                                    <div class="row g-2">
+                                <div id="disc_detalle_cons" class="mt-3 ms-4 ps-3 border-start border-2 border-primary" style="display:{{ old('discapacidad_tipo') || old('discapacidad_carnet') ? 'block' : 'none' }};">
+                                    <div class="row g-3">
                                         <div class="col-4">
-                                            <label class="form-label small mb-1">Tipo de discapacidad</label>
-                                            <input type="text" name="discapacidad_tipo" class="form-control form-control-sm" placeholder="Ej: Visual, Motriz..." value="{{ old('discapacidad_tipo') }}">
+                                            <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Tipo de discapacidad</label>
+                                            <input type="text" name="discapacidad_tipo" class="form-control" placeholder="Ej: Visual, Motriz..." value="{{ old('discapacidad_tipo') }}">
                                         </div>
                                         <div class="col-4">
-                                            <label class="form-label small mb-1">Carnet de discapacidad</label>
-                                            <input type="text" name="discapacidad_carnet" class="form-control form-control-sm" placeholder="N° carnet" value="{{ old('discapacidad_carnet') }}">
+                                            <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Carnet de discapacidad</label>
+                                            <input type="text" name="discapacidad_carnet" class="form-control" placeholder="N° carnet" value="{{ old('discapacidad_carnet') }}">
                                         </div>
                                         <div class="col-4">
-                                            <label class="form-label small mb-1">Vence</label>
-                                            <input type="date" name="discapacidad_vence" class="form-control form-control-sm" value="{{ old('discapacidad_vence') }}">
+                                            <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem; color: #495057;">Vence</label>
+                                            <input type="date" name="discapacidad_vence" class="form-control" value="{{ old('discapacidad_vence') }}">
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="mt-3">
-                                <label class="form-label small mb-1">📷 Fotografía</label>
-                                <div class="d-flex align-items-center gap-2">
-                                    <label class="btn btn-sm btn-outline-secondary mb-0">
-                                        Subir Imagen <input type="file" name="fotografia" accept="image/*" class="d-none" onchange="previewImg(event,'preview-cons')">
-                                    </label>
-                                    <img id="preview-cons" src="" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;display:none;">
+                            <div class="mt-4">
+                                <label class="form-label fw-semibold mb-2" style="font-size: 0.9rem; color: #495057;"><i class="bi bi-camera me-1"></i>Fotografía</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <button type="button" class="btn btn-outline-secondary mb-0 px-3 py-2 rounded-3" style="font-size: 0.85rem; cursor: pointer;" onclick="document.getElementById('foto_cons').click()">
+                                        <i class="bi bi-upload me-1"></i> Subir Imagen
+                                    </button>
+                                    <input type="file" name="fotografia" id="foto_cons" accept="image/*" class="d-none" onchange="previewImg(event,'preview-cons')">
+                                    <img id="preview-cons" src="" class="rounded-circle border border-2 border-primary" style="width:50px;height:50px;object-fit:cover;display:none;">
                                 </div>
                             </div>
 
-                            <div class="d-flex gap-2 mt-3">
-                                <button type="submit" class="btn btn-primary btn-sm px-4">Guardar</button>
-                                <a href="{{ route('servidores.index') }}" class="btn btn-secondary btn-sm px-4">Cancelar</a>
+                            <div class="d-flex gap-3 mt-4">
+                                <button type="submit" class="btn px-4 py-2 border-0 rounded-3 fw-semibold" style="background: linear-gradient(135deg, #1a237e, #0d47a1); color: #fff; box-shadow: 0 3px 10px rgba(13, 71, 161, 0.3); font-size: 0.9rem; transition: all 0.25s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(13, 71, 161, 0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px rgba(13, 71, 161, 0.3)'">
+                                    <i class="bi bi-check-lg me-1"></i> Guardar
+                                </button>
+                                <a href="{{ route('servidores.index') }}" class="btn px-4 py-2 rounded-3 fw-semibold" style="background: #6c757d; color: #fff; font-size: 0.9rem; transition: all 0.25s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+                                    <i class="bi bi-x-lg me-1"></i> Cancelar
+                                </a>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
 
-        </div>{{-- fin col-md-6 --}}
+                        </div>{{-- fin card-body --}}
+                    </div>{{-- fin card --}}
+                </div>{{-- fin form-card-body --}}
+            </div>{{-- fin form-card --}}
+        </div>{{-- fin col-md-7 --}}
     </div>{{-- fin row --}}
 </div>{{-- fin container --}}
 
@@ -530,24 +568,12 @@ function previewImg(event, previewId) {
     document.getElementById('selectorTipo').value = 'item';
 @endif
 
+const subUnidadesData = @json($subUnidades);
+
 function llenarSubUnidades(unidad, selectEl) {
     selectEl.innerHTML = '<option value="">Seleccionar Sub-Unidad</option>';
-    const datos = {
-        "GERENCIA REGIONAL LA PAZ - GRLPZ": ["GERENTE","ASESORÍA","PLATAFORMA","SISTEMAS","ARCHIVO","SECRETARIA"],
-        "Unidad Administrativa": ["Resposanble Administrativa","Auxiliar Unidad Administrativa","Bienes y Servicios / Activos Fijos","Bienes y Servicios / Servicios Generales","Bienes y Servicios / Contrataciones","Talento Humano / Regimiento Laboral","Talento Humano / Planillal","Finanzas / Contabilidad y Presupuesto","Finanzas / Tesorería y Archivo"],
-        "Unidad Fiscalización": ["Jefe de Fiscalización","Supervisores Fiscalización","Auxiliar Fiscalización","Fiscalizaciones Control Posterior"],
-        "Unidad Jurídica": ["Jefe de Jurídica","Supervisor Jurídica","Procurador Jurídica","Auxiliar Unidad Jurídica","Cobranza Coactiva Jurídica","Técnica Jurídica","Procesos Judiciales y Administrativos Jurídica"],
-        "Administración Aduana Interior La Paz": ["Administrador Aduana Interior La Paz","Supervisor Aduana Interior La Paz","Auxiliar Aduana Interior La Paz","Archivo Aduana Interior La Paz","Administrador Aduana Interior La Paz","SPCC Aduana Interior La Paz","Disposición de mercancías Aduana Interior La Paz","Despachos Aduana Interior La Paz","Gestión Aduana Interior La Paz"],
-        "Administración Aduana Frontera Guayaramerín": ["Administrador Guayaramerín","Despachos Guayaramerín","Gestión Aduanera Guayaramerín"],
-        "Administración Aduana Aeropuerto": ["Administrador Aeropuerto","Supervisor Aeropuerto","Secretario Aeropuerto","Archivo Aeropuerto","Despachos Aeropuerto","Disposición Aeropuerto","Gestión Aduanera Aeropuerto"],
-        "Administración Aduana Zona Franca Patacamaya": ["Administrador Patacamaya","Despachos Patacamaya","Gestión aduanera Patacamaya"],
-        "Administración Aduana Frontera Desaguadero": ["Administrador Frontera Desaguadero","Secretario Frontera Desaguadero","Archivo Frontera Desaguadero","Despachos Frontera Desaguadero","Gestión aduanera Frontera Desaguadero","Disposición Frontera Desaguadero","Plataforma Frontera Desaguadero"],
-        "Administración Aduana Frontera Cobija": ["Administrador Frontera Cobija","Despachos Frontera Cobija","Disposición Frontera Cobija","Gestión aduanera Frontera Cobija"],
-        "Administración Agencia Aduana Exterior Matarani": ["Administrador Exterior Mataraniones","Despachos Exterior Mataraniones","Disposición Exterior Matarani","Gestión aduanera Exterior Matarani"],
-        "Administración Aduana Frontera Charaña": ["Administrador aduanera Frontera Charaña","Gestión Frontera Charaña","Tránsitos Frontera Charaña"],
-    };
-    if (datos[unidad]) {
-        datos[unidad].forEach(function(sub) {
+    if (subUnidadesData[unidad]) {
+        subUnidadesData[unidad].forEach(function(sub) {
             let option = document.createElement("option");
             option.value = sub;
             option.text = sub;

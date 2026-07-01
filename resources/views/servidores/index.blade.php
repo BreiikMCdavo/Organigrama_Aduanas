@@ -10,42 +10,41 @@
                 </h5>
                 <small class="text-muted">Gestión completa del personal</small>
             </div>
-            <div class="d-flex gap-2">
-                <div class="btn-group" role="group">
-                    <a href="{{ route('reporte.items') }}"
-                        class="btn btn-gradient-success btn-sm d-flex align-items-center px-3"
-                        style="background: linear-gradient(135deg, #28a745, #20c997); border: none; color: white; box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3); transition: all 0.3s;">
-
-                        <i class="bi bi-file-earmark-excel me-2 fs-3"></i>
-
-                        <span>
-                            <strong>Reporte Items</strong>
-                            <br>
-                            <small style="font-size: 0.7rem; opacity: 0.9;">Abrir en Excel</small>
-                        </span>
-                    </a>
-                    <a href="{{ route('reporte.consultoria') }}"
-                        class="btn btn-gradient-info btn-sm d-flex align-items-center px-3"
-                        style="background: linear-gradient(135deg, #17a2b8, #6610f2); border: none; color: white; box-shadow: 0 2px 4px rgba(23, 162, 184, 0.3); transition: all 0.3s;">
-
-                        <i class="bi bi-file-earmark-excel me-2 fs-3"></i>
-
-                        <span>
-                            <strong>Reporte Consultoría</strong>
-                            <br>
-                            <small style="font-size: 0.7rem; opacity: 0.9;">Abrir en Excel</small>
-                        </span>
-                    </a>
-                </div>
-                <a href="{{ route('servidores.create') }}" class="btn btn-primary btn-sm d-flex align-items-center px-3"
-                    style="box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3); transition: all 0.3s;">
-
-                    <i class="bi bi-person-plus-fill me-2 fs-3"></i>
-
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{{ route('reporte.items') }}"
+                    class="btn btn-sm d-flex align-items-center px-3 py-2 border-0 rounded-3 fw-semibold report-btn"
+                    style="background: linear-gradient(135deg, #28a745, #20c997); color: #fff; box-shadow: 0 3px 10px rgba(40, 167, 69, 0.25); transition: all 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(40, 167, 69, 0.4)'"
+                    onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px rgba(40, 167, 69, 0.25)'">
+                    <i class="bi bi-file-earmark-excel me-2" style="font-size: 1.5rem;"></i>
                     <span>
-                        <strong>+ Nuevo Servidor</strong>
+                        <strong style="font-size: 0.8rem;">Reporte Items</strong>
                         <br>
-                        <small style="font-size: 0.7rem; opacity: 0.9;">Agregar registro</small>
+                        <small style="font-size: 0.65rem; opacity: 0.85;">Abrir en Excel</small>
+                    </span>
+                </a>
+                <a href="{{ route('reporte.consultoria') }}"
+                    class="btn btn-sm d-flex align-items-center px-3 py-2 border-0 rounded-3 fw-semibold report-btn"
+                    style="background: linear-gradient(135deg, #17a2b8, #6610f2); color: #fff; box-shadow: 0 3px 10px rgba(23, 162, 184, 0.25); transition: all 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(23, 162, 184, 0.4)'"
+                    onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px rgba(23, 162, 184, 0.25)'">
+                    <i class="bi bi-file-earmark-excel me-2" style="font-size: 1.5rem;"></i>
+                    <span>
+                        <strong style="font-size: 0.8rem;">Reporte Consultoría</strong>
+                        <br>
+                        <small style="font-size: 0.65rem; opacity: 0.85;">Abrir en Excel</small>
+                    </span>
+                </a>
+                <a href="{{ route('servidores.create') }}"
+                    class="btn btn-sm d-flex align-items-center px-3 py-2 border-0 rounded-3 fw-semibold"
+                    style="background: linear-gradient(135deg, #0d6efd, #6610f2); color: #fff; box-shadow: 0 3px 10px rgba(13, 110, 253, 0.25); transition: all 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(13, 110, 253, 0.4)'"
+                    onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px rgba(13, 110, 253, 0.25)'">
+                    <i class="bi bi-person-plus-fill me-2" style="font-size: 1.5rem;"></i>
+                    <span>
+                        <strong style="font-size: 0.8rem;">+ Nuevo Servidor</strong>
+                        <br>
+                        <small style="font-size: 0.65rem; opacity: 0.85;">Agregar registro</small>
                     </span>
                 </a>
             </div>

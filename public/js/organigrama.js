@@ -22,66 +22,78 @@ function mostrarInfo(area){
                 html = `
                     <div class="text-center">
 
-                        <div class="bg-primary text-white p-3 rounded mb-4">
-                            <h4 class="mb-0"><i class="bi bi-building me-2"></i>${area}</h4>
+                        <div class="p-4 rounded-4 mb-4" style="background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #1565c0 100%); box-shadow: 0 8px 32px rgba(13, 71, 161, 0.3);">
+                            <h4 class="mb-0 text-white fw-bold" style="font-size: 1.3rem; letter-spacing: 0.5px;">
+                                <i class="bi bi-building me-2"></i>${area}
+                            </h4>
                         </div>
 
-                        <div class="row g-4 mb-4">
+                        <div class="row g-3 mb-4">
                             <!-- Items -->
-                            <div class="col-md-6">
-                                <div class="card-datos h-100">
-                                    <div class="card-body text-center p-4">
-                                        <i class="bi bi-check-circle-fill icon-datos icon-success"></i>
-                                        <div class="numero-dato text-success">${totalItems}</div>
-                                        <div class="texto-dato">Con Item</div>
-                                        <div class="badge-items mt-2">${porcentajeItems}%</div>
+                            <div class="col-6 col-md-3 col-xl">
+                                <div class="card-datos h-100 border-0" style="border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                                    <div class="card-body text-center p-3">
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2" style="width: 48px; height: 48px; background: rgba(40, 167, 69, 0.12);">
+                                            <i class="bi bi-check-circle-fill" style="font-size: 1.4rem; color: #28a745;"></i>
+                                        </div>
+                                        <div class="numero-dato text-success fw-bold" style="font-size: 1.8rem;">${totalItems}</div>
+                                        <div class="texto-dato text-muted small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Con Item</div>
+                                        <div class="badge-items mt-2 d-inline-block" style="font-size: 0.7rem; padding: 0.2rem 0.7rem;">${porcentajeItems}%</div>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Acefalías -->
-                            <div class="col-md-6">
-                                <div class="card-datos h-100">
-                                    <div class="card-body text-center p-4">
-                                        <i class="bi bi-exclamation-triangle-fill icon-datos icon-danger"></i>
-                                        <div class="numero-dato text-danger">${totalAcefalias}</div>
-                                        <div class="texto-dato">Acefalía</div>
-                                        <div class="badge-acefalias mt-2">${porcentajeAcefalias}%</div>
+                            <div class="col-6 col-md-3 col-xl">
+                                <div class="card-datos h-100 border-0" style="border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                                    <div class="card-body text-center p-3">
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2" style="width: 48px; height: 48px; background: rgba(220, 53, 69, 0.12);">
+                                            <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.4rem; color: #dc3545;"></i>
+                                        </div>
+                                        <div class="numero-dato text-danger fw-bold" style="font-size: 1.8rem;">${totalAcefalias}</div>
+                                        <div class="texto-dato text-muted small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Acefalía</div>
+                                        <div class="badge-acefalias mt-2 d-inline-block" style="font-size: 0.7rem; padding: 0.2rem 0.7rem;">${porcentajeAcefalias}%</div>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Inamovibles -->
-                            <div class="col-md-6">
-                                <div class="card-datos h-100">
-                                    <div class="card-body text-center p-4">
-                                        <i class="bi bi-shield-fill icon-datos icon-warning"></i>
-                                        <div class="numero-dato text-warning">${totalInamoviles}</div>
-                                        <div class="texto-dato">Inamovibles</div>
-                                        <div class="badge-inamoviles mt-2">${porcentajeInamovilesDisplay}%</div>
+                            <div class="col-6 col-md-3 col-xl">
+                                <div class="card-datos h-100 border-0" style="border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                                    <div class="card-body text-center p-3">
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2" style="width: 48px; height: 48px; background: rgba(255, 193, 7, 0.12);">
+                                            <i class="bi bi-shield-fill" style="font-size: 1.4rem; color: #ffc107;"></i>
+                                        </div>
+                                        <div class="numero-dato text-warning fw-bold" style="font-size: 1.8rem;">${totalInamoviles}</div>
+                                        <div class="texto-dato text-muted small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Inamovibles</div>
+                                        <div class="badge-inamoviles mt-2 d-inline-block" style="font-size: 0.7rem; padding: 0.2rem 0.7rem;">${porcentajeInamovilesDisplay}%</div>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Total Items -->
-                            <div class="col-md-6">
-                                <div class="card-datos h-100">
-                                    <div class="card-body text-center p-4">
-                                        <i class="bi bi-list-check icon-datos icon-primary"></i>
-                                        <div class="numero-dato text-primary">${totalPlazas}</div>
-                                        <div class="texto-dato">Total de Items</div>
+                            <div class="col-6 col-md-3 col-xl">
+                                <div class="card-datos h-100 border-0" style="border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                                    <div class="card-body text-center p-3">
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2" style="width: 48px; height: 48px; background: rgba(13, 110, 253, 0.12);">
+                                            <i class="bi bi-list-check" style="font-size: 1.4rem; color: #0d6efd;"></i>
+                                        </div>
+                                        <div class="numero-dato text-primary fw-bold" style="font-size: 1.8rem;">${totalPlazas}</div>
+                                        <div class="texto-dato text-muted small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Total Plazas</div>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Total -->
-                            <div class="col-md-6">
-                                <div class="card-datos h-100">
-                                    <div class="card-body text-center p-4">
-                                        <i class="bi bi-calculator icon-datos icon-info"></i>
-                                        <div class="numero-dato text-info">${totalPlazas}</div>
-                                        <div class="texto-dato">Total</div>
-                                        <div class="badge-total mt-2">100%</div>
+                            <div class="col-6 col-md-3 col-xl">
+                                <div class="card-datos h-100 border-0" style="border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                                    <div class="card-body text-center p-3">
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2" style="width: 48px; height: 48px; background: rgba(23, 162, 184, 0.12);">
+                                            <i class="bi bi-calculator" style="font-size: 1.4rem; color: #17a2b8;"></i>
+                                        </div>
+                                        <div class="numero-dato text-info fw-bold" style="font-size: 1.8rem;">${totalPlazas}</div>
+                                        <div class="texto-dato text-muted small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Total</div>
+                                        <div class="badge-total mt-2 d-inline-block" style="font-size: 0.7rem; padding: 0.2rem 0.7rem; background: linear-gradient(135deg, #0d6efd, #6610f2);">100%</div>
                                     </div>
                                 </div>
                             </div>
@@ -89,8 +101,8 @@ function mostrarInfo(area){
 
                         <!-- DATOS GENERALES DE TODAS LAS UNIDADES -->
                         <div class="mt-4">
-                            <div class="bg-light rounded-3 p-4">
-                                <h5 class="text-center mb-4 fw-bold text-primary">
+                            <div class="rounded-4 p-4" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 1px solid rgba(0,0,0,0.04);">
+                                <h5 class="text-center mb-4 fw-bold" style="color: #1a237e; font-size: 1.1rem; letter-spacing: 1px; text-transform: uppercase;">
                                     <i class="bi bi-graph-up me-2"></i> Datos Generales por Unidad
                                 </h5>
                                 <div id="datos-unidades">
@@ -98,18 +110,21 @@ function mostrarInfo(area){
                                         <div class="spinner-border text-primary" role="status">
                                             <span class="visually-hidden">Cargando...</span>
                                         </div>
-                                        <p class="mt-3 text-muted fw-bold">Cargando datos de unidades...</p>
+                                        <p class="mt-3 text-muted fw-bold" style="font-size: 0.9rem;">Cargando datos de unidades...</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mt-3">
+                        <div class="mt-4 mb-2">
                             <button 
-                                class="btn btn-primary"
+                                class="btn px-4 py-2 rounded-3 border-0 fw-semibold"
+                                style="background: linear-gradient(135deg, #1a237e, #0d47a1); color: #fff; box-shadow: 0 4px 16px rgba(13, 71, 161, 0.3); transition: all 0.25s; font-size: 0.9rem;"
+                                onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(13, 71, 161, 0.4)'"
+                                onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(13, 71, 161, 0.3)'"
                                 onclick="verPersonal('${area}')"
                             >
-                                Ver Personal de ${area}
+                                <i class="bi bi-people-fill me-2"></i> Ver Personal de ${area}
                             </button>
                         </div>
 
@@ -294,72 +309,61 @@ async function cargarDatosUnidades() {
     // Generar HTML para mostrar los datos
     const htmlUnidades = datosUnidades.map(unidad => {
             const total = unidad.total || 0;
-            const porcentaje = Math.round((total / unidad.maximo) * 100);
+            const maximo = unidad.maximo || total || 1;
+            const porcentaje = Math.min(100, Math.round((total / maximo) * 100));
             const colorPorcentaje = porcentaje >= 80 ? 'success' : porcentaje >= 50 ? 'warning' : 'danger';
             
-            // Si es GERENCIA, hacer la tarjeta más grande
-            const esGerencia = unidad.nombre === 'GERENCIA REGIONAL LA PAZ - GRLPZ';
-            const gridClass = esGerencia ? 'col-span-2' : '';
+            // Safe percentage calculation (avoid NaN)
+            const pctItems = total > 0 ? Math.round((unidad.items / total) * 100) : 0;
+            const pctAcefalias = total > 0 ? Math.round((unidad.acefalias / total) * 100) : 0;
             
             return `
-            <div class="card-datos ${gridClass}" style="${esGerencia ? 'grid-column: span 2;' : ''}">
-                <div class="card-body p-3 flex flex-column" style="${esGerencia ? 'min-height: 200px;' : 'min-height: 160px;'}">
-                <!-- Header compacto -->
-                <div class="text-center mb-2">
-                    <h6 class="titulo-unidad mb-1" style="font-size: 1rem; line-height: 1.2; word-wrap: break-word; font-weight: 600;">
-                        ${unidad.nombre.length > 25 ? unidad.nombre.substring(0, 25) + '...' : unidad.nombre}
-                    </h6>
-                    <span class="badge-total" style="font-size: 0.9rem; font-weight: 600;">${unidad.total}</span>
-                </div>
-                
-                <!-- Métricas compactas -->
-                <div class="d-flex justify-content-between mb-2 flex-grow-1">
-                    <!-- Items -->
-                    <div class="d-flex flex-column align-items-center justify-content-center" style="flex: 1; min-height: 80px;">
-                        <div class="text-center">
-                            <i class="bi bi-check-circle-fill icon-datos icon-success mb-1" style="font-size: 1.5rem;"></i>
-                            <div class="numero-dato text-success mb-0" style="font-size: 1.6rem; font-weight: 700;">${unidad.items}</div>
-                            <div class="texto-dato mb-1" style="font-size: 0.85rem; font-weight: 600;">Items</div>
-                            <div class="badge-items" style="font-size: 0.8rem; font-weight: 600;">${Math.round((unidad.items / unidad.total) * 100)}%</div>
+            <div class="card-datos border-0" style="border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: all 0.3s ease;">
+                <div class="card-body p-3">
+                    <div class="text-center mb-2">
+                        <h6 class="mb-1 fw-bold" style="font-size: 0.85rem; color: #1a237e; line-height: 1.3;">
+                            ${unidad.nombre.length > 30 ? unidad.nombre.substring(0, 28) + '...' : unidad.nombre}
+                        </h6>
+                        <span class="d-inline-block px-2 py-1 rounded-3 fw-bold" style="font-size: 0.8rem; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">${unidad.total}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="text-center flex-fill">
+                            <i class="bi bi-check-circle-fill" style="font-size: 1.2rem; color: #28a745;"></i>
+                            <div class="fw-bold text-success" style="font-size: 1.3rem;">${unidad.items}</div>
+                            <div class="text-muted small text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.3px;">Items</div>
+                            <span class="d-inline-block rounded-3 px-2 py-0 mt-1 fw-semibold" style="font-size: 0.65rem; background: rgba(40,167,69,0.12); color: #28a745;">${pctItems}%</span>
+                        </div>
+                        <div class="text-center flex-fill">
+                            <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.2rem; color: #dc3545;"></i>
+                            <div class="fw-bold text-danger" style="font-size: 1.3rem;">${unidad.acefalias}</div>
+                            <div class="text-muted small text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.3px;">Acefalía</div>
+                            <span class="d-inline-block rounded-3 px-2 py-0 mt-1 fw-semibold" style="font-size: 0.65rem; background: rgba(220,53,69,0.12); color: #dc3545;">${pctAcefalias}%</span>
                         </div>
                     </div>
                     
-                    <!-- Acefalía -->
-                    <div class="d-flex flex-column align-items-center justify-content-center" style="flex: 1; min-height: 80px;">
-                        <div class="text-center">
-                            <i class="bi bi-exclamation-triangle-fill icon-datos icon-danger mb-1" style="font-size: 1.5rem;"></i>
-                            <div class="numero-dato text-danger mb-0" style="font-size: 1.6rem; font-weight: 700;">${unidad.acefalias}</div>
-                            <div class="texto-dato mb-1" style="font-size: 0.85rem; font-weight: 600;">Acefalía</div>
-                            <div class="badge-acefalias" style="font-size: 0.8rem; font-weight: 600;">${Math.round((unidad.acefalias / unidad.total) * 100)}%</div>
+                    <div class="mb-2">
+                        <div class="progress" style="height: 5px; border-radius: 4px; background: #e9ecef;">
+                            <div class="progress-bar rounded-3 bg-${colorPorcentaje}" style="width: ${porcentaje}%; transition: width 0.6s ease;"></div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Barra de progreso compacta -->
-                <div class="mb-2">
-                    <div class="progress" style="height: 6px; border-radius: 3px;">
-                        <div class="progress-bar bg-${colorPorcentaje}" style="width: ${porcentaje}%; border-radius: 3px; font-size: 0.6rem;">
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="d-inline-flex align-items-center gap-1 fw-semibold rounded-3 px-2 py-1" style="font-size: 0.65rem; background: ${porcentaje >= 80 ? 'rgba(25,135,84,0.1)' : porcentaje >= 50 ? 'rgba(255,193,7,0.1)' : 'rgba(220,53,69,0.1)'}; color: ${porcentaje >= 80 ? '#198754' : porcentaje >= 50 ? '#856404' : '#dc3545'};">
+                            ${porcentaje >= 80 ? '✅ Óptimo' : porcentaje >= 50 ? '⚠️ Regular' : '🚨 Crítico'}
+                        </span>
+                        <div class="d-flex gap-1">
+                            <button class="btn-generate-report-excel" onclick="generateReportExcel('${unidad.nombre}')">
+                                <i class="bi bi-file-earmark-excel"></i> Excel
+                            </button>
+                            <button class="btn-generate-report-pdf" onclick="generateReportPdf('${unidad.nombre}')">
+                                <i class="bi bi-file-earmark-pdf"></i> PDF
+                            </button>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- Estado y botones compactos -->
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge bg-${colorPorcentaje} bg-opacity-10 text-${colorPorcentaje}" style="font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.8rem;">
-                        ${porcentaje >= 80 ? '✅ Óptimo' : porcentaje >= 50 ? '⚠️ Regular' : '🚨 Crítico'}
-                    </span>
-                    <div class="d-flex gap-1">
-                        <button class="btn-generate-report-excel" style="font-size: 0.7rem; padding: 0.3rem 0.5rem;" onclick="generateReportExcel('${unidad.nombre}')">
-                            <i class="bi bi-file-earmark-excel me-1"></i>Excel
-                        </button>
-                        <button class="btn-generate-report-pdf" style="font-size: 0.7rem; padding: 0.3rem 0.5rem;" onclick="generateReportPdf('${unidad.nombre}')">
-                            <i class="bi bi-file-earmark-pdf me-1"></i>PDF
-                        </button>
                     </div>
                 </div>
             </div>
-        </div>
-    `;}).join('');
+        `;}).join('');
 
     // Actualizar el contenedor
     const contenedor = document.getElementById('datos-unidades');

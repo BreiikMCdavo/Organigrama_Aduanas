@@ -8,6 +8,18 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/organigrama.css') }}">
+    <style>
+        .dropdown-report-btn {
+            transition: all 0.2s ease;
+        }
+        .dropdown-report-btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.1);
+        }
+        .dropdown-report-btn:active {
+            transform: translateY(0);
+        }
+    </style>
     @stack('styles')
 </head>
 
@@ -73,8 +85,8 @@
 
                 <!-- Botones de Reportes -->
                 <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle d-flex align-items-center gap-2 px-3 rounded-pill"
-                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:#fff;border:none;box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);transition: all 0.3s ease; font-weight: 500;"
+                    <button class="btn btn-sm dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 rounded-pill"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:#fff;border:none;box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);transition: all 0.3s ease; font-weight: 500;letter-spacing:0.5px;"
                         type="button" data-bs-toggle="dropdown" 
                         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)'"
                         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'">
@@ -82,82 +94,66 @@
                         <span>Reportes</span>
                         <span class="badge bg-white bg-opacity-20 text-white ms-1" style="font-size: 0.6rem;">6</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" 
-                        style="background: linear-gradient(135deg, #1a3a6b 0%, #2c5282 100%);border: 1px solid rgba(255,255,255,0.1);max-width: 350px;border-radius: 16px;padding: 12px;box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-0 overflow-hidden" 
+                        style="background: linear-gradient(135deg, #1a3a6b 0%, #2c5282 100%);border: 1px solid rgba(255,255,255,0.1);min-width: 300px;border-radius: 16px;box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
                         
-                        <!-- Items -->
-                        <li class="mb-2">
-                            <div class="report-card bg-white bg-opacity-10 rounded-lg p-3 border border-white border-opacity-20 hover:bg-opacity-15 transition-all duration-300">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <h6 class="text-white mb-0 d-flex align-items-center" style="font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;">
-                                        <i class="bi bi-people-fill me-2 text-success"></i>
-                                        SERVIDORES CON ITEMS
-                                    </h6>
+                        <li style="padding: 10px;">
+                            <!-- Items -->
+                            <div class="rounded-3 p-3 mb-2" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.06);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-people-fill text-success" style="font-size: 1rem;"></i>
+                                    <span style="color: rgba(255,255,255,0.85); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Servidores con Items</span>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <button class="flex-fill btn btn-sm btn-success d-flex align-items-center justify-content-center py-2 px-3 rounded-lg hover:scale-105 transition-transform"
+                                    <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
                                             onclick="showExcelPreview('{{ route('reporte.items') }}', '📊 Reporte de Items - Excel')"
-                                            style="background: rgba(40, 167, 69, 0.9); border: 1px solid rgba(40, 167, 69, 0.3); box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);">
-                                        <i class="bi bi-file-earmark-excel me-1"></i>
-                                        <span style="font-size: 0.75rem; font-weight: 600;">Excel</span>
+                                            style="font-size: 0.75rem; background: linear-gradient(135deg, #28a745, #20c997); color: #fff; box-shadow: 0 2px 8px rgba(40,167,69,0.3);">
+                                        <i class="bi bi-file-earmark-excel"></i> Excel
                                     </button>
-                                    <button class="flex-fill btn btn-sm btn-danger d-flex align-items-center justify-content-center py-2 px-3 rounded-lg hover:scale-105 transition-transform"
+                                    <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
                                             onclick="showPdfPreview('{{ route('reporte.items.pdf') }}', '📊 Reporte de Items - Servidores Públicos')"
-                                            style="background: rgba(220, 53, 69, 0.9); border: 1px solid rgba(220, 53, 69, 0.3); box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);">
-                                        <i class="bi bi-file-earmark-pdf me-1"></i>
-                                        <span style="font-size: 0.75rem; font-weight: 600;">PDF</span>
+                                            style="font-size: 0.75rem; background: linear-gradient(135deg, #dc3545, #e4606d); color: #fff; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">
+                                        <i class="bi bi-file-earmark-pdf"></i> PDF
                                     </button>
                                 </div>
                             </div>
-                        </li>
 
-                        <!-- Consultoría -->
-                        <li class="mb-2">
-                            <div class="report-card bg-white bg-opacity-10 rounded-lg p-3 border border-white border-opacity-20 hover:bg-opacity-15 transition-all duration-300">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <h6 class="text-white mb-0 d-flex align-items-center" style="font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;">
-                                        <i class="bi bi-briefcase-fill me-2 text-info"></i>
-                                        SERVIDORES DE CONSULTORÍA
-                                    </h6>
+                            <!-- Consultoría -->
+                            <div class="rounded-3 p-3 mb-2" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.06);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-briefcase-fill text-info" style="font-size: 1rem;"></i>
+                                    <span style="color: rgba(255,255,255,0.85); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Servidores de Consultoría</span>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <button class="flex-fill btn btn-sm btn-info d-flex align-items-center justify-content-center py-2 px-3 rounded-lg hover:scale-105 transition-transform"
+                                    <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
                                             onclick="showExcelPreview('{{ route('reporte.consultoria') }}', '📋 Reporte de Consultoría - Excel')"
-                                            style="background: rgba(23, 162, 184, 0.9); border: 1px solid rgba(23, 162, 184, 0.3); box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);">
-                                        <i class="bi bi-file-earmark-excel me-1"></i>
-                                        <span style="font-size: 0.75rem; font-weight: 600;">Excel</span>
+                                            style="font-size: 0.75rem; background: linear-gradient(135deg, #17a2b8, #6610f2); color: #fff; box-shadow: 0 2px 8px rgba(23,162,184,0.3);">
+                                        <i class="bi bi-file-earmark-excel"></i> Excel
                                     </button>
-                                    <button class="flex-fill btn btn-sm btn-danger d-flex align-items-center justify-content-center py-2 px-3 rounded-lg hover:scale-105 transition-transform"
+                                    <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
                                             onclick="showPdfPreview('{{ route('reporte.consultoria.pdf') }}', '📋 Reporte de Consultoría - Servidores Públicos')"
-                                            style="background: rgba(220, 53, 69, 0.9); border: 1px solid rgba(220, 53, 69, 0.3); box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);">
-                                        <i class="bi bi-file-earmark-pdf me-1"></i>
-                                        <span style="font-size: 0.75rem; font-weight: 600;">PDF</span>
+                                            style="font-size: 0.75rem; background: linear-gradient(135deg, #dc3545, #e4606d); color: #fff; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">
+                                        <i class="bi bi-file-earmark-pdf"></i> PDF
                                     </button>
                                 </div>
                             </div>
-                        </li>
 
-                        <!-- Acefalías -->
-                        <li>
-                            <div class="report-card bg-white bg-opacity-10 rounded-lg p-3 border border-white border-opacity-20 hover:bg-opacity-15 transition-all duration-300">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <h6 class="text-white mb-0 d-flex align-items-center" style="font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;">
-                                        <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
-                                        PLAZAS VACANTES (ACEFALÍAS)
-                                    </h6>
+                            <!-- Acefalías -->
+                            <div class="rounded-3 p-3" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.06);">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 1rem;"></i>
+                                    <span style="color: rgba(255,255,255,0.85); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Plazas Vacantes (Acefalías)</span>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <button class="flex-fill btn btn-sm btn-warning d-flex align-items-center justify-content-center py-2 px-3 rounded-lg hover:scale-105 transition-transform"
+                                    <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
                                             onclick="showExcelPreview('{{ route('reporte.acefalias') }}', '⚠️ Reporte de Acefalías - Excel')"
-                                            style="background: rgba(255, 193, 7, 0.9); border: 1px solid rgba(255, 193, 7, 0.3); box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);">
-                                        <i class="bi bi-file-earmark-excel me-1"></i>
-                                        <span style="font-size: 0.75rem; font-weight: 600;">Excel</span>
+                                            style="font-size: 0.75rem; background: linear-gradient(135deg, #ffc107, #fd7e14); color: #212529; box-shadow: 0 2px 8px rgba(255,193,7,0.3);">
+                                        <i class="bi bi-file-earmark-excel"></i> Excel
                                     </button>
-                                    <button class="flex-fill btn btn-sm btn-danger d-flex align-items-center justify-content-center py-2 px-3 rounded-lg hover:scale-105 transition-transform"
+                                    <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
                                             onclick="showPdfPreview('{{ route('reporte.acefalias.pdf') }}', '⚠️ Reporte de Acefalías - Plazas Vacantes')"
-                                            style="background: rgba(220, 53, 69, 0.9); border: 1px solid rgba(220, 53, 69, 0.3); box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);">
-                                        <i class="bi bi-file-earmark-pdf me-1"></i>
-                                        <span style="font-size: 0.75rem; font-weight: 600;">PDF</span>
+                                            style="font-size: 0.75rem; background: linear-gradient(135deg, #dc3545, #e4606d); color: #fff; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">
+                                        <i class="bi bi-file-earmark-pdf"></i> PDF
                                     </button>
                                 </div>
                             </div>
