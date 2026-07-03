@@ -110,11 +110,11 @@
                                             style="font-size: 0.75rem; background: linear-gradient(135deg, #28a745, #20c997); color: #fff; box-shadow: 0 2px 8px rgba(40,167,69,0.3);">
                                         <i class="bi bi-file-earmark-excel"></i> Excel
                                     </button>
-                                    <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
-                                            onclick="showPdfPreview('{{ route('reporte.items.pdf') }}', '📊 Reporte de Items - Servidores Públicos')"
-                                            style="font-size: 0.75rem; background: linear-gradient(135deg, #dc3545, #e4606d); color: #fff; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">
-                                        <i class="bi bi-file-earmark-pdf"></i> PDF
-                                    </button>
+                        <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
+                                                onclick="showPdfPreview('{{ route('reporte.items') }}', '{{ route('reporte.items.pdf') }}', '📊 Reporte de Items - Servidores Públicos')"
+                                                style="font-size: 0.75rem; background: linear-gradient(135deg, #dc3545, #e4606d); color: #fff; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">
+                                                <i class="bi bi-file-earmark-pdf"></i> PDF
+                                        </button>
                                 </div>
                             </div>
 
@@ -131,7 +131,7 @@
                                         <i class="bi bi-file-earmark-excel"></i> Excel
                                     </button>
                                     <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
-                                            onclick="showPdfPreview('{{ route('reporte.consultoria.pdf') }}', '📋 Reporte de Consultoría - Servidores Públicos')"
+                                            onclick="showPdfPreview('{{ route('reporte.consultoria') }}', '{{ route('reporte.consultoria.pdf') }}', '📋 Reporte de Consultoría - Servidores Públicos')"
                                             style="font-size: 0.75rem; background: linear-gradient(135deg, #dc3545, #e4606d); color: #fff; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">
                                         <i class="bi bi-file-earmark-pdf"></i> PDF
                                     </button>
@@ -151,7 +151,7 @@
                                         <i class="bi bi-file-earmark-excel"></i> Excel
                                     </button>
                                     <button class="flex-fill btn btn-sm d-flex align-items-center justify-content-center gap-1 py-2 px-3 rounded-3 border-0 fw-semibold dropdown-report-btn"
-                                            onclick="showPdfPreview('{{ route('reporte.acefalias.pdf') }}', '⚠️ Reporte de Acefalías - Plazas Vacantes')"
+                                            onclick="showPdfPreview('{{ route('reporte.acefalias') }}', '{{ route('reporte.acefalias.pdf') }}', '⚠️ Reporte de Acefalías - Plazas Vacantes')"
                                             style="font-size: 0.75rem; background: linear-gradient(135deg, #dc3545, #e4606d); color: #fff; box-shadow: 0 2px 8px rgba(220,53,69,0.3);">
                                         <i class="bi bi-file-earmark-pdf"></i> PDF
                                     </button>
@@ -219,7 +219,7 @@
                 <div class="modal-body p-0" style="height: auto; max-height: none; overflow: visible;">
                     <!-- Contenido del PDF se cargará aquí -->
                     <iframe id="pdfPreviewFrame" 
-                            style="width: 100%; height: auto; min-height: 600px; border: none;"
+                            style="width: 100%; height: 80vh; border: none;"
                             src=""></iframe>
                 </div>
                 <div class="modal-footer bg-light">
@@ -291,13 +291,15 @@
 
     <script>
         let currentPdfUrl = '';
+        let currentPdfDownloadUrl = '';
         let currentExcelUrl = '';
         
         // Función para mostrar vista previa de PDF
-        function showPdfPreview(url, title) {
+        function showPdfPreview(url, pdfUrl, title) {
             document.getElementById('pdfTitleText').textContent = title;
-            document.getElementById('pdfPreviewFrame').src = url;
+            document.getElementById('pdfPreviewFrame').src = pdfUrl;
             currentPdfUrl = url;
+            currentPdfDownloadUrl = pdfUrl;
             
             const modal = new bootstrap.Modal(document.getElementById('modalPdfPreview'));
             modal.show();
@@ -313,62 +315,44 @@
             modal.show();
         }
 
-        // Función para descargar el PDF actual usando jsPDF
+        // Función para descargar el PDF real
         function downloadCurrentPdf() {
-            if (currentPdfUrl) {
-                // Mostrar feedback
+            if (currentPdfDownloadUrl) {
                 const btn = document.getElementById('pdfDownloadBtn');
                 const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i>Generando PDF...';
+                btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i>Descargando...';
                 btn.disabled = true;
-                
-                // Obtener el contenido del iframe
-                const iframe = document.getElementById('pdfPreviewFrame');
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                
-                // Usar html2canvas para capturar el contenido
-                html2canvas(iframeDoc.body, {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff'
-                }).then(canvas => {
-                    // Crear PDF con jsPDF
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    
-                    // Calcular dimensiones
-                    const imgData = canvas.toDataURL('image/png');
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                    
-                    // Agregar imagen al PDF
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                    
-                    // Generar nombre de archivo
-                    const fileName = currentPdfUrl.includes('items') ? 'reporte_items' : 
-                                   currentPdfUrl.includes('consultoria') ? 'reporte_consultoria' : 
-                                   'reporte_acefalias';
-                    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-                    
-                    // Descargar PDF
-                    pdf.save(`${fileName}_${timestamp}.pdf`);
-                    
-                    // Mostrar feedback de completado
-                    btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>¡PDF Descargado!';
-                    setTimeout(() => {
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    }, 2000);
-                    
-                }).catch(error => {
-                    console.error('Error generando PDF:', error);
-                    btn.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i>Error';
-                    setTimeout(() => {
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    }, 2000);
-                });
+
+                fetch(currentPdfDownloadUrl)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        const fileName = currentPdfDownloadUrl.includes('items') ? 'reporte_items' : 
+                                       currentPdfDownloadUrl.includes('consultoria') ? 'reporte_consultoria' : 
+                                       'reporte_acefalias';
+                        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                        a.download = `${fileName}_${timestamp}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+
+                        btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>¡PDF Descargado!';
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        console.error('Error descargando PDF:', error);
+                        btn.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i>Error';
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        }, 2000);
+                    });
             }
         }
 
