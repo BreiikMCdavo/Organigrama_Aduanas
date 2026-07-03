@@ -113,16 +113,21 @@
                 </div>
                 @endif
 
-                {{-- Botón volver --}}
+                {{-- Botón volver al organigrama --}}
                 <a href="{{ route('index') }}" class="btn-volver">Volver al Organigrama</a>
 
             </div>
 
             {{-- Acciones debajo de la tarjeta --}}
-            <div class="d-flex gap-2 mt-3 justify-content-center">
-                <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-warning btn-sm">Editar</a>
+            <div class="d-flex gap-2 mt-3 justify-content-center flex-wrap">
+                <a href="{{ route('servidores.index') }}" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+                <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-warning btn-sm">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                    Eliminar
+                    <i class="bi bi-trash"></i> Eliminar
                 </button>
             </div>
         </div>

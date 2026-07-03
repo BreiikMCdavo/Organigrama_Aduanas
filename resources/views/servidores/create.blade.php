@@ -106,13 +106,62 @@ $subUnidades = [
                 </div>
             @endif
 
-            {{-- SECCIÓN DE DUPLICADOS - VERSIÓN SIMPLE --}}
+            {{-- DUPLICADOS: notificación y acciones --}}
+            @if(session('duplicados') && session('duplicados')->count() > 0)
+                <div class="alert alert-warning elegant-alert">
+                    <strong><i class="bi bi-exclamation-triangle"></i> Se encontraron registros duplicados</strong>
+                    <p class="mb-2 mt-1" style="font-size:0.85rem;">Los siguientes registros ya existen con el mismo N° de Ítem o nombre. Elige qué acción deseas realizar:</p>
+                    <table class="table table-sm table-bordered mb-2" style="font-size:0.8rem;background:#fff;">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cargo</th>
+                                <th>Unidad</th>
+                                <th>N° Ítem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(session('duplicados') as $dup)
+                                <tr>
+                                    <td>{{ $dup->nombre_completo ?? ($dup->nombre.' '.$dup->apellido_paterno) }}</td>
+                                    <td>{{ $dup->cargo_descripcion ?? $dup->cargo ?? $dup->cargo_consultoria ?? '(sin cargo)' }}</td>
+                                    <td>{{ $dup->unidad ?? '' }}</td>
+                                    <td>{{ $dup->numero_item ?? '—' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="button" class="btn btn-sm btn-outline-success" onclick="setAccionDuplicado('nuevo')">
+                            <i class="bi bi-plus-circle"></i> Nuevo — registrar de todas formas
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-warning" onclick="setAccionDuplicado('adicionar')">
+                            <i class="bi bi-copy"></i> Adicionar — agregar otro registro
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="setAccionDuplicado('reemplazar')">
+                            <i class="bi bi-arrow-repeat"></i> Reemplazar — marcar existente como acefalía
+                        </button>
+                    </div>
+                    <div id="reemplazar-select-wrapper" class="mt-2" style="display:none;">
+                        <label class="form-label-custom">Selecciona el registro a reemplazar (quedará vacante):</label>
+                        <select name="cargo_a_reemplazar" id="cargo_a_reemplazar" class="form-select form-select-sm">
+                            <option value="">— Seleccionar —</option>
+                            @foreach(session('duplicados') as $dup)
+                                <option value="{{ $dup->id }}">
+                                    {{ $dup->nombre_completo ?? ($dup->nombre.' '.$dup->apellido_paterno) }} — {{ $dup->cargo_descripcion ?? $dup->cargo ?? $dup->cargo_consultoria ?? '(sin cargo)' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            @endif
             {{-- ===== ÍTEM ===== --}}
             <div id="form-item" style="display:none;">
                 <form action="{{ route('servidores.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="tipo" value="item">
-
+                    <input type="hidden" name="accion_duplicado" id="accion_duplicado_item" value="">
+                    <input type="hidden" name="cargo_a_reemplazar" id="cargo_a_reemplazar_item" value="">
 
                     <div class="form-section">
                         <div class="section-title"><i class="bi bi-briefcase"></i> Datos de Ítem</div>
@@ -328,7 +377,8 @@ $subUnidades = [
                 <form action="{{ route('servidores.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="tipo" value="consultoria">
-
+                    <input type="hidden" name="accion_duplicado" id="accion_duplicado_cons" value="">
+                    <input type="hidden" name="cargo_a_reemplazar" id="cargo_a_reemplazar_cons" value="">
                     <div class="form-section">
                         <div class="section-title"><i class="bi bi-briefcase"></i> Datos de Consultoría</div>
                         <div class="row g-3">
@@ -569,10 +619,10 @@ function previewImg(event, previewId) {
     document.getElementById('selectorTipo').value = 'consultoria';
 @endif
 
-// Si hay duplicados, mostrar el form de ítem automáticamente
+// Si hay duplicados, mostrar el formulario correspondiente
 @if(session('duplicados'))
-    mostrarFormulario('item');
-    document.getElementById('selectorTipo').value = 'item';
+    mostrarFormulario('{{ old('tipo', 'item') }}');
+    document.getElementById('selectorTipo').value = '{{ old('tipo', 'item') }}';
 @endif
 
 const subUnidadesData = @json($subUnidades);
@@ -596,5 +646,24 @@ function cargarSubUnidades() {
 function cargarSubUnidadesCons() {
     llenarSubUnidades(document.getElementById("unidad_cons").value, document.getElementById("sub_unidad_cons"));
 }
+
+function setAccionDuplicado(accion) {
+    const tipo = document.getElementById('selectorTipo').value;
+    const sufijo = tipo === 'consultoria' ? 'cons' : 'item';
+    document.getElementById('accion_duplicado_' + sufijo).value = accion;
+    document.getElementById('reemplazar-select-wrapper').style.display = accion === 'reemplazar' ? 'block' : 'none';
+    if (accion !== 'reemplazar') {
+        document.getElementById('cargo_a_reemplazar_' + sufijo).value = '';
+    }
+}
+
+// Cuando cambia el select de reemplazo, copiar valor al hidden dentro del form activo
+document.addEventListener('change', function(e) {
+    if (e.target.id === 'cargo_a_reemplazar') {
+        const tipo = document.getElementById('selectorTipo').value;
+        const sufijo = tipo === 'consultoria' ? 'cons' : 'item';
+        document.getElementById('cargo_a_reemplazar_' + sufijo).value = e.target.value;
+    }
+});
 </script>
 @endsection
