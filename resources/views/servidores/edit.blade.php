@@ -72,23 +72,25 @@ $subUnidades = [
 
                         @if($servidor->tipo === 'item')
 
-                            {{-- N° Ítem, CITE, Código, Escala --}}
-                            <div class="row g-3 mb-3">
-                                <div class="col-3">
-                                    <label class="form-label-custom"><i class="bi bi-hash"></i> N° Ítem</label>
-                                    <input type="text" name="numero_item" class="form-control" value="{{ old('numero_item', $servidor->numero_item) }}">
-                                </div>
-                                <div class="col-3">
-                                    <label class="form-label-custom"><i class="bi bi-file-text"></i> CITE Mem.</label>
-                                    <input type="text" name="cite_memorandum" class="form-control" value="{{ old('cite_memorandum', $servidor->cite_memorandum) }}">
-                                </div>
-                                <div class="col-3">
-                                    <label class="form-label-custom"><i class="bi bi-person-badge"></i> Cód. Funcionario</label>
-                                    <input type="text" name="cod_funcionario" class="form-control" value="{{ old('cod_funcionario', $servidor->cod_funcionario) }}">
-                                </div>
-                                <div class="col-3">
-                                    <label class="form-label-custom"><i class="bi bi-currency-dollar"></i> Escala Salarial</label>
-                                    <input type="text" name="escala_salarial" class="form-control" value="{{ old('escala_salarial', $servidor->escala_salarial) }}">
+                            <div class="form-section">
+                                <div class="section-title"><i class="bi bi-briefcase"></i> Datos de Ítem</div>
+                                <div class="row g-3">
+                                    <div class="col-3">
+                                        <label class="form-label-custom"><i class="bi bi-hash"></i> N° Ítem</label>
+                                        <input type="text" name="numero_item" class="form-control" value="{{ old('numero_item', $servidor->numero_item) }}">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label-custom"><i class="bi bi-file-text"></i> CITE Mem.</label>
+                                        <input type="text" name="cite_memorandum" class="form-control" value="{{ old('cite_memorandum', $servidor->cite_memorandum) }}">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label-custom"><i class="bi bi-person-badge"></i> Cód. Funcionario</label>
+                                        <input type="text" name="cod_funcionario" class="form-control" value="{{ old('cod_funcionario', $servidor->cod_funcionario) }}">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label-custom"><i class="bi bi-currency-dollar"></i> Escala Salarial</label>
+                                        <input type="text" name="escala_salarial" class="form-control" value="{{ old('escala_salarial', $servidor->escala_salarial) }}">
+                                    </div>
                                 </div>
                             </div>
 
@@ -111,6 +113,40 @@ $subUnidades = [
 
                             <div class="mb-3">
                                 <input type="text" name="cargo" class="form-control" placeholder="Ingresar nombre del cargo..." value="{{ old('cargo', $servidor->cargo) }}">
+                            </div>
+
+                            <hr class="section-divider">
+
+                            {{-- Designación --}}
+                            <div class="form-section">
+                                <div class="section-title"><i class="bi bi-pen"></i> Designación</div>
+                                <div class="row g-3 align-items-start">
+                                    <div class="col-5 d-flex flex-column gap-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Designación" id="chk_des_item_edit"
+                                                {{ (is_array(old('designacion_tipos')) && in_array('Designación', old('designacion_tipos'))) || ($servidor->designacion && in_array('Designación', explode(', ', $servidor->designacion))) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="chk_des_item_edit" style="font-size: 0.9rem;">Designación</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Interinato" id="chk_int_item_edit"
+                                                {{ (is_array(old('designacion_tipos')) && in_array('Interinato', old('designacion_tipos'))) || ($servidor->designacion && in_array('Interinato', explode(', ', $servidor->designacion))) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="chk_int_item_edit" style="font-size: 0.9rem;">Interinato</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Comisión" id="chk_com_item_edit"
+                                                {{ (is_array(old('designacion_tipos')) && in_array('Comisión', old('designacion_tipos'))) || ($servidor->designacion && in_array('Comisión', explode(', ', $servidor->designacion))) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="chk_com_item_edit" style="font-size: 0.9rem;">Comisión</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label-custom" style="font-size: 0.75rem;">Fecha inicio</label>
+                                        <input type="date" name="designacion_inicio" class="form-control" value="{{ old('designacion_inicio', $servidor->designacion_inicio) }}">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label-custom" style="font-size: 0.75rem;">Fecha fin</label>
+                                        <input type="date" name="designacion_fin" class="form-control" value="{{ old('designacion_fin', $servidor->designacion_fin) }}">
+                                    </div>
+                                </div>
                             </div>
 
                             <hr class="section-divider">
@@ -170,7 +206,7 @@ $subUnidades = [
                             {{-- Consultoría --}}
                             <div class="form-section">
                                 <div class="section-title"><i class="bi bi-briefcase"></i> Datos de Consultoría</div>
-                                <div class="row g-3 mb-3">
+                                <div class="row g-3">
                                     <div class="col-6">
                                         <label class="form-label-custom"><i class="bi bi-file-text"></i> Contrato</label>
                                         <input type="text" name="contrato_numero" class="form-control" value="{{ old('contrato_numero', $servidor->contrato_numero) }}">
@@ -184,11 +220,13 @@ $subUnidades = [
                                         <input type="text" name="escala_salarial" class="form-control" value="{{ old('escala_salarial', $servidor->escala_salarial) }}">
                                     </div>
                                 </div>
+                            </div>
 
-                                <hr class="section-divider">
+                            <hr class="section-divider">
 
-                                <div class="section-title" style="font-size:0.8rem;"><i class="bi bi-person-fill"></i> Nombres del Servidor</div>
-                                <div class="row g-3 mb-3">
+                            <div class="form-section">
+                                <div class="section-title"><i class="bi bi-person-fill"></i> Nombres del Servidor</div>
+                                <div class="row g-3">
                                     <div class="col-4">
                                         <input type="text" name="nombre" class="form-control" placeholder="Nombres" value="{{ old('nombre', $servidor->nombre) }}">
                                     </div>
@@ -199,14 +237,50 @@ $subUnidades = [
                                         <input type="text" name="apellido_materno" class="form-control" placeholder="Apellido Materno" value="{{ old('apellido_materno', $servidor->apellido_materno) }}">
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="mb-3">
-                                    <input type="text" name="cargo_consultoria" class="form-control" placeholder="Ingresar descripción del cargo..." value="{{ old('cargo_consultoria', $servidor->cargo_consultoria) }}">
+                            <div class="mb-3">
+                                <input type="text" name="cargo_consultoria" class="form-control" placeholder="Ingresar nombre del cargo..." value="{{ old('cargo_consultoria', $servidor->cargo_consultoria) }}">
+                            </div>
+
+                            <hr class="section-divider">
+
+                            {{-- Designación --}}
+                            <div class="form-section">
+                                <div class="section-title"><i class="bi bi-pen"></i> Designación</div>
+                                <div class="row g-3 align-items-start">
+                                    <div class="col-5 d-flex flex-column gap-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Designación" id="chk_des_cons_edit"
+                                                {{ (is_array(old('designacion_tipos')) && in_array('Designación', old('designacion_tipos'))) || ($servidor->designacion && in_array('Designación', explode(', ', $servidor->designacion))) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="chk_des_cons_edit" style="font-size: 0.9rem;">Designación</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Interinato" id="chk_int_cons_edit"
+                                                {{ (is_array(old('designacion_tipos')) && in_array('Interinato', old('designacion_tipos'))) || ($servidor->designacion && in_array('Interinato', explode(', ', $servidor->designacion))) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="chk_int_cons_edit" style="font-size: 0.9rem;">Interinato</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input custom-checkbox" type="checkbox" name="designacion_tipos[]" value="Comisión" id="chk_com_cons_edit"
+                                                {{ (is_array(old('designacion_tipos')) && in_array('Comisión', old('designacion_tipos'))) || ($servidor->designacion && in_array('Comisión', explode(', ', $servidor->designacion))) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="chk_com_cons_edit" style="font-size: 0.9rem;">Comisión</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label-custom" style="font-size: 0.75rem;">Fecha inicio</label>
+                                        <input type="date" name="designacion_inicio" class="form-control" value="{{ old('designacion_inicio', $servidor->designacion_inicio) }}">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label-custom" style="font-size: 0.75rem;">Fecha fin</label>
+                                        <input type="date" name="designacion_fin" class="form-control" value="{{ old('designacion_fin', $servidor->designacion_fin) }}">
+                                    </div>
                                 </div>
+                            </div>
 
-                                <hr class="section-divider">
+                            <hr class="section-divider">
 
-                                <div class="section-title" style="font-size:0.8rem;"><i class="bi bi-building"></i> Ubicación</div>
+                            <div class="form-section">
+                                <div class="section-title"><i class="bi bi-building"></i> Ubicación</div>
                                 <div class="row g-3 mb-3">
                                     <div class="col-6">
                                         <label class="form-label-custom">Unidad</label>
@@ -234,8 +308,9 @@ $subUnidades = [
                                         <label class="form-label-custom">Sub-Unidad</label>
                                         <select name="sub_unidad" id="sub_unidad_cons" class="form-select">
                                             <option value="">Seleccionar Sub-Unidad</option>
-                                            @if(isset($subUnidades[old('unidad', $servidor->unidad)]))
-                                                @foreach($subUnidades[old('unidad', $servidor->unidad)] as $sub)
+                                            @php $unidadSeleccionada = old('unidad', $servidor->unidad); @endphp
+                                            @if(isset($subUnidades[$unidadSeleccionada]))
+                                                @foreach($subUnidades[$unidadSeleccionada] as $sub)
                                                     <option value="{{ $sub }}" {{ old('sub_unidad', $servidor->sub_unidad) == $sub ? 'selected' : '' }}>{{ $sub }}</option>
                                                 @endforeach
                                             @endif

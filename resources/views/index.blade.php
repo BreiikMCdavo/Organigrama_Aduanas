@@ -216,6 +216,28 @@
     .container > div {
       animation: fadeInUp 0.5s ease-out;
     }
+
+    #organigrama-container {
+        position: relative;
+        border-radius: 20px;
+        padding: 30px 15px;
+        overflow: hidden;
+    }
+
+    #organigrama-container::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url('{{ asset('img/logo_1.png') }}') no-repeat center center;
+        background-size: contain;
+        opacity: 0.15;
+        pointer-events: none;
+    }
+
+    #organigrama-container > * {
+        position: relative;
+        z-index: 1;
+    }
 </style>
 @endpush
 
@@ -239,7 +261,7 @@
       <button class="boton-menu" onclick="toggleMenu()">☰</button>
     </div>
 
-    <div class="container text-center mt-4">
+    <div class="container text-center mt-4" id="organigrama-container">
 
         <!-- GERENCIA -->
         <div class="box box-gerencia mb-4" onclick="mostrarInfo('GERENCIA REGIONAL LA PAZ - GRLPZ')">
