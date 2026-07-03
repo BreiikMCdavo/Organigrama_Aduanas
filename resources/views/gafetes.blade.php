@@ -15,84 +15,94 @@
     }
 
     .menu-burbuja .boton-menu {
-      width: 60px;
-      height: 60px;
-      background: #8B0000;
+      width: 65px;
+      height: 65px;
+      background: linear-gradient(135deg, #0037ff 0%, #0564b6 100%);
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, .3);
-      transition: .3s;
-      border: none;
+      box-shadow: 0 6px 25px rgba(0, 55, 255, 0.4);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       color: white;
-      font-size: 24px;
+      font-size: 26px;
     }
 
     .menu-burbuja .boton-menu:hover {
-      transform: scale(1.1);
-      background: #a00000;
+      transform: scale(1.15) rotate(90deg);
+      box-shadow: 0 10px 35px rgba(0, 55, 255, 0.6);
+      border-color: rgba(255, 255, 255, 0.4);
     }
 
     .menu-burbuja .opciones {
       position: absolute;
-      bottom: 70px;
+      bottom: 80px;
       right: 0;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 18px;
       opacity: 0;
       visibility: hidden;
-      transition: .3s;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(15px);
     }
 
     .menu-burbuja .opciones.active {
       opacity: 1;
       visibility: visible;
+      transform: translateY(0);
     }
 
     .menu-burbuja .opcion {
-      width: 50px;
-      height: 50px;
-      background: white;
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
-      transition: .3s;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
-      color: #8B0000;
+      color: #0037ff;
       font-weight: bold;
-      font-size: 14px;
-      border: 2px solid #8B0000;
+      font-size: 16px;
+      border: 2px solid rgba(0, 55, 255, 0.2);
     }
 
     .menu-burbuja .opcion:hover {
-      transform: scale(1.1);
-      background: #8B0000;
+      transform: scale(1.2);
+      background: linear-gradient(135deg, #0037ff 0%, #0564b6 100%);
       color: white;
+      border-color: transparent;
+      box-shadow: 0 8px 30px rgba(0, 55, 255, 0.5);
     }
 
     .menu-burbuja .opcion span {
       position: absolute;
-      right: 60px;
-      background: #8B0000;
+      right: 70px;
+      background: linear-gradient(135deg, #0037ff 0%, #0564b6 100%);
       color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 600;
       white-space: nowrap;
       opacity: 0;
       visibility: hidden;
-      transition: .3s;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(10px);
+      box-shadow: 0 5px 20px rgba(0, 55, 255, 0.3);
+      letter-spacing: 0.5px;
     }
 
     .menu-burbuja .opcion:hover span {
       opacity: 1;
       visibility: visible;
+      transform: translateX(0);
     }
   </style>
 </head>
@@ -161,6 +171,9 @@
   <div class="btn-row" style="justify-content:flex-start; margin-top:0; margin-bottom:16px;">
     <button class="btn-excel" onclick="document.getElementById('excel-file').click()">
       📂 Seleccionar archivo Excel
+    </button>
+    <button class="btn-template" onclick="descargarPlantilla()">
+      📄 Descargar plantilla
     </button>
     <span id="excel-filename" class="excel-filename">Ningún archivo seleccionado</span>
   </div>
@@ -305,6 +318,15 @@
   function toggleMenu() {
     const opciones = document.querySelector('.menu-burbuja .opciones');
     opciones.classList.toggle('active');
+  }
+
+  function descargarPlantilla() {
+    const datos = [['NOMBRE', 'CARGO', 'INTERNO', 'UNIDAD']];
+    const libro = XLSX.utils.book_new();
+    const hoja = XLSX.utils.aoa_to_sheet(datos);
+    hoja['!cols'] = [{ wch: 30 }, { wch: 30 }, { wch: 12 }, { wch: 30 }];
+    XLSX.utils.book_append_sheet(libro, hoja, 'Plantilla');
+    XLSX.writeFile(libro, 'plantilla_gafetes.xlsx');
   }
 </script>
 

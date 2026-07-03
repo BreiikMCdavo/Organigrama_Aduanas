@@ -26,7 +26,7 @@
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-dark" style="background: linear-gradient(90deg, #0a1628 0%, #1a3a6b 100%);">
+    <nav class="navbar navbar-dark" style="background: linear-gradient(90deg, #0a1628 0%, #1a3a6b 100%); position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);">
         <div class="container-fluid px-4" style="min-height:64px;">
 
             <div class="d-flex align-items-center gap-3">

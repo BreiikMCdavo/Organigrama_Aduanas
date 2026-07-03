@@ -2,6 +2,13 @@
 
 @push('styles')
 <style>
+    body {
+        background: url('{{ asset('storage/fondo/fondo.jpg') }}') no-repeat center top fixed;
+        background-size: 100% 100%;
+        min-height: 100vh;
+        background-attachment: fixed;
+    }
+
     .menu-burbuja {
       position: fixed;
       bottom: 30px;
@@ -10,84 +17,226 @@
     }
 
     .menu-burbuja .boton-menu {
-      width: 60px;
-      height: 60px;
-      background: #8B0000;
+      width: 65px;
+      height: 65px;
+      background: linear-gradient(135deg, #0037ff 0%, #0564b6 100%);
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, .3);
-      transition: .3s;
-      border: none;
+      box-shadow: 0 6px 25px rgba(0, 55, 255, 0.4);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       color: white;
-      font-size: 24px;
+      font-size: 26px;
     }
 
     .menu-burbuja .boton-menu:hover {
-      transform: scale(1.1);
-      background: #a00000;
+      transform: scale(1.15) rotate(90deg);
+      box-shadow: 0 10px 35px rgba(0, 55, 255, 0.6);
+      border-color: rgba(255, 255, 255, 0.4);
     }
 
     .menu-burbuja .opciones {
       position: absolute;
-      bottom: 70px;
+      bottom: 80px;
       right: 0;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 18px;
       opacity: 0;
       visibility: hidden;
-      transition: .3s;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(15px);
     }
 
     .menu-burbuja .opciones.active {
       opacity: 1;
       visibility: visible;
+      transform: translateY(0);
     }
 
     .menu-burbuja .opcion {
-      width: 50px;
-      height: 50px;
-      background: white;
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
-      transition: .3s;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
-      color: #8B0000;
+      color: #0037ff;
       font-weight: bold;
-      font-size: 14px;
-      border: 2px solid #8B0000;
+      font-size: 16px;
+      border: 2px solid rgba(0, 55, 255, 0.2);
     }
 
     .menu-burbuja .opcion:hover {
-      transform: scale(1.1);
-      background: #8B0000;
+      transform: scale(1.2);
+      background: linear-gradient(135deg, #0037ff 0%, #0564b6 100%);
       color: white;
+      border-color: transparent;
+      box-shadow: 0 8px 30px rgba(0, 55, 255, 0.5);
     }
 
     .menu-burbuja .opcion span {
       position: absolute;
-      right: 60px;
-      background: #8B0000;
+      right: 70px;
+      background: linear-gradient(135deg, #0037ff 0%, #0564b6 100%);
       color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 600;
       white-space: nowrap;
       opacity: 0;
       visibility: hidden;
-      transition: .3s;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(10px);
+      box-shadow: 0 5px 20px rgba(0, 55, 255, 0.3);
+      letter-spacing: 0.5px;
     }
 
     .menu-burbuja .opcion:hover span {
       opacity: 1;
       visibility: visible;
+      transform: translateX(0);
+    }
+
+    /* Estilos mejorados del organigrama */
+    .box {
+      background: linear-gradient(135deg, #0f2bb5 0%, #3182ce 100%);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 3px 12px rgba(15, 43, 181, 0.2);
+      letter-spacing: 0.3px;
+    }
+
+    .box-gerencia {
+      background: linear-gradient(135deg, #010466 0%, #0564b6 100%);
+    }
+
+    .box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(15, 43, 181, 0.35);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .box.right {
+      background: linear-gradient(135deg, #0037ff 0%, #a00000 100%);
+    }
+
+    .box.left {
+      background: linear-gradient(135deg, #0037ff 0%, #a00000 100%);
+    }
+
+    .sub-box {
+      background: rgba(255, 255, 255, 0.95);
+      color: #0f2bb5;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid #0f2bb5;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .sub-box:hover {
+      transform: translateX(5px);
+      background: white;
+      border-left-color: #8B0000;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    }
+
+    .zigzag-container {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .zigzag-container .box {
+      min-width: 140px;
+    }
+
+    .nivel-hijos .box {
+      background: linear-gradient(135deg, #0f2bb5 0%, #3182ce 100%);
+      font-size: 13px;
+      padding: 14px 20px;
+    }
+
+    .nivel-hijos .box:hover {
+      background: linear-gradient(135deg, #3182ce 0%, #4299e1 100%);
+    }
+
+    .nivel-tercer .box {
+      background: linear-gradient(135deg, #0f2bb5 0%, #3182ce 100%);
+      font-size: 12px;
+      padding: 12px 16px;
+    }
+
+    .nivel-tercer .box:hover {
+      background: linear-gradient(135deg, #3182ce 0%, #4299e1 100%);
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #0f2bb5, transparent);
+      margin: 25px 0;
+      opacity: 0.4;
+    }
+
+    /* Animación de entrada */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container > div {
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    #organigrama-container {
+        position: relative;
+        border-radius: 20px;
+        padding: 30px 15px;
+        overflow: hidden;
+    }
+
+    #organigrama-container::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url('{{ asset('img/logo_1.png') }}') no-repeat center center;
+        background-size: contain;
+        opacity: 0.15;
+        pointer-events: none;
+    }
+
+    #organigrama-container > * {
+        position: relative;
+        z-index: 1;
     }
 </style>
 @endpush
@@ -112,10 +261,10 @@
       <button class="boton-menu" onclick="toggleMenu()">☰</button>
     </div>
 
-    <div class="container text-center mt-4">
+    <div class="container text-center mt-4" id="organigrama-container">
 
         <!-- GERENCIA -->
-        <div class="box mb-4" onclick="mostrarInfo('GERENCIA REGIONAL LA PAZ - GRLPZ')">
+        <div class="box box-gerencia mb-4" onclick="mostrarInfo('GERENCIA REGIONAL LA PAZ - GRLPZ')">
             GERENCIA REGIONAL LA PAZ - GRLPZ
         </div>
 
