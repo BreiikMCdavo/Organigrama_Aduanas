@@ -217,6 +217,8 @@ button:active { transform: translateY(0); }
 .btn-download { background: linear-gradient(135deg, #4caf50, var(--green));          color: #fff; box-shadow: 0 3px 12px rgba(27,94,32,.3); }
 .btn-excel    { background: linear-gradient(135deg, #16a34a, #15803d);               color: #fff; box-shadow: 0 3px 12px rgba(22,163,74,.35); flex-shrink: 0; }
 .btn-excel:hover { box-shadow: 0 6px 20px rgba(22,163,74,.4); }
+.btn-template { background: linear-gradient(135deg, #f59e0b, #d97706);               color: #fff; box-shadow: 0 3px 12px rgba(245,158,11,.35); flex-shrink: 0; }
+.btn-template:hover { box-shadow: 0 6px 20px rgba(245,158,11,.4); }
 
 /* ── Vista previa ── */
 #preview-area {

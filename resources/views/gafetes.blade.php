@@ -172,6 +172,9 @@
     <button class="btn-excel" onclick="document.getElementById('excel-file').click()">
       📂 Seleccionar archivo Excel
     </button>
+    <button class="btn-template" onclick="descargarPlantilla()">
+      📄 Descargar plantilla
+    </button>
     <span id="excel-filename" class="excel-filename">Ningún archivo seleccionado</span>
   </div>
 
@@ -315,6 +318,15 @@
   function toggleMenu() {
     const opciones = document.querySelector('.menu-burbuja .opciones');
     opciones.classList.toggle('active');
+  }
+
+  function descargarPlantilla() {
+    const datos = [['NOMBRE', 'CARGO', 'INTERNO', 'UNIDAD']];
+    const libro = XLSX.utils.book_new();
+    const hoja = XLSX.utils.aoa_to_sheet(datos);
+    hoja['!cols'] = [{ wch: 30 }, { wch: 30 }, { wch: 12 }, { wch: 30 }];
+    XLSX.utils.book_append_sheet(libro, hoja, 'Plantilla');
+    XLSX.writeFile(libro, 'plantilla_gafetes.xlsx');
   }
 </script>
 
