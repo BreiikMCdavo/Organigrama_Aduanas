@@ -293,53 +293,42 @@ class ServidorPublicoController extends Controller
             ->get();
 
         $headers = [
-            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-            'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
-            'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
-            'CASOS ESPECIALES', 'GRADO CE', 'FOTO'
+            'N°', 'UNIDAD', 'SUB-UNIDAD', 'N° ITEM', 'NOMBRE COMPLETO', 'CARGO',
+            'CITE MEMO', 'COD. FUNC.', 'ESC. SALARIAL', 'DESIGNACIÓN',
+            'F. DESIGN. INICIO', 'F. DESIGN. FIN'
         ];
 
-        $csvData = [];
-        $csvData[] = implode(',', $headers);
-
-        foreach ($servidores as $servidor) {
-            $row = [
-                $servidor->tipo ?? '',
-                $this->escapeCsv($servidor->nombre ?? ''),
-                $this->escapeCsv($servidor->apellido_paterno ?? ''),
-                $this->escapeCsv($servidor->apellido_materno ?? ''),
-                $this->escapeCsv($servidor->unidad ?? ''),
-                $this->escapeCsv($servidor->sub_unidad ?? ''),
-                $servidor->numero_item ?? '',
-                $this->escapeCsv($servidor->cite_memorandum ?? ''),
-                $this->escapeCsv($servidor->cargo ?? ''),
-                $servidor->fecha_inicio_cargo ?? '',
-                $servidor->fecha_fin_cargo ?? '',
-                $servidor->cod_funcionario ?? '',
-                $servidor->escala_salarial ?? '',
-                $this->escapeCsv($servidor->asignacion_familiar_desc ?? ''),
-                $servidor->asignacion_familiar_grado ?? '',
-                $this->escapeCsv($servidor->casos_especiales_desc ?? ''),
-                $servidor->casos_especiales_grado ?? '',
-                $this->escapeCsv($servidor->discapacidad_desc ?? ''),
-                $servidor->discapacidad_grado ?? '',
-                $this->escapeCsv($servidor->discapacidad_tipo ?? ''),
-                $servidor->discapacidad_carnet ?? '',
-                $servidor->discapacidad_vence ?? '',
-                $servidor->fotografia ?? ''
+        $data = [];
+        foreach ($servidores as $s) {
+            $nombreCompleto = trim(($s->nombre ?? '') . ' ' . ($s->apellido_paterno ?? '') . ' ' . ($s->apellido_materno ?? ''));
+            $data[] = [
+                $s->unidad ?? '',
+                $s->sub_unidad ?? '',
+                $s->numero_item ?? '',
+                $nombreCompleto ?: '—',
+                $s->cargo ?? '',
+                $s->cite_memorandum ?? '',
+                $s->cod_funcionario ?? '',
+                $s->escala_salarial ? $s->escala_salarial . ' Bs.' : '',
+                $s->designacion ?? '',
+                $s->designacion_inicio ? \Carbon\Carbon::parse($s->designacion_inicio)->format('d/m/Y') : '',
+                $s->designacion_fin ? \Carbon\Carbon::parse($s->designacion_fin)->format('d/m/Y') : '',
             ];
-            $csvData[] = implode(',', $row);
         }
 
         $filename = 'reporte_items_' . date('Y-m-d_H-i-s') . '.xls';
-        
-        // Generar contenido HTML que Excel puede abrir
-        $htmlContent = $this->generateExcelHtml($csvData, 'Reporte de Items - Servidores Públicos');
-        
+
+        $htmlContent = $this->generateExcelHtml(
+            'Reporte de Servidores Públicos con Items',
+            $headers,
+            $data,
+            'Total de servidores con items: ' . count($servidores)
+        );
+
         return response($htmlContent)
             ->header('Content-Type', 'text/html')
             ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
-}
+    }
 
 /**
  * Generar reporte de servidores con items en PDF
@@ -382,51 +371,36 @@ public function reporteItemsPdf()
             ->get();
 
         $headers = [
-            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-            'CONTRATO', 'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CARGO', 
-            'FECHA INICIO CARGO', 'FECHA FIN CARGO', 'DESIGNACION', 'FECHA INICIO DESIGNACION',
-            'FECHA FIN DESIGNACION', 'ASIGNACION FAMILIAR', 'GRADO AF',
-            'CASOS ESPECIALES', 'GRADO CE'
+            'N°', 'UNIDAD', 'SUB-UNIDAD', 'CONTRATO', 'NOMBRE COMPLETO', 'CARGO',
+            'COD. FUNC.', 'ESC. SALARIAL', 'DESIGNACIÓN', 'F. INICIO', 'F. FIN'
         ];
 
-        $csvData = [];
-        $csvData[] = implode(',', $headers);
-
-        foreach ($servidores as $servidor) {
-            $row = [
-                $servidor->tipo ?? '',
-                $this->escapeCsv($servidor->nombre ?? ''),
-                $this->escapeCsv($servidor->apellido_paterno ?? ''),
-                $this->escapeCsv($servidor->apellido_materno ?? ''),
-                $this->escapeCsv($servidor->unidad ?? ''),
-                $this->escapeCsv($servidor->sub_unidad ?? ''),
-                $servidor->contrato ?? '',
-                $servidor->cod_funcionario ?? '',
-                $servidor->escala_salarial ?? '',
-                $this->escapeCsv($servidor->cargo ?? ''),
-                $servidor->fecha_inicio_cargo ?? '',
-                $servidor->fecha_fin_cargo ?? '',
-                $this->escapeCsv($servidor->designacion ?? ''),
-                $servidor->fecha_inicio_designacion ?? '',
-                $servidor->fecha_fin_designacion ?? '',
-                $this->escapeCsv($servidor->asignacion_familiar_desc ?? ''),
-                $servidor->asignacion_familiar_grado ?? '',
-                $this->escapeCsv($servidor->casos_especiales_desc ?? ''),
-                $servidor->casos_especiales_grado ?? '',
-                $this->escapeCsv($servidor->discapacidad_desc ?? ''),
-                $servidor->discapacidad_grado ?? '',
-                $this->escapeCsv($servidor->discapacidad_tipo ?? ''),
-                $servidor->discapacidad_carnet ?? '',
-                $servidor->discapacidad_vence ?? ''
+        $data = [];
+        foreach ($servidores as $s) {
+            $nombreCompleto = trim(($s->nombre ?? '') . ' ' . ($s->apellido_paterno ?? '') . ' ' . ($s->apellido_materno ?? ''));
+            $data[] = [
+                $s->unidad ?? '',
+                $s->sub_unidad ?? '',
+                $s->contrato_numero ?? '',
+                $nombreCompleto ?: '—',
+                $s->cargo_consultoria ?? '',
+                $s->cod_funcionario ?? '',
+                $s->escala_salarial ? $s->escala_salarial . ' Bs.' : '',
+                $s->designacion ?? '',
+                $s->fecha_inicio_contrato ? \Carbon\Carbon::parse($s->fecha_inicio_contrato)->format('d/m/Y') : '',
+                $s->fecha_fin_contrato ? \Carbon\Carbon::parse($s->fecha_fin_contrato)->format('d/m/Y') : '',
             ];
-            $csvData[] = implode(',', $row);
         }
 
         $filename = 'reporte_consultoria_' . date('Y-m-d_H-i-s') . '.xls';
-        
-        // Generar contenido HTML que Excel puede abrir
-        $htmlContent = $this->generateExcelHtml($csvData, 'Reporte de Consultoría - Servidores Públicos');
-        
+
+        $htmlContent = $this->generateExcelHtml(
+            'Reporte de Servidores de Consultoría',
+            $headers,
+            $data,
+            'Total de servidores de consultoría: ' . count($servidores)
+        );
+
         return response($htmlContent)
             ->header('Content-Type', 'text/html')
             ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
@@ -470,43 +444,38 @@ public function reporteConsultoriaPdf()
             ->get();
 
         $headers = [
-            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-            'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
-            'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'CONTRATO', 'DESIGNACION', 
-            'FECHA INICIO DESIGNACION', 'FECHA FIN DESIGNACION'
+            'N°', 'TIPO', 'UNIDAD', 'SUB-UNIDAD', 'N° ITEM / CONTRATO', 'NOMBRE COMPLETO',
+            'CARGO', 'COD. FUNC.', 'ESC. SALARIAL', 'DESIGNACIÓN',
+            'F. DESIGN. INICIO', 'F. DESIGN. FIN'
         ];
 
-        $csvData = [];
-        $csvData[] = implode(',', $headers);
-
-        foreach ($servidores as $servidor) {
-            $row = [
-                $servidor->tipo ?? '',
-                $this->escapeCsv($servidor->nombre ?? ''),
-                $this->escapeCsv($servidor->apellido_paterno ?? ''),
-                $this->escapeCsv($servidor->apellido_materno ?? ''),
-                $this->escapeCsv($servidor->unidad ?? ''),
-                $this->escapeCsv($servidor->sub_unidad ?? ''),
-                $servidor->numero_item ?? '',
-                $this->escapeCsv($servidor->cite_memorandum ?? ''),
-                $this->escapeCsv($servidor->cargo ?? ''),
-                $servidor->fecha_inicio_cargo ?? '',
-                $servidor->fecha_fin_cargo ?? '',
-                $servidor->cod_funcionario ?? '',
-                $servidor->escala_salarial ?? '',
-                $this->escapeCsv($servidor->contrato_numero ?? ''),
-                $this->escapeCsv($servidor->designacion ?? ''),
-                $servidor->designacion_inicio ?? '',
-                $servidor->designacion_fin ?? ''
+        $data = [];
+        foreach ($servidores as $s) {
+            $nombreCompleto = trim(($s->nombre ?? '') . ' ' . ($s->apellido_paterno ?? '') . ' ' . ($s->apellido_materno ?? ''));
+            $data[] = [
+                $s->tipo === 'item' ? 'ÍTEM' : 'CONSULTORÍA',
+                $s->unidad ?? '',
+                $s->sub_unidad ?? '',
+                $s->tipo === 'item' ? ($s->numero_item ?? '') : ($s->contrato_numero ?? ''),
+                $nombreCompleto ?: '—',
+                $s->tipo === 'item' ? ($s->cargo ?? '') : ($s->cargo_consultoria ?? ''),
+                $s->cod_funcionario ?? '',
+                $s->escala_salarial ? $s->escala_salarial . ' Bs.' : '',
+                $s->designacion ?? '',
+                $s->designacion_inicio ? \Carbon\Carbon::parse($s->designacion_inicio)->format('d/m/Y') : '',
+                $s->designacion_fin ? \Carbon\Carbon::parse($s->designacion_fin)->format('d/m/Y') : '',
             ];
-            $csvData[] = implode(',', $row);
         }
 
         $filename = 'reporte_acefalias_' . date('Y-m-d_H-i-s') . '.xls';
-        
-        // Generar contenido HTML que Excel puede abrir
-        $htmlContent = $this->generateExcelHtml($csvData, 'Reporte de Acefalías - Plazas Vacantes');
-        
+
+        $htmlContent = $this->generateExcelHtml(
+            'Reporte de Plazas Vacantes (Acefalías)',
+            $headers,
+            $data,
+            'Total de plazas vacantes: ' . count($servidores)
+        );
+
         return response($htmlContent)
             ->header('Content-Type', 'text/html')
             ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
@@ -537,92 +506,82 @@ public function reporteAcefaliasPdf()
 }
 
     /**
-     * Generar contenido HTML que Excel puede abrir
+     * Generar contenido HTML compatible con Excel
      */
-    private function generateExcelHtml($csvData, $title)
+    private function generateExcelHtml($title, $headers, $data, $subtitle = null)
     {
+        $total = count($data);
+        $dateStr = date('d/m/Y H:i:s');
+        $safeTitle = htmlspecialchars($title);
+
         $html = '<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>' . htmlspecialchars($title) . '</title>
+    <title>' . $safeTitle . '</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #ffffff;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #ffffff; }
         .header {
-            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 50%, #2c5282 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            background: #0a1628; color: white; padding: 18px 20px; margin-bottom: 18px;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .header p {
-            margin: 5px 0 0 0;
-            opacity: 0.9;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
+        .header h1 { margin: 0; font-size: 22px; text-align: center; }
+        .header .subtitle { text-align: center; font-size: 12px; margin-top: 6px; opacity: 0.85; }
+        table { border-collapse: collapse; width: 100%; margin: 18px 0; }
         th {
-            background-color: #1a3a6b;
-            color: white;
-            font-weight: bold;
+            background: #0a1628; color: white; padding: 8px 6px; font-size: 10px;
+            font-weight: bold; text-transform: uppercase; letter-spacing: 0.3px; text-align: left;
+            border: 1px solid #1a3a6b;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        td {
+            border: 1px solid #ddd; padding: 6px; font-size: 10px; color: #333;
+            vertical-align: middle;
         }
+        tr:nth-child(even) td { background-color: #f8f9fa; }
         .footer {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
+            margin-top: 20px; text-align: center; font-size: 10px; color: #888;
+            padding: 12px; border-top: 1px solid #ddd;
         }
+        .footer .total { font-size: 13px; font-weight: bold; color: #0a1628; margin-bottom: 4px; }
+        .num-col { text-align: center; font-weight: bold; }
+        .text-muted { color: #999; font-style: italic; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>' . htmlspecialchars($title) . '</h1>
-        <p>Generado el ' . date('d/m/Y H:i:s') . '</p>
+        <h1>' . $safeTitle . '</h1>
+        <div class="subtitle">' . ($subtitle ? htmlspecialchars($subtitle) : 'Gerencia Regional La Paz - Aduana Nacional de Bolivia') . '</div>
     </div>
-    
-    <table>';
 
-        // Agregar filas de datos
-        foreach ($csvData as $row) {
-            $cells = explode(',', $row);
+    <table>
+        <thead>
+            <tr>';
+        foreach ($headers as $h) {
+            $html .= '<th>' . htmlspecialchars($h) . '</th>';
+        }
+        $html .= '</tr>
+        </thead>
+        <tbody>';
+
+        $num = 0;
+        foreach ($data as $row) {
+            $num++;
             $html .= '<tr>';
-            foreach ($cells as $cell) {
-                $html .= '<td>' . htmlspecialchars($cell) . '</td>';
+            $html .= '<td class="num-col">' . $num . '</td>';
+            foreach ($row as $cell) {
+                $val = $cell === null || $cell === '' ? '<span class="text-muted">—</span>' : htmlspecialchars($cell);
+                $html .= '<td>' . $val . '</td>';
             }
             $html .= '</tr>';
         }
 
-        $html .= '</table>
-    
+        $html .= '</tbody>
+    </table>
+
     <div class="footer">
-        <strong>Reporte generado automáticamente por el Sistema de Gestión de Servidores Públicos</strong><br>
+        <div class="total">TOTAL DE REGISTROS: ' . $total . '</div>
+        Reporte generado el ' . $dateStr . ' por el Sistema de Gestión de Servidores Públicos<br>
         Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
-        © ' . date('Y') . ' Todos los derechos reservados
+        &copy; ' . date('Y') . ' Todos los derechos reservados
     </div>
 </body>
 </html>';
@@ -650,61 +609,45 @@ public function reporteAcefaliasPdf()
      */
     public function reportePorUnidad($nombre)
     {
-        // Decodificar el nombre de la unidad (URL encoded)
         $nombreUnidad = urldecode($nombre);
-        
-        // Obtener todos los servidores de la unidad específica
+
         $servidores = ServidorPublico::where('unidad', $nombreUnidad)
             ->orderBy('sub_unidad')
             ->orderBy('tipo')
             ->get();
 
-        // Headers para el reporte
         $headers = [
-            'TIPO', 'NOMBRE', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'UNIDAD', 'SUB-UNIDAD',
-            'N° ITEM', 'CARGO', 'FECHA INICIO', 'FECHA FIN',
-            'COD. FUNCIONARIO', 'ESCALA SALARIAL', 'ASIGNACION FAMILIAR', 'GRADO AF',
-            'CASOS ESPECIALES', 'GRADO CE'
+            'N°', 'TIPO', 'SUB-UNIDAD', 'N° ITEM / CONTRATO', 'NOMBRE COMPLETO', 'CARGO',
+            'COD. FUNC.', 'ESC. SALARIAL', 'DESIGNACIÓN',
+            'F. DESIGN. INICIO', 'F. DESIGN. FIN'
         ];
 
-        // Generar contenido CSV
-        $csvData = [];
-        $csvData[] = implode(',', $headers);
-
-        foreach ($servidores as $servidor) {
-            $row = [
-                $servidor->tipo ?? '',
-                $this->escapeCsv($servidor->nombre ?? ''),
-                $this->escapeCsv($servidor->apellido_paterno ?? ''),
-                $this->escapeCsv($servidor->apellido_materno ?? ''),
-                $this->escapeCsv($servidor->unidad ?? ''),
-                $this->escapeCsv($servidor->sub_unidad ?? ''),
-                $servidor->numero_item ?? '',
-                $this->escapeCsv($servidor->cite_memorandum ?? ''),
-                $this->escapeCsv($servidor->cargo ?? ''),
-                $servidor->fecha_inicio_cargo ?? '',
-                $servidor->fecha_fin_cargo ?? '',
-                $servidor->cod_funcionario ?? '',
-                $servidor->escala_salarial ?? '',
-                $this->escapeCsv($servidor->asignacion_familiar_desc ?? ''),
-                $servidor->asignacion_familiar_grado ?? '',
-                $this->escapeCsv($servidor->casos_especiales_desc ?? ''),
-                $servidor->casos_especiales_grado ?? '',
-                $this->escapeCsv($servidor->discapacidad_desc ?? ''),
-                $servidor->discapacidad_grado ?? '',
-                $this->escapeCsv($servidor->discapacidad_tipo ?? ''),
-                $servidor->discapacidad_carnet ?? '',
-                $servidor->discapacidad_vence ?? ''
+        $data = [];
+        foreach ($servidores as $s) {
+            $nombreCompleto = trim(($s->nombre ?? '') . ' ' . ($s->apellido_paterno ?? '') . ' ' . ($s->apellido_materno ?? ''));
+            $data[] = [
+                $s->tipo === 'item' ? 'ÍTEM' : 'CONSULTORÍA',
+                $s->sub_unidad ?? '',
+                $s->tipo === 'item' ? ($s->numero_item ?? '') : ($s->contrato_numero ?? ''),
+                $nombreCompleto ?: '—',
+                $s->tipo === 'item' ? ($s->cargo ?? '') : ($s->cargo_consultoria ?? ''),
+                $s->cod_funcionario ?? '',
+                $s->escala_salarial ? $s->escala_salarial . ' Bs.' : '',
+                $s->designacion ?? '',
+                $s->designacion_inicio ? \Carbon\Carbon::parse($s->designacion_inicio)->format('d/m/Y') : '',
+                $s->designacion_fin ? \Carbon\Carbon::parse($s->designacion_fin)->format('d/m/Y') : '',
             ];
-            $csvData[] = implode(',', $row);
         }
 
-        // Generar nombre de archivo
-        $nombreArchivo = 'reporte_' . str_replace(' ', '_', strtolower($nombreUnidad)) . '_' . date('Y-m-d_H-i-s') . '.xls';
-        
-        // Generar contenido HTML que Excel puede abrir
-        $htmlContent = $this->generateExcelHtml($csvData, 'Reporte de ' . $nombreUnidad . ' - Servidores Públicos');
-        
+        $nombreArchivo = 'reporte_' . str_replace([' ', 'á', 'é', 'í', 'ó', 'ú', 'ñ'], ['_', 'a', 'e', 'i', 'o', 'u', 'n'], strtolower($nombreUnidad)) . '_' . date('Y-m-d_H-i-s') . '.xls';
+
+        $htmlContent = $this->generateExcelHtml(
+            'Reporte de ' . htmlspecialchars($nombreUnidad),
+            $headers,
+            $data,
+            'Total de registros: ' . count($servidores)
+        );
+
         return response($htmlContent)
             ->header('Content-Type', 'text/html')
             ->header('Content-Disposition', 'attachment; filename="' . $nombreArchivo . '"');

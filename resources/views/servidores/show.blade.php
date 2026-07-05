@@ -26,8 +26,8 @@
                 {{-- Datos principales --}}
                 @if($servidor->tipo === 'item')
                     <div class="dato-principal">
-                        <div class="valor" style="font-size:1rem;">N° Ítem: {{ $servidor->numero_item ?? '—' }}</div>
-                        <div style="font-size:0.78rem; color:#a0b8d8; margin-top:2px;">
+                        <div class="valor">N° Ítem: {{ $servidor->numero_item ?? '—' }}</div>
+                        <div style="font-size:0.9rem; color:#a0b8d8; margin-top:4px;">
                             @if($servidor->cod_funcionario)
                                 Cód. Funcionario: <span style="color:#fff;">{{ $servidor->cod_funcionario }}</span>
                             @endif
@@ -102,7 +102,7 @@
                     <span>
                         <span class="check-icon">☑</span> Discapacidad Ley N° 223: {{ $servidor->discapacidad_desc }}
                         @if($servidor->discapacidad_tipo || $servidor->discapacidad_carnet || $servidor->discapacidad_vence)
-                        <div class="mt-1 ms-2 d-flex flex-column" style="font-size:0.8rem;color:#c8daf0;">
+                        <div class="mt-1 ms-2 d-flex flex-column" style="font-size:0.9rem;color:#c8daf0;">
                             @if($servidor->discapacidad_tipo)<span>Tipo: {{ $servidor->discapacidad_tipo }}</span>@endif
                             @if($servidor->discapacidad_carnet)<span>Carnet: {{ $servidor->discapacidad_carnet }}</span>@endif
                             @if($servidor->discapacidad_vence)<span>Vence: {{ \Carbon\Carbon::parse($servidor->discapacidad_vence)->format('d/m/Y') }}</span>@endif
@@ -119,15 +119,27 @@
             </div>
 
             {{-- Acciones debajo de la tarjeta --}}
-            <div class="d-flex gap-2 mt-3 justify-content-center flex-wrap">
-                <a href="{{ route('servidores.index') }}" class="btn btn-secondary btn-sm">
-                    <i class="bi bi-arrow-left"></i> Volver
+            <div class="d-flex gap-3 mt-4 justify-content-center flex-wrap">
+                <a href="{{ route('servidores.index') }}"
+                    class="btn d-inline-flex align-items-center gap-2 px-4 py-2 border-0 rounded-3 fw-semibold"
+                    style="background: linear-gradient(135deg, #6c757d, #495057); color:#fff; box-shadow:0 3px 10px rgba(108,117,125,0.3); transition:all 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(108,117,125,0.5)'"
+                    onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px rgba(108,117,125,0.3)'">
+                    <i class="bi bi-arrow-left" style="font-size:1.1rem;"></i> Volver
                 </a>
-                <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-warning btn-sm">
-                    <i class="bi bi-pencil"></i> Editar
+                <a href="{{ route('servidores.edit', $servidor->id) }}"
+                    class="btn d-inline-flex align-items-center gap-2 px-4 py-2 border-0 rounded-3 fw-semibold"
+                    style="background: linear-gradient(135deg, #f9a825, #ff8f00); color:#fff; box-shadow:0 3px 10px rgba(249,168,37,0.3); transition:all 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(249,168,37,0.5)'"
+                    onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px rgba(249,168,37,0.3)'">
+                    <i class="bi bi-pencil" style="font-size:1.1rem;"></i> Editar
                 </a>
-                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                    <i class="bi bi-trash"></i> Eliminar
+                <button type="button" data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                    class="btn d-inline-flex align-items-center gap-2 px-4 py-2 border-0 rounded-3 fw-semibold"
+                    style="background: linear-gradient(135deg, #e53935, #c62828); color:#fff; box-shadow:0 3px 10px rgba(229,57,53,0.3); transition:all 0.25s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(229,57,53,0.5)'"
+                    onmouseout="this.style.transform='';this.style.boxShadow='0 3px 10px rgba(229,57,53,0.3)'">
+                    <i class="bi bi-trash" style="font-size:1.1rem;"></i> Eliminar
                 </button>
             </div>
         </div>
@@ -148,10 +160,10 @@
                 <br><small class="text-muted">Esta acción no se puede deshacer.</small>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary px-4 py-2" data-bs-dismiss="modal">Cancelar</button>
                 <form action="{{ route('servidores.destroy', $servidor->id) }}" method="POST">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm">Sí, eliminar</button>
+                    <button type="submit" class="btn btn-danger px-4 py-2">Sí, eliminar</button>
                 </form>
             </div>
         </div>

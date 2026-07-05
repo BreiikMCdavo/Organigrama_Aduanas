@@ -1,104 +1,104 @@
 .tarjeta-servidor {
     background: linear-gradient(135deg, #1a2a4a 0%, #0d1b35 60%, #1a3a5c 100%);
     color: #fff;
-    border-radius: 14px;
-    padding: 32px 36px;
-    max-width: 520px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    border-radius: 16px;
+    padding: 36px 42px;
+    max-width: 580px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
 
 .tarjeta-servidor .unidad-titulo {
     text-align: center;
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     color: #fff;
 }
 
 .tarjeta-servidor .foto-circulo {
-    width: 90px;
-    height: 90px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #4a90d9;
+    border: 4px solid #4a90d9;
     display: block;
-    margin: 0 auto 14px auto;
+    margin: 0 auto 16px auto;
 }
 
 .tarjeta-servidor .foto-placeholder {
-    width: 90px;
-    height: 90px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     background: #2a4a7a;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 14px auto;
-    font-size: 2.2rem;
-    border: 3px solid #4a90d9;
+    margin: 0 auto 16px auto;
+    font-size: 2.8rem;
+    border: 4px solid #4a90d9;
 }
 
 .tarjeta-servidor .dato-principal {
     text-align: center;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .tarjeta-servidor .dato-principal .label {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #a0b8d8;
 }
 
 .tarjeta-servidor .dato-principal .valor {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     font-weight: 600;
 }
 
 .tarjeta-servidor .dato-principal .cargo-desc {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     color: #c8daf0;
 }
 
 .tarjeta-servidor .divider {
     border-color: #2a4a7a;
-    margin: 14px 0;
+    margin: 16px 0;
 }
 
 .tarjeta-servidor .nombre-completo {
-    font-size: 1rem;
+    font-size: 1.15rem;
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .tarjeta-servidor .fechas-row {
     display: flex;
     justify-content: space-between;
-    font-size: 0.88rem;
+    font-size: 0.95rem;
     color: #a0b8d8;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 6px;
 }
 
 .tarjeta-servidor .inamovilidad-titulo {
-    font-size: 0.92rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #a0b8d8;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .tarjeta-servidor .inamovilidad-item {
     display: flex;
     align-items: flex-start;
-    gap: 6px;
-    font-size: 0.9rem;
-    margin-bottom: 6px;
+    gap: 8px;
+    font-size: 1rem;
+    margin-bottom: 8px;
 }
 
 .tarjeta-servidor .inamovilidad-item .check-icon {
     color: #4fc3f7;
-    font-size: 1rem;
+    font-size: 1.1rem;
     margin-top: 1px;
     flex-shrink: 0;
 }
@@ -106,20 +106,24 @@
 .tarjeta-servidor .btn-volver {
     display: block;
     width: 100%;
-    margin-top: 16px;
-    background: #1565c0;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #1565c0, #1976d2);
     color: #fff;
     border: none;
-    border-radius: 6px;
-    padding: 10px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
     text-align: center;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: all 0.25s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(21, 101, 192, 0.4);
 }
 
 .tarjeta-servidor .btn-volver:hover {
-    background: #0d47a1;
+    background: linear-gradient(135deg, #0d47a1, #1565c0);
     color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(21, 101, 192, 0.5);
 }

@@ -5,10 +5,10 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h5 class="fw-bold mb-0 text-primary">
+                <h4 class="fw-bold mb-1 text-primary">
                     <i class="bi bi-people-fill me-2"></i>Servidores Públicos Registrados
-                </h5>
-                <small class="text-muted">Gestión completa del personal</small>
+                </h4>
+                <small class="text-muted" style="font-size:0.9rem;">Gestión completa del personal</small>
             </div>
             <div class="d-flex gap-2 flex-wrap">
                 <a href="{{ route('reporte.items') }}"
@@ -54,60 +54,60 @@
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="card border-0 bg-light rounded-3 shadow-sm">
-                    <div class="card-body p-3">
+                    <div class="card-body p-4">
                         <div class="row text-center">
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <div class="badge bg-success bg-opacity-10 text-success p-2 me-2">
+                                    <div class="badge bg-success bg-opacity-10 text-success p-3 me-3" style="font-size:1.3rem;">
                                         <i class="bi bi-briefcase-fill"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-success">
+                                        <h5 class="mb-0 fw-bold text-success">
                                             {{ \App\Models\ServidorPublico::where('tipo', 'item')->where(function ($q) {
         $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}
-                                        </h6>
+                                        </h5>
                                         <small class="text-muted">Items Activos</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <div class="badge bg-info bg-opacity-10 text-info p-2 me-2">
+                                    <div class="badge bg-info bg-opacity-10 text-info p-3 me-3" style="font-size:1.3rem;">
                                         <i class="bi bi-file-text-fill"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-info">
+                                        <h5 class="mb-0 fw-bold text-info">
                                             {{ \App\Models\ServidorPublico::where('tipo', 'consultoria')->where(function ($q) {
         $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}
-                                        </h6>
+                                        </h5>
                                         <small class="text-muted">Consultoría</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <div class="badge bg-warning bg-opacity-10 text-warning p-2 me-2">
+                                    <div class="badge bg-warning bg-opacity-10 text-warning p-3 me-3" style="font-size:1.3rem;">
                                         <i class="bi bi-shield-fill"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-warning">
+                                        <h5 class="mb-0 fw-bold text-warning">
                                             {{ \App\Models\ServidorPublico::where(function ($q) {
         $q->whereNotNull('asignacion_familiar_desc')->where('asignacion_familiar_desc', '!=', '')->orWhereNotNull('casos_especiales_desc')->where('casos_especiales_desc', '!=', '')->orWhereNotNull('discapacidad_desc')->where('discapacidad_desc', '!=', ''); })->where(function ($q) {
             $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}
-                                        </h6>
+                                        </h5>
                                         <small class="text-muted">Inamovibles</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <div class="badge bg-danger bg-opacity-10 text-danger p-2 me-2">
+                                    <div class="badge bg-danger bg-opacity-10 text-danger p-3 me-3" style="font-size:1.3rem;">
                                         <i class="bi bi-exclamation-triangle-fill"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-danger">
+                                        <h5 class="mb-0 fw-bold text-danger">
                                             {{ \App\Models\ServidorPublico::where('acefalia', true)->count() }}
-                                        </h6>
+                                        </h5>
                                         <small class="text-muted">Acefalías</small>
                                     </div>
                                 </div>
@@ -126,18 +126,18 @@
         @endif
 
         @forelse($servidores as $servidor)
-            <div class="card mb-4 shadow-sm border-0 servidor-card" style="border-radius: 12px;">
-                <div class="card-body p-4">
+            <div class="card mb-4 shadow-sm border-0 servidor-card" style="border-radius: 14px;">
+                <div class="card-body p-4" style="padding: 1.8rem !important;">
 
                     <div class="row align-items-center">
                         {{-- Foto --}}
                         <div class="col-md-auto text-center mb-3 mb-md-0">
                             @if($servidor->fotografia_url)
                                 <img src="{{ $servidor->fotografia_url }}" class="rounded-circle"
-                                    style="width:80px;height:80px;object-fit:cover;border:3px solid #1565c0;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+                                    style="width:110px;height:110px;object-fit:cover;border:4px solid #1565c0;box-shadow:0 3px 12px rgba(0,0,0,0.2);">
                             @else
                                 <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white"
-                                    style="width:80px;height:80px;font-size:2rem;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+                                    style="width:110px;height:110px;font-size:2.8rem;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,0.2);">
                                     <i class="bi bi-person-fill"></i>
                                 </div>
                             @endif
@@ -145,45 +145,45 @@
 
                         {{-- Info Principal --}}
                         <div class="col-md">
-                            <div class="mb-2">
-                                <h5 class="mb-1 fw-bold servidor-nombre" style="font-size: 1.25rem;">
+                            <div class="mb-3">
+                                <h4 class="mb-1 fw-bold servidor-nombre" style="font-size: 1.4rem;">
                                     {{ $servidor->nombre }} {{ $servidor->apellido_paterno }} {{ $servidor->apellido_materno }}
-                                </h5>
+                                </h4>
 
                                 {{-- Badge de estado --}}
                                 @if($servidor->acefalia)
-                                    <span class="badge bg-danger me-2 px-3 py-1 servidor-badge">
+                                    <span class="badge bg-danger me-2 px-3 py-1 servidor-badge" style="font-size:0.85rem;">
                                         <i class="bi bi-exclamation-triangle-fill me-1"></i>ACEFALÍA
                                     </span>
                                 @elseif($servidor->tipo === 'item')
-                                    <span class="badge bg-primary me-2 px-3 py-1 servidor-badge">
+                                    <span class="badge bg-primary me-2 px-3 py-1 servidor-badge" style="font-size:0.85rem;">
                                         <i class="bi bi-check-circle-fill me-1"></i>ÍTEM
                                     </span>
                                 @else
-                                    <span class="badge bg-success me-2 px-3 py-1 servidor-badge">
+                                    <span class="badge bg-success me-2 px-3 py-1 servidor-badge" style="font-size:0.85rem;">
                                         <i class="bi bi-briefcase-fill me-1"></i>CONSULTORÍA
                                     </span>
                                 @endif
                             </div>
 
                             {{-- Información del cargo --}}
-                            <div class="mb-2">
+                            <div class="mb-3" style="font-size:1rem;">
                                 @if($servidor->tipo === 'item')
-                                    <div class="text-muted">
+                                    <div class="text-muted mb-1">
                                         <i class="bi bi-hash me-1"></i><strong>N° Item:</strong> {{ $servidor->numero_item }}
                                     </div>
-                                    <div class="text-muted">
+                                    <div class="text-muted mb-1">
                                         <i class="bi bi-briefcase me-1"></i><strong>Cargo:</strong> {{ $servidor->cargo }}
                                     </div>
                                     <div class="text-muted">
                                         <i class="bi bi-award me-1"></i><strong>Designación:</strong> {{ $servidor->designacion }}
                                     </div>
                                 @else
-                                    <div class="text-muted">
+                                    <div class="text-muted mb-1">
                                         <i class="bi bi-file-text me-1"></i><strong>Contrato:</strong>
                                         {{ $servidor->contrato_numero }}
                                     </div>
-                                    <div class="text-muted">
+                                    <div class="text-muted mb-1">
                                         <i class="bi bi-briefcase me-1"></i><strong>Cargo:</strong>
                                         {{ $servidor->cargo_consultoria }}
                                     </div>
@@ -194,8 +194,8 @@
                             </div>
 
                             {{-- Unidad y fecha --}}
-                            <div class="row text-muted small">
-                                <div class="col-md-6">
+                            <div class="row text-muted" style="font-size:0.95rem;">
+                                <div class="col-md-6 mb-1">
                                     <i class="bi bi-building me-1"></i>
                                     <strong>Unidad:</strong> {{ $servidor->unidad }}
                                     @if($servidor->sub_unidad)
@@ -203,7 +203,7 @@
                                         <strong>Sub-unidad:</strong> {{ $servidor->sub_unidad }}
                                     @endif
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 mb-1">
                                     <i class="bi bi-calendar-event me-1"></i>
                                     <strong>Ingreso Aduana:</strong>
                                     {{ $servidor->fecha_ingreso_aduana ? \Carbon\Carbon::parse($servidor->fecha_ingreso_aduana)->format('d/m/Y') : '—' }}
@@ -212,12 +212,12 @@
 
                             {{-- Inamovilidad --}}
                             @if($servidor->asignacion_familiar_desc || $servidor->casos_especiales_desc || $servidor->discapacidad_desc)
-                                <div class="mt-2 p-2 bg-light rounded border-start border-4 border-warning">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="bi bi-shield-fill text-warning me-2"></i>
-                                        <strong class="text-warning">Inamovilidad:</strong>
+                                <div class="mt-3 p-3 bg-light rounded border-start border-4 border-warning">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-shield-fill text-warning me-2" style="font-size:1.1rem;"></i>
+                                        <strong class="text-warning" style="font-size:1rem;">Inamovilidad:</strong>
                                     </div>
-                                    <div class="small text-muted">
+                                    <div class="text-muted" style="font-size:0.95rem;">
                                         @if($servidor->asignacion_familiar_desc)
                                             <div class="mb-1">
                                                 <i class="bi bi-check-circle-fill text-success me-1"></i>
@@ -252,19 +252,18 @@
                         {{-- Acciones --}}
                         <div class="col-md-auto text-center">
                             <div class="d-flex flex-column gap-2">
-                                <a href="{{ route('servidores.show', $servidor->id) }}" class="btn btn-sm btn-primary px-3">
+                                <a href="{{ route('servidores.show', $servidor->id) }}" class="btn btn-primary px-4 py-2">
                                     <i class="bi bi-eye me-1"></i>Ver
                                 </a>
-                                <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-sm btn-warning px-3">
+                                <a href="{{ route('servidores.edit', $servidor->id) }}" class="btn btn-warning px-4 py-2">
                                     <i class="bi bi-pencil me-1"></i>Editar
                                 </a>
-                                <form action="{{ route('servidores.destroy', $servidor->id) }}" method="POST"
-                                    onsubmit="return confirm('¿Está seguro de eliminar este servidor?')">
-                                    @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-danger px-3">
-                                        <i class="bi bi-trash me-1"></i>Eliminar
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-danger px-4 py-2"
+                                    data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                                    data-servidor-id="{{ $servidor->id }}"
+                                    data-servidor-nombre="{{ $servidor->nombre }} {{ $servidor->apellido_paterno }}">
+                                    <i class="bi bi-trash me-1"></i>Eliminar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -281,4 +280,41 @@
         </div>
 
     </div>
+
+{{-- Modal confirmación eliminar --}}
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">⚠️ Confirmar eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro que deseas eliminar a
+                <strong id="eliminarNombre"></strong>?
+                <br><small class="text-muted">Esta acción no se puede deshacer.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary px-4 py-2" data-bs-dismiss="modal">Cancelar</button>
+                <form id="formEliminar" action="" method="POST">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn btn-danger px-4 py-2">Sí, eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById('modalEliminar');
+    modal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-servidor-id');
+        var nombre = button.getAttribute('data-servidor-nombre');
+        document.getElementById('eliminarNombre').textContent = nombre;
+        document.getElementById('formEliminar').action = '{{ route("servidores.destroy", "") }}/' + id;
+    });
+});
+</script>
 @endsection
