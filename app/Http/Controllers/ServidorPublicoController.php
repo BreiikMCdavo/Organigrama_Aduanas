@@ -11,31 +11,57 @@ class ServidorPublicoController extends Controller
 {
     public function index(Request $request)
     {
-        $area = $request->area;
+        $areaActual = trim((string) $request->query('area', ''));
+        $areaActual = $areaActual !== '' ? $areaActual : null;
+        $buscar = trim((string) $request->query('buscar', ''));
+        $buscar = $buscar !== '' ? $buscar : null;
 
-        if ($area) {
+        $servidores = ServidorPublico::query()
+            ->forArea($areaActual)
+            ->search($buscar)
+            ->orderBy('created_at', 'desc')
+            ->paginate(25)
+            ->appends($request->query());
 
-            if ($area === 'GERENCIA REGIONAL LA PAZ - GRLPZ') {
+        $estadisticas = ServidorPublico::statsForArea($areaActual);
+        $resumenUnidades = ServidorPublico::breakdownForArea($areaActual);
 
-                $servidores = ServidorPublico::orderBy('created_at', 'desc')
-                    ->paginate(25);
+        return view('servidores.index', compact('servidores', 'areaActual', 'buscar', 'estadisticas', 'resumenUnidades'));
+    }
 
-            } else {
+    public function sugerencias(Request $request)
+    {
+        $areaActual = trim((string) $request->query('area', ''));
+        $areaActual = $areaActual !== '' ? $areaActual : null;
+        $buscar = trim((string) $request->query('buscar', ''));
 
-                $servidores = ServidorPublico::where('unidad', $area)
-                    ->orWhere('sub_unidad', $area)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(25);
-            }
-
-        } else {
-
-            $servidores = ServidorPublico::orderBy('created_at', 'desc')
-                ->paginate(25);
-
+        if ($buscar === '') {
+            return response()->json([]);
         }
 
-        return view('servidores.index', compact('servidores'));
+        $servidores = ServidorPublico::query()
+            ->forArea($areaActual)
+            ->search($buscar)
+            ->orderBy('nombre')
+            ->orderBy('apellido_paterno')
+            ->limit(8)
+            ->get();
+
+        return response()->json(
+            $servidores->map(function (ServidorPublico $servidor) {
+                $codigo = $servidor->tipo === 'item'
+                    ? 'Item ' . ($servidor->numero_item ?? 's/n')
+                    : 'Contrato ' . ($servidor->contrato_numero ?? 's/n');
+
+                return [
+                    'nombre' => $servidor->nombre_completo ?: 'Acefalía',
+                    'codigo' => $codigo,
+                    'cargo' => $servidor->cargo_descripcion,
+                    'unidad' => trim(($servidor->unidad ?? '') . ' / ' . ($servidor->sub_unidad ?? ''), ' /'),
+                    'url' => route('servidores.show', $servidor),
+                ];
+            })->values()
+        );
     }
     public function create()
     {

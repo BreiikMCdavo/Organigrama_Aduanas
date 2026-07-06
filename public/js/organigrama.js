@@ -247,7 +247,7 @@ function mostrarInfo(area){
 
             // Si es GERENCIA, cargar datos de todas las unidades
             if (area === 'GERENCIA REGIONAL LA PAZ - GRLPZ') {
-                cargarDatosUnidades();
+                cargarDatosUnidades(data.subunidades || []);
             }
 
             new bootstrap.Modal(
@@ -264,7 +264,7 @@ function verPersonal(area){
 }
 
 // Función para cargar datos de todas las unidades principales
-async function cargarDatosUnidades() {
+async function cargarDatosUnidades(datosPrecargados = []) {
     const unidadesPrincipales = [
         'Unidad Administrativa',
         'Unidad Fiscalización', 
@@ -280,10 +280,10 @@ async function cargarDatosUnidades() {
         'Administración Aduana Frontera Charaña'
     ];
 
-    let datosUnidades = [];
+    let datosUnidades = Array.isArray(datosPrecargados) ? datosPrecargados : [];
 
     // Cargar datos de cada unidad
-    for (const unidad of unidadesPrincipales) {
+    for (const unidad of datosUnidades.length ? [] : unidadesPrincipales) {
         try {
             const response = await fetch(`/organigrama/${encodeURIComponent(unidad)}`);
             const data = await response.json();

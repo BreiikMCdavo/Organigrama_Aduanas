@@ -58,26 +58,28 @@
 
             <!-- BOTONES DERECHA -->
             <div class="d-flex gap-2 align-items-center">
+                @php($navbarStats = \App\Models\ServidorPublico::statsForArea(request('area')))
+
                 <!-- Estadísticas Rápidas -->
                 <div class="d-flex gap-3 me-3">
                     <div class="text-center">
                         <div class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 px-2 py-1" style="font-size: 0.7rem;">
                             <i class="bi bi-people-fill me-1"></i>
-                            {{ \App\Models\ServidorPublico::where('tipo', 'item')->where(function($q){ $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}
+                            {{ $navbarStats['items'] }}
                         </div>
                         <small class="text-white-50 d-block" style="font-size: 0.6rem;">Items</small>
                     </div>
                     <div class="text-center">
                         <div class="badge bg-info bg-opacity-25 text-white border border-info border-opacity-50 px-2 py-1" style="font-size: 0.7rem;">
                             <i class="bi bi-briefcase-fill me-1"></i>
-                            {{ \App\Models\ServidorPublico::where('tipo', 'consultoria')->where(function($q){ $q->whereNull('acefalia')->orWhere('acefalia', false); })->count() }}
+                            {{ $navbarStats['consultoria'] }}
                         </div>
                         <small class="text-white-50 d-block" style="font-size: 0.6rem;">Consultoría</small>
                     </div>
                     <div class="text-center">
                         <div class="badge bg-warning bg-opacity-25 text-white border border-warning border-opacity-50 px-2 py-1" style="font-size: 0.7rem;">
                             <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                            {{ \App\Models\ServidorPublico::where('acefalia', true)->count() }}
+                            {{ $navbarStats['acefalias'] }}
                         </div>
                         <small class="text-white-50 d-block" style="font-size: 0.6rem;">Acefalías</small>
                     </div>
@@ -185,7 +187,7 @@
     </nav>
 
     <!-- CONTENIDO DINÁMICO -->
-    <div class="py-4">
+    <div>
         @yield('content')
     </div>
 

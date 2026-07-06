@@ -37,6 +37,8 @@ Route::get('/organigrama}', function () {
 
 Route::get('/organigrama/{area}', [OrganigramaController::class, 'info'])
     ->where('area', '.*');
+Route::get('/servidores/buscar/sugerencias', [ServidorPublicoController::class, 'sugerencias'])
+    ->name('servidores.sugerencias');
 Route::resource('servidores', ServidorPublicoController::class);
 
 // Rutas para reportes
@@ -55,4 +57,3 @@ Route::get('/reporte/unidad/{nombre}/pdf', [ServidorPublicoController::class, 'r
 Route::get('/gafetes', function () {
     return view('gafetes');
 })->name('gafetes');
-

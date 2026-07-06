@@ -10,6 +10,8 @@ class ServidorPublico extends Model
 {
     use HasFactory;
 
+    public const GERENCIA_AREA = 'GERENCIA REGIONAL LA PAZ - GRLPZ';
+
     protected $table = 'servidores_publicos';
 
     protected $fillable = [
@@ -67,6 +69,90 @@ class ServidorPublico extends Model
         'casos_especiales_check'    => 'boolean',
         'discapacidad_check'        => 'boolean',
     ];
+
+    public function scopeForArea($query, ?string $area)
+    {
+        $area = trim($area ?? '');
+
+        if ($area === '' || $area === self::GERENCIA_AREA) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($area) {
+            $q->where('unidad', $area)
+                ->orWhere('sub_unidad', $area);
+        });
+    }
+
+    public function scopeSearch($query, ?string $term)
+    {
+        $term = trim($term ?? '');
+
+        if ($term === '') {
+            return $query;
+        }
+
+        $like = '%' . $term . '%';
+
+        return $query->where(function ($q) use ($like) {
+            $q->where('numero_item', 'like', $like)
+                ->orWhere('contrato_numero', 'like', $like)
+                ->orWhere('nombre', 'like', $like)
+                ->orWhere('apellido_paterno', 'like', $like)
+                ->orWhere('apellido_materno', 'like', $like)
+                ->orWhereRaw("CONCAT_WS(' ', nombre, apellido_paterno, apellido_materno) like ?", [$like]);
+        });
+    }
+
+    public static function statsForArea(?string $area): array
+    {
+        return self::statsFromRecords(
+            self::query()->forArea($area)->get()
+        );
+    }
+
+    public static function breakdownForArea(?string $area)
+    {
+        $area = trim($area ?? '');
+        $records = self::query()->forArea($area)->get();
+        $groupColumn = ($area === '' || $area === self::GERENCIA_AREA) ? 'unidad' : 'sub_unidad';
+
+        return $records
+            ->filter(function ($record) use ($groupColumn) {
+                return trim((string) $record->{$groupColumn}) !== '';
+            })
+            ->groupBy($groupColumn)
+            ->map(function ($group, $name) {
+                return array_merge(['nombre' => $name], self::statsFromRecords($group));
+            })
+            ->sortBy('nombre')
+            ->values();
+    }
+
+    private static function statsFromRecords($records): array
+    {
+        $isActive = function ($record) {
+            return !$record->acefalia;
+        };
+
+        $hasInamovilidad = function ($record) use ($isActive) {
+            if (!$isActive($record)) {
+                return false;
+            }
+
+            return trim((string) $record->asignacion_familiar_desc) !== ''
+                || trim((string) $record->casos_especiales_desc) !== ''
+                || trim((string) $record->discapacidad_desc) !== '';
+        };
+
+        return [
+            'items' => $records->filter(fn ($record) => $record->tipo === 'item' && $isActive($record))->count(),
+            'consultoria' => $records->filter(fn ($record) => $record->tipo === 'consultoria' && $isActive($record))->count(),
+            'inamoviles' => $records->filter($hasInamovilidad)->count(),
+            'acefalias' => $records->filter(fn ($record) => (bool) $record->acefalia)->count(),
+            'total' => $records->count(),
+        ];
+    }
 
     /**
      * Buscar duplicados por nombre completo
