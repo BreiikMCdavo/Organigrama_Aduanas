@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\ServidorPublico;
+use App\Services\EstructuraOrganizacionalService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 
 class ServidorPublicoController extends Controller
 {
+    private const EXPORT_CHUNK_SIZE = 500;
+    private const PDF_PART_SIZE = 500;
+
     public function index(Request $request)
     {
         $areaActual = trim((string) $request->query('area', ''));
@@ -70,28 +75,26 @@ class ServidorPublicoController extends Controller
 
     public function store(Request $request)
     {
-        // ── Detección de duplicados por número de ítem ──────────────────
-        if ($request->tipo === 'item' && $request->filled('numero_item') && !$request->filled('accion_duplicado')) {
-            $duplicados = ServidorPublico::where('numero_item', $request->numero_item)
-                ->where('tipo', 'item')
-                ->get()
-                ->map(function ($s) {
-                    $s->cargo_descripcion = $s->cargo ?? '(sin cargo)';
-                    return $s;
-                });
+        $cargoMarcadoAcefalia = false;
 
-            if ($duplicados->count() > 0) {
-                return back()
-                    ->withInput()
-                    ->with('duplicados', $duplicados);
-            }
-        }
+        // ── Detección de duplicados por número de ítem ──────────────────
+        // Los items duplicados se normalizan automaticamente despues de guardar.
 
         // Si eligió "reemplazar", marcar el registro anterior como acefalía
-        if ($request->accion_duplicado === 'reemplazar' && $request->filled('numero_item')) {
-            ServidorPublico::where('numero_item', $request->numero_item)
-                ->where('tipo', 'item')
-                ->update(['acefalia' => true, 'nombre' => null, 'apellido_paterno' => null, 'apellido_materno' => null]);
+        if ($request->accion_duplicado === 'reemplazar' && $request->filled('cargo_a_reemplazar')) {
+            $cargoReemplazado = ServidorPublico::find($request->cargo_a_reemplazar);
+
+            if ($cargoReemplazado) {
+                $cargoReemplazado->update([
+                    'acefalia' => true,
+                    'nombre' => null,
+                    'apellido_paterno' => null,
+                    'apellido_materno' => null,
+                ]);
+
+                $this->sincronizarEstructura($cargoReemplazado->fresh());
+                $cargoMarcadoAcefalia = true;
+            }
         }
         // Si eligió "adicionar" o "nuevo", simplemente continúa y guarda normalmente
         $rules = [
@@ -102,7 +105,7 @@ class ServidorPublicoController extends Controller
             'apellido_paterno' => 'nullable|regex:/^[\pL\s]+$/u|max:100',
             'apellido_materno' => 'nullable|regex:/^[\pL\s]+$/u|max:100',
             'fotografia'       => 'nullable|image|max:2048',
-            'accion_duplicado' => 'nullable|in:nuevo,reemplazar,adicionar',
+            'accion_duplicado' => 'nullable|in:nuevo,reemplazar,adicionar,comision',
             'cargo_a_reemplazar' => 'nullable|integer',
         ];
 
@@ -144,15 +147,22 @@ class ServidorPublicoController extends Controller
         $data['discapacidad_check']        = $request->boolean('discapacidad_check');
 
         // Guardar designación como texto separado por comas
-        $data['designacion'] = $request->designacion_tipos
-            ? implode(', ', $request->designacion_tipos)
+        $designacionTipos = $request->input('designacion_tipos', []);
+        $designacionTipos = is_array($designacionTipos) ? $designacionTipos : [];
+
+        if ($request->accion_duplicado === 'comision' && !in_array('Comisión', $designacionTipos, true)) {
+            $designacionTipos[] = 'Comisión';
+        }
+
+        $data['designacion'] = $designacionTipos
+            ? implode(', ', array_unique($designacionTipos))
             : null;
 
         // Detectar acefalía: sin nombre = acefalía
         $data['acefalia'] = empty(trim($request->nombre ?? ''));
 
         // Buscar duplicados solo si hay nombre completo
-        if (!empty(trim($request->nombre ?? '')) && !empty(trim($request->apellido_paterno ?? ''))) {
+        if ($request->tipo !== 'item' && !empty(trim($request->nombre ?? '')) && !empty(trim($request->apellido_paterno ?? ''))) {
             $duplicados = ServidorPublico::buscarPorNombreCompleto(
                 $request->nombre,
                 $request->apellido_paterno,
@@ -168,6 +178,61 @@ class ServidorPublicoController extends Controller
                         ->with('warning', 'Se encontraron registros existentes para esta persona. Por favor, seleccione una acción.');
                 }
 
+                $duplicadoItemActivo = $duplicados->first(function ($duplicado) {
+                    return $duplicado->tipo === 'item' && ! $duplicado->acefalia;
+                });
+
+                if ($request->tipo === 'item' && $duplicadoItemActivo && in_array($request->accion_duplicado, ['nuevo', 'adicionar'], true)) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with('duplicados', $duplicados)
+                        ->with('error', 'Esta persona ya tiene un ítem activo. Usa Comisión o Reemplazar para evitar dos ítems activos.');
+                }
+
+                if ($request->tipo === 'item' && $duplicadoItemActivo && $request->accion_duplicado === 'comision') {
+                    if (trim((string) $duplicadoItemActivo->numero_item) === trim((string) $request->numero_item)) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->with('duplicados', $duplicados)
+                            ->with('error', 'Para registrar una comision, el item destino debe ser distinto del item titular de la persona.');
+                    }
+
+                    $itemDestinoOcupado = ServidorPublico::query()
+                        ->where('tipo', 'item')
+                        ->where('numero_item', $request->numero_item)
+                        ->whereKeyNot($duplicadoItemActivo->id)
+                        ->where(function ($query) {
+                            $query->whereNull('acefalia')->orWhere('acefalia', false);
+                        })
+                        ->first();
+
+                    if ($itemDestinoOcupado) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->with('duplicados', $duplicados)
+                            ->with('error', 'El item destino ya tiene una persona activa. Primero debe quedar acefalia o elegirse otro item.');
+                    }
+
+                    $destinoComisionData = $this->datosPlazaDestinoComision($data);
+                    $destinoComision = ServidorPublico::query()
+                        ->where('tipo', 'item')
+                        ->where('numero_item', $request->numero_item)
+                        ->whereKeyNot($duplicadoItemActivo->id)
+                        ->where('acefalia', true)
+                        ->first();
+
+                    if ($destinoComision) {
+                        $destinoComision->update($destinoComisionData);
+                    } else {
+                        $destinoComision = ServidorPublico::create($destinoComisionData);
+                    }
+
+                    $this->registrarComisionEstructura($duplicadoItemActivo->fresh(), $destinoComision->fresh());
+
+                    return redirect()->route('servidores.show', $destinoComision->id)
+                        ->with('success', 'Comisión registrada. La persona mantiene un solo ítem activo.');
+                }
+
                 // Validar que si se elige reemplazar, se seleccione un cargo
                 if ($request->accion_duplicado === 'reemplazar' && !$request->cargo_a_reemplazar) {
                     return redirect()->back()
@@ -177,7 +242,7 @@ class ServidorPublicoController extends Controller
                 }
 
                 // Manejar acción seleccionada
-                if ($request->accion_duplicado === 'reemplazar' && $request->cargo_a_reemplazar) {
+                if ($request->accion_duplicado === 'reemplazar' && $request->cargo_a_reemplazar && !$cargoMarcadoAcefalia) {
                     $cargoExistente = $duplicados->where('id', $request->cargo_a_reemplazar)->first();
                     if ($cargoExistente) {
                         // Marcar cargo anterior como acefalía pero conservar información del cargo
@@ -188,11 +253,17 @@ class ServidorPublicoController extends Controller
                             'apellido_materno' => null,
                         ]);
 
+                        $this->sincronizarEstructura($cargoExistente->fresh());
+
                         // Agregar mensaje informativo
                         session()->flash('info', "El cargo '{$cargoExistente->cargo_descripcion}' ha quedado vacante (acefalía).");
                     }
 
                 // Si es 'nuevo', simplemente continuar sin mensajes especiales
+            }
+
+            if ($request->accion_duplicado === 'comision') {
+                session()->flash('info', 'Registro guardado como comisión. El cargo anterior se mantiene activo y no se manda a acefalía.');
             }
         }
     }
@@ -201,7 +272,9 @@ class ServidorPublicoController extends Controller
             $data['fotografia'] = $request->file('fotografia')->store('servidores', 'public');
         }
 
-        ServidorPublico::create($data);
+        $servidorCreado = ServidorPublico::create($data);
+
+        $servidorCreado = $this->normalizarItemActivo($servidorCreado);
 
         return redirect()->route('servidores.index')
             ->with('success', 'Servidor público registrado correctamente.');
@@ -287,6 +360,8 @@ class ServidorPublicoController extends Controller
 
         $servidor->update($data);
 
+        $this->normalizarItemActivo($servidor->fresh());
+
         return redirect()->route('servidores.show', $servidor->id)
             ->with('success', 'Servidor actualizado correctamente.');
     }
@@ -299,17 +374,134 @@ class ServidorPublicoController extends Controller
             Storage::disk('public')->delete($servidor->fotografia);
         }
 
+        if ($servidor->asignacion) {
+            $servidor->asignacion->update([
+                'estado' => 'finalizada',
+                'fecha_fin' => now()->toDateString(),
+            ]);
+        }
+
         $servidor->delete();
 
         return redirect()->route('servidores.index')
             ->with('success', 'Servidor eliminado correctamente.');
     }
 
+    private function marcarOtrosItemsActivosComoAcefalia(ServidorPublico $servidor): void
+    {
+        $nombre = trim((string) $servidor->nombre);
+        $apellidoPaterno = trim((string) $servidor->apellido_paterno);
+        $apellidoMaterno = trim((string) $servidor->apellido_materno);
+
+        if ($nombre === '' || $apellidoPaterno === '') {
+            return;
+        }
+
+        $itemsAConvertir = ServidorPublico::query()
+            ->where('tipo', 'item')
+            ->whereKeyNot($servidor->id)
+            ->where(function ($query) {
+                $query->whereNull('acefalia')->orWhere('acefalia', false);
+            })
+            ->whereRaw('LOWER(nombre) = ?', [mb_strtolower($nombre, 'UTF-8')])
+            ->whereRaw('LOWER(apellido_paterno) = ?', [mb_strtolower($apellidoPaterno, 'UTF-8')])
+            ->whereRaw("LOWER(COALESCE(apellido_materno, '')) = ?", [mb_strtolower($apellidoMaterno, 'UTF-8')])
+            ->pluck('id');
+
+        if ($itemsAConvertir->isEmpty()) {
+            return;
+        }
+
+        ServidorPublico::query()
+            ->whereKey($itemsAConvertir)
+            ->update([
+                'acefalia' => true,
+                'nombre' => null,
+                'apellido_paterno' => null,
+                'apellido_materno' => null,
+            ]);
+
+        ServidorPublico::query()
+            ->whereKey($itemsAConvertir)
+            ->get()
+            ->each(function (ServidorPublico $item) {
+                $this->sincronizarEstructura($item);
+            });
+    }
+
+    private function datosPlazaDestinoComision(array $data): array
+    {
+        $data['acefalia'] = true;
+        $data['nombre'] = null;
+        $data['apellido_paterno'] = null;
+        $data['apellido_materno'] = null;
+        $data['fotografia'] = null;
+        $data['cod_funcionario'] = null;
+        $data['fecha_ingreso_aduana'] = null;
+        $data['asignacion_familiar_desc'] = null;
+        $data['asignacion_familiar_grado'] = null;
+        $data['asignacion_familiar_check'] = false;
+        $data['casos_especiales_desc'] = null;
+        $data['casos_especiales_grado'] = null;
+        $data['casos_especiales_check'] = false;
+        $data['discapacidad_desc'] = null;
+        $data['discapacidad_grado'] = null;
+        $data['discapacidad_check'] = false;
+        $data['discapacidad_tipo'] = null;
+        $data['discapacidad_carnet'] = null;
+        $data['discapacidad_vence'] = null;
+
+        return $data;
+    }
+
+    private function sincronizarEstructura(ServidorPublico $servidor): void
+    {
+        app(EstructuraOrganizacionalService::class)->sincronizarServidor($servidor);
+    }
+
+    private function normalizarItemActivo(ServidorPublico $servidor): ServidorPublico
+    {
+        return app(EstructuraOrganizacionalService::class)->normalizarItemActivo($servidor);
+    }
+
+    private function registrarComisionEstructura(ServidorPublico $titular, ServidorPublico $destino): void
+    {
+        app(EstructuraOrganizacionalService::class)->registrarComision($titular, $destino);
+    }
+
     /**
      * Generar reporte de servidores con items
      */
-    public function reporteItems()
+    public function reporteItems(Request $request)
     {
+        return $this->streamCsvReport(
+            'Reporte de Servidores Publicos con Items',
+            'reporte_items',
+            [
+                'No.', 'UNIDAD', 'SUB-UNIDAD', 'No. ITEM', 'NOMBRE COMPLETO', 'CARGO',
+                'CITE MEMO', 'COD. FUNC.', 'ESC. SALARIAL', 'DESIGNACION',
+                'F. DESIGN. INICIO', 'F. DESIGN. FIN',
+            ],
+            $this->itemsReportQuery(),
+            function (ServidorPublico $s, int $number) {
+                return [
+                    $number,
+                    $s->unidad ?? '',
+                    $s->sub_unidad ?? '',
+                    $s->numero_item ?? '',
+                    $this->reportFullName($s),
+                    $s->cargo ?? '',
+                    $s->cite_memorandum ?? '',
+                    $s->cod_funcionario ?? '',
+                    $s->escala_salarial ? $s->escala_salarial . ' Bs.' : '',
+                    $s->designacion ?? '',
+                    $this->reportDate($s->designacion_inicio),
+                    $this->reportDate($s->designacion_fin),
+                ];
+            },
+            $request
+        );
+
         $servidores = ServidorPublico::where('tipo', 'item')
             ->where(function($query) {
                 $query->whereNull('acefalia')->orWhere('acefalia', false);
@@ -359,8 +551,17 @@ class ServidorPublicoController extends Controller
 /**
  * Generar reporte de servidores con items en PDF
  */
-public function reporteItemsPdf()
+public function reporteItemsPdf(Request $request)
 {
+    return $this->downloadPdfReport(
+        $request,
+        'Reporte de Servidores Publicos con Items',
+        'items',
+        'reportes.items-pdf',
+        'reporte_items',
+        $this->itemsReportQuery()
+    );
+
     $servidores = ServidorPublico::where('tipo', 'item')
         ->where(function($query) {
             $query->whereNull('acefalia')->orWhere('acefalia', false);
@@ -386,8 +587,34 @@ public function reporteItemsPdf()
     /**
      * Generar reporte de servidores de consultoría en Excel
      */
-    public function reporteConsultoria()
+    public function reporteConsultoria(Request $request)
     {
+        return $this->streamCsvReport(
+            'Reporte de Servidores de Consultoria',
+            'reporte_consultoria',
+            [
+                'No.', 'UNIDAD', 'SUB-UNIDAD', 'CONTRATO', 'NOMBRE COMPLETO', 'CARGO',
+                'COD. FUNC.', 'ESC. SALARIAL', 'DESIGNACION', 'F. INICIO', 'F. FIN',
+            ],
+            $this->consultoriaReportQuery(),
+            function (ServidorPublico $s, int $number) {
+                return [
+                    $number,
+                    $s->unidad ?? '',
+                    $s->sub_unidad ?? '',
+                    $s->contrato_numero ?? '',
+                    $this->reportFullName($s),
+                    $s->cargo_consultoria ?? '',
+                    $s->cod_funcionario ?? '',
+                    $s->escala_salarial ? $s->escala_salarial . ' Bs.' : '',
+                    $s->designacion ?? '',
+                    $this->reportDate($s->fecha_inicio_contrato),
+                    $this->reportDate($s->fecha_fin_contrato),
+                ];
+            },
+            $request
+        );
+
         $servidores = ServidorPublico::where('tipo', 'consultoria')
             ->where(function($query) {
                 $query->whereNull('acefalia')->orWhere('acefalia', false);
@@ -435,8 +662,17 @@ public function reporteItemsPdf()
 /**
  * Generar reporte de servidores de consultoría en PDF
  */
-public function reporteConsultoriaPdf()
+public function reporteConsultoriaPdf(Request $request)
 {
+    return $this->downloadPdfReport(
+        $request,
+        'Reporte de Servidores de Consultoria',
+        'consultoria',
+        'reportes.consultoria-pdf',
+        'reporte_consultoria',
+        $this->consultoriaReportQuery()
+    );
+
     $servidores = ServidorPublico::where('tipo', 'consultoria')
         ->where(function($query) {
             $query->whereNull('acefalia')->orWhere('acefalia', false);
@@ -462,8 +698,36 @@ public function reporteConsultoriaPdf()
     /**
      * Generar reporte de acefalías en Excel
      */
-    public function reporteAcefalias()
+    public function reporteAcefalias(Request $request)
     {
+        return $this->streamCsvReport(
+            'Reporte de Plazas Vacantes Acefalias',
+            'reporte_acefalias',
+            [
+                'No.', 'TIPO', 'UNIDAD', 'SUB-UNIDAD', 'No. ITEM / CONTRATO', 'NOMBRE COMPLETO',
+                'CARGO', 'COD. FUNC.', 'ESC. SALARIAL', 'DESIGNACION',
+                'F. DESIGN. INICIO', 'F. DESIGN. FIN',
+            ],
+            $this->acefaliasReportQuery(),
+            function (ServidorPublico $s, int $number) {
+                return [
+                    $number,
+                    $s->tipo === 'item' ? 'ITEM' : 'CONSULTORIA',
+                    $s->unidad ?? '',
+                    $s->sub_unidad ?? '',
+                    $s->tipo === 'item' ? ($s->numero_item ?? '') : ($s->contrato_numero ?? ''),
+                    $this->reportFullName($s),
+                    $s->tipo === 'item' ? ($s->cargo ?? '') : ($s->cargo_consultoria ?? ''),
+                    $s->cod_funcionario ?? '',
+                    $s->escala_salarial ? $s->escala_salarial . ' Bs.' : '',
+                    $s->designacion ?? '',
+                    $this->reportDate($s->designacion_inicio),
+                    $this->reportDate($s->designacion_fin),
+                ];
+            },
+            $request
+        );
+
         $servidores = ServidorPublico::where('acefalia', true)
             ->orderBy('unidad')
             ->orderBy('sub_unidad')
@@ -510,8 +774,17 @@ public function reporteConsultoriaPdf()
 /**
  * Generar reporte de acefalías en PDF
  */
-public function reporteAcefaliasPdf()
+public function reporteAcefaliasPdf(Request $request)
 {
+    return $this->downloadPdfReport(
+        $request,
+        'Reporte de Plazas Vacantes Acefalias',
+        'acefalias',
+        'reportes.acefalias-pdf',
+        'reporte_acefalias',
+        $this->acefaliasReportQuery()
+    );
+
     $servidores = ServidorPublico::where('acefalia', true)
         ->orderBy('unidad')
         ->orderBy('sub_unidad')
@@ -530,6 +803,327 @@ public function reporteAcefaliasPdf()
 
     return $pdf->stream($filename);
 }
+
+    private function itemsReportQuery()
+    {
+        return $this->activeReportQuery()
+            ->where('tipo', 'item')
+            ->orderBy('unidad')
+            ->orderBy('sub_unidad')
+            ->orderBy('numero_item')
+            ->orderBy('id');
+    }
+
+    private function consultoriaReportQuery()
+    {
+        return $this->activeReportQuery()
+            ->where('tipo', 'consultoria')
+            ->orderBy('unidad')
+            ->orderBy('sub_unidad')
+            ->orderBy('contrato_numero')
+            ->orderBy('id');
+    }
+
+    private function acefaliasReportQuery()
+    {
+        return $this->reportQuery()
+            ->where('acefalia', true)
+            ->orderBy('unidad')
+            ->orderBy('sub_unidad')
+            ->orderBy('tipo')
+            ->orderBy('id');
+    }
+
+    private function unidadReportQuery(string $nombreUnidad)
+    {
+        return $this->reportQuery()
+            ->where('unidad', $nombreUnidad)
+            ->orderBy('sub_unidad')
+            ->orderBy('tipo')
+            ->orderBy('id');
+    }
+
+    private function activeReportQuery()
+    {
+        return $this->reportQuery()
+            ->where(function ($query) {
+                $query->whereNull('acefalia')->orWhere('acefalia', false);
+            });
+    }
+
+    private function reportQuery()
+    {
+        return ServidorPublico::query()->select([
+            'id',
+            'tipo',
+            'nombre',
+            'apellido_paterno',
+            'apellido_materno',
+            'unidad',
+            'sub_unidad',
+            'numero_item',
+            'contrato_numero',
+            'cargo',
+            'cargo_consultoria',
+            'cite_memorandum',
+            'cod_funcionario',
+            'escala_salarial',
+            'designacion',
+            'designacion_inicio',
+            'designacion_fin',
+            'fecha_inicio_cargo',
+            'fecha_inicio_contrato',
+            'fecha_fin_contrato',
+            'acefalia',
+            'asignacion_familiar_desc',
+            'asignacion_familiar_grado',
+            'casos_especiales_desc',
+            'casos_especiales_grado',
+        ]);
+    }
+
+    private function streamCsvReport(string $title, string $filenamePrefix, array $headers, $query, callable $rowBuilder, ?Request $request = null)
+    {
+        $this->prepareLargeReport();
+
+        $filename = $filenamePrefix . '_' . now()->format('Y-m-d_H-i-s') . '.csv';
+        $total = (clone $query)->count();
+
+        if ($request?->boolean('preview')) {
+            return $this->previewHtmlReport($title, $headers, $query, $rowBuilder, $total);
+        }
+
+        return response()->streamDownload(function () use ($title, $headers, $query, $rowBuilder, $total) {
+            $handle = fopen('php://output', 'w');
+
+            fwrite($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, [$title], ';');
+            fputcsv($handle, ['Generado', now()->format('d/m/Y H:i:s')], ';');
+            fputcsv($handle, ['Total registros', $total], ';');
+            fputcsv($handle, [], ';');
+            fputcsv($handle, $headers, ';');
+
+            $number = 1;
+            foreach ((clone $query)->lazy(self::EXPORT_CHUNK_SIZE) as $servidor) {
+                fputcsv($handle, $rowBuilder($servidor, $number), ';');
+                $number++;
+
+                if ($number % self::EXPORT_CHUNK_SIZE === 0) {
+                    flush();
+                }
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'X-Accel-Buffering' => 'no',
+            'Cache-Control' => 'no-store, no-cache',
+        ]);
+    }
+
+    private function previewHtmlReport(string $title, array $headers, $query, callable $rowBuilder, int $total)
+    {
+        $limit = 100;
+        $rows = [];
+        $number = 1;
+
+        foreach ((clone $query)->take($limit)->get() as $servidor) {
+            $rows[] = $rowBuilder($servidor, $number);
+            $number++;
+        }
+
+        return response()
+            ->view('reportes.excel-preview', compact('title', 'headers', 'rows', 'total', 'limit'))
+            ->header('Content-Type', 'text/html; charset=UTF-8');
+    }
+
+    private function downloadPdfReport(Request $request, string $title, string $type, string $view, string $filenamePrefix, $query)
+    {
+        $this->prepareLargeReport();
+
+        $total = (clone $query)->count();
+        $parts = max(1, (int) ceil($total / self::PDF_PART_SIZE));
+
+        if ($request->boolean('meta')) {
+            return response()->json([
+                'title' => $title,
+                'type' => $type,
+                'total' => $total,
+                'parts' => $parts,
+                'partSize' => self::PDF_PART_SIZE,
+            ]);
+        }
+
+        $part = max(1, (int) $request->query('part', 1));
+        $part = min($part, $parts);
+        $offset = ($part - 1) * self::PDF_PART_SIZE;
+
+        $reportOffset = $offset;
+        $reportTotal = $total;
+        $reportPart = $part;
+        $reportParts = $parts;
+        $reportTitle = $title;
+
+        if ($request->boolean('preview')) {
+            return $this->previewPdfLikeReport($title, $type, $query, $offset, $total, $part, $parts);
+        }
+
+        $servidores = (clone $query)
+            ->skip($offset)
+            ->take(self::PDF_PART_SIZE)
+            ->get();
+
+        $filename = $filenamePrefix . '_' . now()->format('Y-m-d_H-i-s');
+        if ($parts > 1) {
+            $filename .= '_parte_' . $part . '_de_' . $parts;
+        }
+        $filename .= '.pdf';
+
+        $pdf = PDF::loadView($view, compact(
+            'servidores',
+            'reportOffset',
+            'reportTotal',
+            'reportPart',
+            'reportParts',
+            'reportTitle'
+        ));
+
+        $pdf->setPaper('A4', 'landscape');
+        $pdf->setOptions([
+            'defaultFont' => 'DejaVu Sans',
+            'isRemoteEnabled' => false,
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => false,
+            'dpi' => 72,
+            'isFontSubsettingEnabled' => true,
+        ]);
+
+        return $pdf->download($filename);
+    }
+
+    private function previewPdfLikeReport(string $title, string $type, $query, int $offset, int $total, int $part, int $parts)
+    {
+        $limit = 80;
+        [$headers, $rowBuilder] = $this->pdfPreviewDefinition($type);
+        $rows = [];
+        $number = $offset + 1;
+
+        foreach ((clone $query)->skip($offset)->take($limit)->get() as $servidor) {
+            $rows[] = $rowBuilder($servidor, $number);
+            $number++;
+        }
+
+        return response()
+            ->view('reportes.pdf-preview', compact('title', 'headers', 'rows', 'total', 'part', 'parts', 'limit'))
+            ->header('Content-Type', 'text/html; charset=UTF-8');
+    }
+
+    private function pdfPreviewDefinition(string $type): array
+    {
+        if ($type === 'consultoria') {
+            return [[
+                'No.', 'UNIDAD', 'SUB-UNIDAD', 'CONTRATO', 'NOMBRE COMPLETO', 'CARGO', 'COD. FUNC.',
+            ], function (ServidorPublico $s, int $number) {
+                return [
+                    $number,
+                    $s->unidad ?? '',
+                    $s->sub_unidad ?? '',
+                    $s->contrato_numero ?? '',
+                    $this->reportFullName($s),
+                    $s->cargo_consultoria ?? '',
+                    $s->cod_funcionario ?? '',
+                ];
+            }];
+        }
+
+        if ($type === 'acefalias') {
+            return [[
+                'No.', 'TIPO', 'UNIDAD', 'SUB-UNIDAD', 'ITEM / CONTRATO', 'CARGO',
+            ], function (ServidorPublico $s, int $number) {
+                return [
+                    $number,
+                    $s->tipo === 'item' ? 'ITEM' : 'CONSULTORIA',
+                    $s->unidad ?? '',
+                    $s->sub_unidad ?? '',
+                    $s->tipo === 'item' ? ($s->numero_item ?? '') : ($s->contrato_numero ?? ''),
+                    $s->tipo === 'item' ? ($s->cargo ?? '') : ($s->cargo_consultoria ?? ''),
+                ];
+            }];
+        }
+
+        if ($type === 'unidad') {
+            return [[
+                'No.', 'TIPO', 'SUB-UNIDAD', 'ITEM / CONTRATO', 'NOMBRE COMPLETO', 'CARGO',
+            ], function (ServidorPublico $s, int $number) {
+                return [
+                    $number,
+                    $s->tipo === 'item' ? 'ITEM' : 'CONSULTORIA',
+                    $s->sub_unidad ?? '',
+                    $s->tipo === 'item' ? ($s->numero_item ?? '') : ($s->contrato_numero ?? ''),
+                    $this->reportFullName($s),
+                    $s->tipo === 'item' ? ($s->cargo ?? '') : ($s->cargo_consultoria ?? ''),
+                ];
+            }];
+        }
+
+        return [[
+            'No.', 'UNIDAD', 'SUB-UNIDAD', 'No. ITEM', 'NOMBRE COMPLETO', 'CARGO', 'COD. FUNC.',
+        ], function (ServidorPublico $s, int $number) {
+            return [
+                $number,
+                $s->unidad ?? '',
+                $s->sub_unidad ?? '',
+                $s->numero_item ?? '',
+                $this->reportFullName($s),
+                $s->cargo ?? '',
+                $s->cod_funcionario ?? '',
+            ];
+        }];
+    }
+
+    private function prepareLargeReport(): void
+    {
+        @set_time_limit(300);
+        @ini_set('memory_limit', '1024M');
+    }
+
+    private function reportFullName(ServidorPublico $servidor): string
+    {
+        $name = trim(($servidor->nombre ?? '') . ' ' . ($servidor->apellido_paterno ?? '') . ' ' . ($servidor->apellido_materno ?? ''));
+
+        return $name !== '' ? $name : '-';
+    }
+
+    private function reportDate($value): string
+    {
+        if (! $value) {
+            return '';
+        }
+
+        return Carbon::parse($value)->format('d/m/Y');
+    }
+
+    private function safeReportName(string $value): string
+    {
+        $value = strtolower(trim($value));
+        $value = strtr($value, [
+            'á' => 'a',
+            'é' => 'e',
+            'í' => 'i',
+            'ó' => 'o',
+            'ú' => 'u',
+            'ñ' => 'n',
+            'Á' => 'a',
+            'É' => 'e',
+            'Í' => 'i',
+            'Ó' => 'o',
+            'Ú' => 'u',
+            'Ñ' => 'n',
+        ]);
+        $value = preg_replace('/[^a-z0-9]+/i', '_', $value);
+
+        return trim($value, '_') ?: 'reporte';
+    }
 
     /**
      * Generar contenido HTML compatible con Excel
@@ -633,9 +1227,36 @@ public function reporteAcefaliasPdf()
     /**
      * Generar reporte individual por unidad
      */
-    public function reportePorUnidad($nombre)
+    public function reportePorUnidad(Request $request, $nombre)
     {
         $nombreUnidad = urldecode($nombre);
+
+        return $this->streamCsvReport(
+            'Reporte de ' . $nombreUnidad,
+            'reporte_' . $this->safeReportName($nombreUnidad),
+            [
+                'No.', 'TIPO', 'SUB-UNIDAD', 'No. ITEM / CONTRATO', 'NOMBRE COMPLETO', 'CARGO',
+                'COD. FUNC.', 'ESC. SALARIAL', 'DESIGNACION',
+                'F. DESIGN. INICIO', 'F. DESIGN. FIN',
+            ],
+            $this->unidadReportQuery($nombreUnidad),
+            function (ServidorPublico $s, int $number) {
+                return [
+                    $number,
+                    $s->tipo === 'item' ? 'ITEM' : 'CONSULTORIA',
+                    $s->sub_unidad ?? '',
+                    $s->tipo === 'item' ? ($s->numero_item ?? '') : ($s->contrato_numero ?? ''),
+                    $this->reportFullName($s),
+                    $s->tipo === 'item' ? ($s->cargo ?? '') : ($s->cargo_consultoria ?? ''),
+                    $s->cod_funcionario ?? '',
+                    $s->escala_salarial ? $s->escala_salarial . ' Bs.' : '',
+                    $s->designacion ?? '',
+                    $this->reportDate($s->designacion_inicio),
+                    $this->reportDate($s->designacion_fin),
+                ];
+            },
+            $request
+        );
 
         $servidores = ServidorPublico::where('unidad', $nombreUnidad)
             ->orderBy('sub_unidad')
@@ -682,10 +1303,19 @@ public function reporteAcefaliasPdf()
     /**
      * Generar reporte PDF individual por unidad usando DomPDF
      */
-    public function reportePorUnidadPdf($nombre)
+    public function reportePorUnidadPdf(Request $request, $nombre)
     {
         // Decodificar el nombre de la unidad (URL encoded)
         $nombreUnidad = urldecode($nombre);
+
+        return $this->downloadPdfReport(
+            $request,
+            'Reporte de ' . $nombreUnidad,
+            'unidad',
+            'reportes.unidad-pdf',
+            'reporte_' . $this->safeReportName($nombreUnidad),
+            $this->unidadReportQuery($nombreUnidad)
+        );
         
         // Obtener todos los servidores de la unidad específica
         $servidores = ServidorPublico::where('unidad', $nombreUnidad)

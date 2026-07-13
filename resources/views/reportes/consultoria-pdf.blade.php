@@ -113,7 +113,7 @@
 
     <table class="info-cards">
         <tr>
-            <td><h3>TOTAL DE SERVIDORES</h3><div class="value">{{ $servidores->count() }}</div></td>
+            <td><h3>TOTAL DE SERVIDORES</h3><div class="value">{{ $reportTotal ?? $servidores->count() }}</div></td>
             <td><h3>FECHA DE GENERACIÓN</h3><div class="value" style="font-size:11px;">{{ now()->format('d/m/Y H:i:s') }}</div></td>
             <td><h3>TIPO DE REPORTE</h3><div class="value" style="font-size:11px;">CONSULTORÍA</div></td>
         </tr>
@@ -138,7 +138,7 @@
         <tbody>
             @foreach($servidores as $i => $s)
             <tr>
-                <td>{{ $i + 1 }}</td>
+                <td>{{ ($reportOffset ?? 0) + $i + 1 }}</td>
                 <td>{{ $s->unidad ?? '—' }}</td>
                 <td>{{ $s->sub_unidad ?? '—' }}</td>
                 <td><strong>{{ $s->contrato_numero ?? '—' }}</strong></td>
@@ -155,7 +155,7 @@
     </table>
 
     <div class="footer">
-        <div class="total">TOTAL DE SERVIDORES DE CONSULTORÍA: {{ $servidores->count() }}</div>
+        <div class="total">TOTAL DE SERVIDORES DE CONSULTORÍA: {{ $reportTotal ?? $servidores->count() }}</div>
         Reporte generado automáticamente por el Sistema de Gestión de Servidores Públicos<br>
         Gerencia Regional La Paz - Aduana Nacional de Bolivia<br>
         &copy; {{ now()->year }} Todos los derechos reservados

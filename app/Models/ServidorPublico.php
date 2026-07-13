@@ -15,6 +15,9 @@ class ServidorPublico extends Model
     protected $table = 'servidores_publicos';
 
     protected $fillable = [
+        'persona_id',
+        'plaza_item_id',
+        'asignacion_id',
         'tipo',
         // Datos comunes
         'nombre',
@@ -197,5 +200,20 @@ class ServidorPublico extends Model
         }
 
         return asset('storage/' . $this->fotografia);
+    }
+
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class);
+    }
+
+    public function plazaItem()
+    {
+        return $this->belongsTo(PlazaItem::class);
+    }
+
+    public function asignacion()
+    {
+        return $this->belongsTo(Asignacion::class);
     }
 }

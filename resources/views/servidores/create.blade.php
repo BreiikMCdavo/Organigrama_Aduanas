@@ -138,6 +138,9 @@ $subUnidades = [
                         <button type="button" class="btn btn-sm btn-outline-warning" onclick="setAccionDuplicado('adicionar')">
                             <i class="bi bi-copy"></i> Adicionar — agregar otro registro
                         </button>
+                        <button type="button" class="btn btn-sm btn-outline-info" onclick="setAccionDuplicado('comision')">
+                            <i class="bi bi-arrow-left-right"></i> Comisión - mantener 1 ítem activo
+                        </button>
                         <button type="button" class="btn btn-sm btn-outline-danger" onclick="setAccionDuplicado('reemplazar')">
                             <i class="bi bi-arrow-repeat"></i> Reemplazar — marcar existente como acefalía
                         </button>
@@ -652,6 +655,10 @@ function setAccionDuplicado(accion) {
     const sufijo = tipo === 'consultoria' ? 'cons' : 'item';
     document.getElementById('accion_duplicado_' + sufijo).value = accion;
     document.getElementById('reemplazar-select-wrapper').style.display = accion === 'reemplazar' ? 'block' : 'none';
+    const chkComision = document.getElementById(sufijo === 'cons' ? 'chk_com_cons' : 'chk_com_item');
+    if (accion === 'comision' && chkComision) {
+        chkComision.checked = true;
+    }
     if (accion !== 'reemplazar') {
         document.getElementById('cargo_a_reemplazar_' + sufijo).value = '';
     }

@@ -467,6 +467,12 @@
                                         <i class="bi bi-briefcase-fill me-1"></i>CONSULTORÍA
                                     </span>
                                 @endif
+                                @php($designacionTexto = mb_strtolower($servidor->designacion ?? '', 'UTF-8'))
+                                @if(str_contains($designacionTexto, 'comisión') || str_contains($designacionTexto, 'comision'))
+                                    <span class="badge bg-info text-dark me-2 px-3 py-1 servidor-badge" style="font-size:0.85rem;">
+                                        <i class="bi bi-arrow-left-right me-1"></i>COMISIÓN
+                                    </span>
+                                @endif
                             </div>
 
                             {{-- Información del cargo --}}

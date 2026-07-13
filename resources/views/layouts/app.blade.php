@@ -181,6 +181,20 @@
                     <i class="bi bi-person-plus-fill"></i>
                     <span>Nuevo Servidor</span>
                 </a>
+
+                @auth
+                    <form method="POST" action="{{ route('logout') }}" class="m-0">
+                        @csrf
+                        <button type="submit"
+                            class="btn btn-sm px-3 rounded-pill d-flex align-items-center gap-2"
+                            style="background:rgba(220,53,69,0.18);color:#fff;border:1px solid rgba(255,255,255,0.28);backdrop-filter: blur(10px);transition: all 0.3s ease;"
+                            onmouseover="this.style.background='rgba(220,53,69,0.32)';this.style.transform='translateY(-1px)'"
+                            onmouseout="this.style.background='rgba(220,53,69,0.18)';this.style.transform='translateY(0)'">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Salir</span>
+                        </button>
+                    </form>
+                @endauth
             </div>
 
         </div>
@@ -294,25 +308,127 @@
     <script>
         let currentPdfUrl = '';
         let currentPdfDownloadUrl = '';
+        let currentPdfPart = 1;
         let currentExcelUrl = '';
+
+        function reportDownloadUrl(url, params) {
+            const nextUrl = new URL(url, window.location.origin);
+
+            Object.keys(params || {}).forEach(function(key) {
+                nextUrl.searchParams.set(key, params[key]);
+            });
+
+            return nextUrl.toString();
+        }
+
+        function escapeReportText(value) {
+            return String(value || '').replace(/[&<>"']/g, function(char) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[char];
+            });
+        }
+
+        function triggerReportDownload(url) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
         
         // Función para mostrar vista previa de PDF
         function showPdfPreview(url, pdfUrl, title) {
-            document.getElementById('pdfTitleText').textContent = title;
-            document.getElementById('pdfPreviewFrame').src = pdfUrl;
             currentPdfUrl = url;
             currentPdfDownloadUrl = pdfUrl;
-            
-            const modal = new bootstrap.Modal(document.getElementById('modalPdfPreview'));
-            modal.show();
+            currentPdfPart = 1;
+            const metaUrl = reportDownloadUrl(pdfUrl, { meta: 1 });
+
+            fetch(metaUrl, { headers: { 'Accept': 'application/json' } })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('No se pudo leer el reporte.');
+                    }
+
+                    return response.json();
+                })
+                .then(function(meta) {
+                    const modalElement = document.getElementById('modalPdfPreview');
+                    const modalBody = modalElement.querySelector('.modal-body');
+                    const downloadBtn = document.getElementById('pdfDownloadBtn');
+                    const total = Number(meta.total || 0).toLocaleString('es-BO');
+                    const parts = Math.max(1, Number(meta.parts || 1));
+                    const partButtons = [];
+
+                    for (let part = 1; part <= parts; part++) {
+                        partButtons.push(`
+                            <button type="button"
+                                    class="btn btn-sm ${part === 1 ? 'btn-primary' : 'btn-outline-primary'} pdf-part-btn"
+                                    data-part="${part}">
+                                Parte ${part}
+                            </button>
+                        `);
+                    }
+
+                    document.getElementById('pdfTitleText').textContent = title;
+                    modalBody.innerHTML = `
+                        <div class="px-3 py-2 bg-light border-bottom">
+                            <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                                <small class="text-muted">
+                                    ${total} registros${parts > 1 ? ` divididos en ${parts} partes` : ''}
+                                </small>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    ${parts > 1 ? partButtons.join('') : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <iframe id="pdfPreviewFrame"
+                                style="width: 100%; height: 80vh; border: none;"
+                                src="${reportDownloadUrl(pdfUrl, { part: 1, preview: 1 })}"></iframe>
+                    `;
+                    downloadBtn.style.display = '';
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = `<i class="bi bi-download me-1"></i>${parts > 1 ? 'Descargar Parte 1' : 'Descargar Reporte'}`;
+
+                    modalBody.querySelectorAll('.pdf-part-btn').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            currentPdfPart = Number(button.dataset.part || 1);
+                            currentPdfDownloadUrl = reportDownloadUrl(pdfUrl, { part: currentPdfPart });
+                            modalBody.querySelectorAll('.pdf-part-btn').forEach(function(btn) {
+                                btn.classList.toggle('btn-primary', btn === button);
+                                btn.classList.toggle('btn-outline-primary', btn !== button);
+                            });
+                            document.getElementById('pdfPreviewFrame').src = reportDownloadUrl(pdfUrl, {
+                                part: currentPdfPart,
+                                preview: 1
+                            });
+                            downloadBtn.innerHTML = `<i class="bi bi-download me-1"></i>Descargar Parte ${currentPdfPart}`;
+                        });
+                    });
+
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                })
+                .catch(function() {
+                    triggerReportDownload(pdfUrl);
+                });
         }
 
         // Función para mostrar vista previa de Excel
         function showExcelPreview(url, title) {
-            document.getElementById('excelTitleText').textContent = title;
-            document.getElementById('excelPreviewFrame').src = url;
             currentExcelUrl = url;
-            
+            document.getElementById('excelTitleText').textContent = title;
+            document.getElementById('excelPreviewFrame').src = reportDownloadUrl(url, { preview: 1 });
+
+            const btn = document.getElementById('excelDownloadBtn');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-download me-1"></i>Descargar Excel';
+
             const modal = new bootstrap.Modal(document.getElementById('modalExcelPreview'));
             modal.show();
         }
@@ -322,6 +438,14 @@
             if (currentPdfDownloadUrl) {
                 const btn = document.getElementById('pdfDownloadBtn');
                 const originalText = btn.innerHTML;
+                triggerReportDownload(currentPdfDownloadUrl);
+                btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Descarga iniciada';
+                btn.disabled = true;
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 1200);
+                return;
                 btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i>Descargando...';
                 btn.disabled = true;
 
